@@ -45,8 +45,8 @@ function TabNavigation() {
 							break;
 					}
 				},
-				tabBarActiveTintColor: "#35689A",
-				tabBarInactiveTintColor: "#7ABCFC",
+				tabBarActiveTintColor: "#0e7490",
+				tabBarInactiveTintColor: "#06b6d4",
 			})}
 		>
 			<Tab.Screen name="Home" component={HomeScreen} />
