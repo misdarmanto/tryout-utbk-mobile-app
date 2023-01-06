@@ -1,8 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, HStack, Image, Text, Pressable, VStack, FlatList } from "native-base";
+import { Box, HStack, Image, Text, Pressable, VStack, FlatList, Heading, ScrollView } from "native-base";
 import { Card } from "../../components/Card";
 import Layout from "../../components/Layout";
+import { FontAwesome5, MaterialIcons, Ionicons, Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RootParamList } from "../../navigations";
+import { TouchableOpacity } from "react-native";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
@@ -23,16 +25,45 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
 			image: defaultImage,
 		},
+		{
+			id: 3,
+			title: "hello world",
+			description:
+				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
+			image: defaultImage,
+		},
+		{
+			id: 4,
+			title: "hello world",
+			description:
+				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
+			image: defaultImage,
+		},
 	];
 	return (
 		<Layout>
-			<Banner />
-			<FlatList
-				mt={2}
-				data={cardData}
-				keyExtractor={(item: any) => item.id}
-				renderItem={({ item }) => <Card title={item.title} description={item.description} image={item.image} />}
-			/>
+			<ScrollView showsVerticalScrollIndicator={false}>
+				<Banner />
+				<HStack my="5" px="2" flexWrap="wrap" justifyContent="space-between">
+					<FontAwesome5 name="brain" size={50} />
+					<FontAwesome5 name="square-root-alt" size={50} />
+					<FontAwesome5 name="book" size={50} />
+					<Fontisto name="atom" size={50} />
+				</HStack>
+				<HStack my="5" px="2" flexWrap="wrap" justifyContent="space-between">
+					<FontAwesome5 name="calculator" size={50} />
+					<FontAwesome5 name="book" size={50} />
+					<Fontisto name="atom" size={50} />
+					<MaterialCommunityIcons name="virus" size={50} />
+				</HStack>
+				<Heading mt="5" fontWeight="extraBlack" fontStyle="italic">
+					Recomend
+				</Heading>
+
+				{cardData.map((item) => (
+					<Card key={item.id} title={item.title} description={item.description} image={item.image} />
+				))}
+			</ScrollView>
 		</Layout>
 	);
 }
@@ -44,17 +75,28 @@ const Banner = () => {
 				<Box justifyContent="space-between">
 					<VStack space="2">
 						<Text fontSize="sm" color="white">
-							Today @ 9PM
+							30 day, 12 hour menuju utbk
 						</Text>
 						<Text color="white" fontSize="xl">
-							Let's talk about avatar!
+							Hello, Jack
 						</Text>
 					</VStack>
-					<Pressable rounded="xs" bg="primary.400" alignSelf="flex-start" py="1" px="3">
-						<Text textTransform="uppercase" fontSize="sm" fontWeight="bold" color="white">
-							Remind me
-						</Text>
-					</Pressable>
+					<HStack space={2}>
+						<HStack space={1}>
+							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+							<Text fontSize="sm" fontWeight="bold" color="white">
+								100
+							</Text>
+						</HStack>
+						<TouchableOpacity>
+							<HStack space={1}>
+								<MaterialIcons name="add-box" size={24} color="#fff" />
+								<Text fontSize="sm" fontWeight="bold" color="white">
+									Top Up
+								</Text>
+							</HStack>
+						</TouchableOpacity>
+					</HStack>
 				</Box>
 				<Image
 					source={{

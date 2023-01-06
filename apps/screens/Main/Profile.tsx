@@ -8,8 +8,7 @@ type ProfilePropsTypes = NativeStackScreenProps<RootParamList, "Profile">;
 export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 	return (
 		<Layout>
-			<Text>Home screen</Text>
-			<Button onPress={() => navigation.navigate("Detail")}>Detail</Button>
+			<Text>Profile screen</Text>
 		</Layout>
 	);
 }

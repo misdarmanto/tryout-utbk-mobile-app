@@ -46,7 +46,7 @@ function TabNavigation() {
 					}
 				},
 				tabBarActiveTintColor: "#0e7490",
-				tabBarInactiveTintColor: "#06b6d4",
+				tabBarInactiveTintColor: "gray",
 			})}
 		>
 			<Tab.Screen name="Home" component={HomeScreen} />
@@ -68,19 +68,28 @@ const MyTheme = {
 };
 
 export default function AppNavigations() {
+	const isAuth = true;
 	return (
 		<NavigationContainer theme={MyTheme}>
 			<Stack.Navigator initialRouteName="Main">
-				<Stack.Screen
-					name="Main"
-					component={TabNavigation}
-					options={{
-						headerShown: false,
-					}}
-				/>
-				<Stack.Screen name="TryOut" component={TryOutScreen} />
-				<Stack.Screen name="SignUp" component={SignUpScreen} />
-				<Stack.Screen name="Login" component={LoginScreen} />
+				{isAuth && (
+					<>
+						<Stack.Screen
+							name="Main"
+							component={TabNavigation}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen name="TryOut" component={TryOutScreen} />
+					</>
+				)}
+				{!isAuth && (
+					<>
+						<Stack.Screen name="Login" component={LoginScreen} />
+						<Stack.Screen name="SignUp" component={SignUpScreen} />
+					</>
+				)}
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
