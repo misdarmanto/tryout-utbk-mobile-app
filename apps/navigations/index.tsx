@@ -10,6 +10,7 @@ import ProfileScreen from "../screens/Main/Profile";
 import TryOutScreen from "../screens/Stack/TryOut";
 import SignUpScreen from "../screens/Auth/SignUp";
 import LoginScreen from "../screens/Auth/Login";
+import { BASE_COLOR } from "../utilities/baseColor";
 
 export type RootParamList = {
 	Main: undefined;
@@ -45,8 +46,8 @@ function TabNavigation() {
 							break;
 					}
 				},
-				tabBarActiveTintColor: "#0e7490",
-				tabBarInactiveTintColor: "gray",
+				tabBarActiveTintColor: BASE_COLOR.primary,
+				tabBarInactiveTintColor: BASE_COLOR.gray,
 			})}
 		>
 			<Tab.Screen name="Home" component={HomeScreen} />

@@ -1,86 +1,100 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, HStack, Image, Text, Pressable, VStack, FlatList, Heading, ScrollView } from "native-base";
-import { Card } from "../../components/Card";
+import { Box, HStack, Text, Heading, ScrollView } from "native-base";
+import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
-import { FontAwesome5, MaterialIcons, Ionicons, Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons, Fontisto, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { RootParamList } from "../../navigations";
 import { TouchableOpacity } from "react-native";
+import { BASE_COLOR } from "../../utilities/baseColor";
+import { PropsWithChildren, useLayoutEffect } from "react";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
 export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
-	const defaultImage = "https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg";
-	const cardData = [
-		{
-			id: 1,
-			title: "hello world",
-			description:
-				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
-			image: defaultImage,
-		},
-		{
-			id: 2,
-			title: "hello world",
-			description:
-				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
-			image: defaultImage,
-		},
-		{
-			id: 3,
-			title: "hello world",
-			description:
-				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
-			image: defaultImage,
-		},
-		{
-			id: 4,
-			title: "hello world",
-			description:
-				"You can change the theme prop dynamically and all the components will automatically update to reflect the new theme",
-			image: defaultImage,
-		},
-	];
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: "",
+			headerLeft: () => (
+				<HStack px="2" alignItems="center" space={2}>
+					<Text color={BASE_COLOR.text.primary} fontSize="xl">
+						Hi, Misdar
+					</Text>
+				</HStack>
+			),
+			headerRight: () => (
+				<HStack px="3" alignItems="center" space={2}>
+					<TouchableOpacity>
+						<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
+					</TouchableOpacity>
+				</HStack>
+			),
+		});
+	}, []);
+
 	return (
 		<Layout>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<Banner />
-				<HStack my="5" px="2" flexWrap="wrap" justifyContent="space-between">
-					<FontAwesome5 name="brain" size={50} />
-					<FontAwesome5 name="square-root-alt" size={50} />
-					<FontAwesome5 name="book" size={50} />
-					<Fontisto name="atom" size={50} />
+				<HStack my="3" mt="8" px="1" flexWrap="wrap" justifyContent="space-between">
+					<IconRounded>
+						<FontAwesome5 name="brain" size={30} color="#FFF" />
+					</IconRounded>
+					<IconRounded>
+						<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
+					</IconRounded>
+					<IconRounded>
+						<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
+					</IconRounded>
+					<IconRounded>
+						<Fontisto name="atom" size={30} color="#FFF" />
+					</IconRounded>
 				</HStack>
-				<HStack my="5" px="2" flexWrap="wrap" justifyContent="space-between">
-					<FontAwesome5 name="calculator" size={50} />
-					<FontAwesome5 name="book" size={50} />
-					<Fontisto name="atom" size={50} />
-					<MaterialCommunityIcons name="virus" size={50} />
+				<HStack my="3" px="1" flexWrap="wrap" justifyContent="space-between">
+					<IconRounded>
+						<FontAwesome5 name="brain" size={30} color="#FFF" />
+					</IconRounded>
+					<IconRounded>
+						<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
+					</IconRounded>
+					<IconRounded>
+						<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
+					</IconRounded>
+					<IconRounded>
+						<Fontisto name="atom" size={30} color="#FFF" />
+					</IconRounded>
 				</HStack>
-				<Heading mt="5" fontWeight="extraBlack" fontStyle="italic">
+
+				<Heading mt="5" color={BASE_COLOR.text.primary} fontStyle="italic">
 					Recomend
 				</Heading>
 
 				{cardData.map((item) => (
-					<Card key={item.id} title={item.title} description={item.description} image={item.image} />
+					<CardTryOut key={item.id} {...item} />
 				))}
 			</ScrollView>
 		</Layout>
 	);
 }
 
+const IconRounded: React.FC<PropsWithChildren> = ({ children }) => {
+	return (
+		<TouchableOpacity activeOpacity={0.8}>
+			<Box backgroundColor={BASE_COLOR.primary} rounded="full" p={5}>
+				{children}
+			</Box>
+		</TouchableOpacity>
+	);
+};
+
 const Banner = () => {
 	return (
-		<Box bg="primary.600" py="4" px="3" borderRadius="5" rounded="md">
+		<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
 			<HStack justifyContent="space-between">
 				<Box justifyContent="space-between">
-					<VStack space="2">
-						<Text fontSize="sm" color="white">
-							30 day, 12 hour menuju utbk
-						</Text>
-						<Text color="white" fontSize="xl">
-							Hello, Jack
-						</Text>
-					</VStack>
+					<Text fontSize="sm" color="white" pb="3">
+						30 day, 12 hour menuju utbk
+					</Text>
+
 					<HStack space={2}>
 						<HStack space={1}>
 							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
@@ -98,16 +112,55 @@ const Banner = () => {
 						</TouchableOpacity>
 					</HStack>
 				</Box>
-				<Image
-					source={{
-						uri: "https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg",
-					}}
-					alt="Aang flying and surrounded by clouds"
-					height="100"
-					rounded="full"
-					width="100"
-				/>
 			</HStack>
 		</Box>
 	);
 };
+
+const cardData: CardTryOutTypes[] = [
+	{
+		id: 1,
+		title: "Tryout UTBK Saintek #1",
+		enrollTotal: 1000,
+		exampTotal: 50,
+		isFree: true,
+	},
+	{
+		id: 2,
+		title: "Tryout UTBK Saintek #2",
+		enrollTotal: 1000,
+		exampTotal: 50,
+		coinTotal: 300,
+		isFree: false,
+	},
+	{
+		id: 3,
+		title: "Tryout UTBK TPS #2",
+		enrollTotal: 1000,
+		exampTotal: 50,
+		isFree: true,
+	},
+	{
+		id: 4,
+		title: "Tryout UTBK Soshum #1",
+		enrollTotal: 1000,
+		exampTotal: 50,
+		coinTotal: 300,
+		isFree: false,
+	},
+	{
+		id: 5,
+		title: "Tryout UTBK TPS #2",
+		enrollTotal: 1000,
+		exampTotal: 50,
+		isFree: true,
+	},
+	{
+		id: 6,
+		title: "Tryout UTBK Soshum #1",
+		enrollTotal: 1000,
+		exampTotal: 50,
+		coinTotal: 300,
+		isFree: false,
+	},
+];
