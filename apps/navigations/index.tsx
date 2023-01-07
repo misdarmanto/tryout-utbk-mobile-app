@@ -31,7 +31,6 @@ function TabNavigation() {
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
 				tabBarShowLabel: false,
-
 				tabBarIcon: ({ color }) => {
 					switch (route.name) {
 						case "Home":
@@ -39,7 +38,13 @@ function TabNavigation() {
 						case "MyTryOut":
 							return <FontAwesome5 name="tasks" size={24} color={color} />;
 						case "Pyment":
-							return <MaterialCommunityIcons name="cart-outline" size={30} color={color} />;
+							return (
+								<MaterialCommunityIcons
+									name="cart-outline"
+									size={30}
+									color={color}
+								/>
+							);
 						case "Profile":
 							return <AntDesign name="user" size={30} color={color} />;
 						default:

@@ -2,7 +2,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Box, HStack, Text, Heading, ScrollView } from "native-base";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
-import { FontAwesome5, MaterialIcons, Fontisto, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import {
+	FontAwesome5,
+	MaterialIcons,
+	Fontisto,
+	MaterialCommunityIcons,
+	Ionicons,
+} from "@expo/vector-icons";
 import { RootParamList } from "../../navigations";
 import { TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
@@ -24,7 +30,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			headerRight: () => (
 				<HStack px="3" alignItems="center" space={2}>
 					<TouchableOpacity>
-						<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
+						<Ionicons
+							name="ios-notifications"
+							size={30}
+							color={BASE_COLOR.text.primary}
+						/>
 					</TouchableOpacity>
 				</HStack>
 			),
@@ -69,7 +79,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				</Heading>
 
 				{cardData.map((item) => (
-					<CardTryOut key={item.id} {...item} />
+					<CardTryOut
+						key={item.id}
+						{...item}
+						onPress={() => navigation.navigate("TryOut")}
+					/>
 				))}
 			</ScrollView>
 		</Layout>
