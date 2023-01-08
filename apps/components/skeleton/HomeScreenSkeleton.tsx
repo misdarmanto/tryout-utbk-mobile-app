@@ -3,7 +3,7 @@ import { memo } from "react";
 
 const HomeScreenSkeleton = () => {
 	return (
-		<ScrollView>
+		<ScrollView showsVerticalScrollIndicator={false}>
 			<VStack space="1" rounded="md">
 				<Box p="3" borderWidth="1" borderColor="gray.100" backgroundColor="#FFF">
 					<HStack space="3" my="1">

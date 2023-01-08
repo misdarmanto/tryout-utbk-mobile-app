@@ -21,6 +21,7 @@ import {
 	useState,
 } from "react";
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
+import { useNavigation } from "@react-navigation/native";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
@@ -53,7 +54,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			),
 			headerRight: () => (
 				<HStack px="3" alignItems="center" space={2}>
-					<TouchableOpacity>
+					<TouchableOpacity onPress={() => navigation.navigate("Notification")}>
 						<Ionicons
 							name="ios-notifications"
 							size={30}
@@ -65,6 +66,19 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		});
 	}, []);
 
+	const IconRounded: React.FC<PropsWithChildren> = ({ children }) => {
+		return (
+			<TouchableOpacity
+				onPress={() => navigation.navigate("DetailTryOut")}
+				activeOpacity={0.8}
+			>
+				<Box backgroundColor={BASE_COLOR.primary} rounded="full" p={5}>
+					{children}
+				</Box>
+			</TouchableOpacity>
+		);
+	};
+
 	return (
 		<Layout>
 			{isLoading && <SkeletonHomeScreen />}
@@ -73,7 +87,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					showsVerticalScrollIndicator={false}
 					refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
 				>
-					<Banner />
+					<Banner onTopUpPress={() => navigation.navigate("Pyment")} />
 					<Box
 						borderWidth={1}
 						my="5"
@@ -130,17 +144,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	);
 }
 
-const IconRounded: React.FC<PropsWithChildren> = ({ children }) => {
-	return (
-		<TouchableOpacity activeOpacity={0.8}>
-			<Box backgroundColor={BASE_COLOR.primary} rounded="full" p={5}>
-				{children}
-			</Box>
-		</TouchableOpacity>
-	);
-};
-
-const Banner = () => {
+const Banner = ({ onTopUpPress }: { onTopUpPress: any }) => {
 	return (
 		<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
 			<HStack justifyContent="space-between">
@@ -156,7 +160,7 @@ const Banner = () => {
 								100
 							</Text>
 						</HStack>
-						<TouchableOpacity>
+						<TouchableOpacity onPress={onTopUpPress}>
 							<HStack space={1}>
 								<MaterialIcons name="add-box" size={24} color="#fff" />
 								<Text fontSize="sm" fontWeight="bold" color="white">

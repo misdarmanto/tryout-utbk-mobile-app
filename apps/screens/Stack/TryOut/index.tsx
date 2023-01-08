@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { createContext, lazy, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../../components/Layout";
 import { RootParamList } from "../../../navigations/index";
 import Finish from "./finish";
@@ -29,7 +29,7 @@ export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
 
 	return (
 		<Layout>
-			<tryOutContext.Provider value={{ tryOutState, setTryOutState }}>
+			<tryOutContext.Provider value={{ tryOutState, setTryOutState, navigation }}>
 				{renderScreen}
 			</tryOutContext.Provider>
 		</Layout>

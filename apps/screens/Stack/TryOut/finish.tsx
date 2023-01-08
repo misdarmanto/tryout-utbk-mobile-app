@@ -114,7 +114,7 @@ const Finish = () => {
 
 				<TouchableOpacity
 					style={{ marginVertical: heightPercentage(5) }}
-					onPress={() => setTryOutState("default")}
+					onPress={() => setTryOutState("play")}
 				>
 					<HStack
 						justifyContent="center"

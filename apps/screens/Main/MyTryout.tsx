@@ -63,7 +63,9 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 					ListHeaderComponent={() => <Tab />}
 					data={tryoutData}
 					keyExtractor={(item) => item.id + ""}
-					renderItem={({ item }) => <CardTryOut {...item} />}
+					renderItem={({ item }) => (
+						<CardTryOut onPress={() => navigation.navigate("DetailTryOut")} {...item} />
+					)}
 				/>
 			)}
 		</Layout>

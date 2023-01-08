@@ -11,6 +11,8 @@ import TryOutScreen from "../screens/Stack/TryOut";
 import SignUpScreen from "../screens/Auth/SignUp";
 import LoginScreen from "../screens/Auth/Login";
 import { BASE_COLOR } from "../utilities/baseColor";
+import NotificationScreen from "../screens/Stack/Notification";
+import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
 
 export type RootParamList = {
 	Main: undefined;
@@ -19,9 +21,10 @@ export type RootParamList = {
 	TryOut: undefined;
 	Profile: undefined;
 	Pyment: undefined;
-	Detail: undefined;
+	DetailTryOut: undefined;
 	Login: undefined;
 	SignUp: undefined;
+	Notification: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -88,6 +91,8 @@ export default function AppNavigations() {
 							}}
 						/>
 						<Stack.Screen name="TryOut" component={TryOutScreen} />
+						<Stack.Screen name="Notification" component={NotificationScreen} />
+						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 					</>
 				)}
 				{!isAuth && (

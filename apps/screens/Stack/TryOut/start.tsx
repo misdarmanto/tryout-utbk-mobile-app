@@ -92,7 +92,7 @@ const Start = () => {
 
 				<TouchableOpacity
 					style={{ marginVertical: heightPercentage(5) }}
-					onPress={() => setTryOutState("tryout")}
+					onPress={() => setTryOutState("play")}
 				>
 					<HStack
 						justifyContent="center"
