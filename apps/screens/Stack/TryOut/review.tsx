@@ -6,18 +6,16 @@ import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
 
-const Play = () => {
-	const { setTryOutState, navigation, tryOutData, setTryOutData }: any =
-		useContext(tryOutContext);
+const Review = () => {
+	const { setTryOutState, navigation, tryOutData }: any = useContext(tryOutContext);
 	const [openModal, setOpenModal] = useState(false);
+
+	console.log(tryOutData);
 
 	const [question, setQuestion] = useState(tryOutData[0]);
 	const [index, setIndex] = useState(0);
 
-	const [choiceSelected, setChoiceSelected] = useState("");
 	let progressValue = ((index + 1) / tryOutData.length) * 100;
-
-	tryOutData[index].answer = choiceSelected;
 
 	useEffect(() => {
 		setQuestion(tryOutData[index]);
@@ -27,10 +25,8 @@ const Play = () => {
 		if (index === tryOutData.length - 1) {
 			setOpenModal(true);
 			console.log(tryOutData);
-			setTryOutData(tryOutData);
 			return;
 		}
-		setChoiceSelected("");
 		setIndex((value) => value + 1);
 	};
 
@@ -81,26 +77,22 @@ const Play = () => {
 				<VStack space={2} my="10">
 					<ChoiceField
 						alphaBet="A"
-						isActive={choiceSelected === "A"}
-						onPress={() => setChoiceSelected("A")}
+						isActive={question.answer === "A"}
 						text={question.choices.A}
 					/>
 					<ChoiceField
 						alphaBet="B"
-						isActive={choiceSelected === "B"}
-						onPress={() => setChoiceSelected("B")}
+						isActive={question.answer === "B"}
 						text={question.choices.B}
 					/>
 					<ChoiceField
 						alphaBet="C"
-						isActive={choiceSelected === "C"}
-						onPress={() => setChoiceSelected("C")}
+						isActive={question.answer === "C"}
 						text={question.choices.C}
 					/>
 					<ChoiceField
 						alphaBet="D"
-						isActive={choiceSelected === "D"}
-						onPress={() => setChoiceSelected("D")}
+						isActive={question.answer === "D"}
 						text={question.choices.D}
 					/>
 				</VStack>
@@ -143,7 +135,7 @@ const Play = () => {
 				modalText="Apakah yakin jawaban mu sudah selesai?"
 				btnNoTitle="Koreksi"
 				btnYesTitle="Selesai"
-				onBtnYesClick={() => setTryOutState("review")}
+				onBtnYesClick={() => setTryOutState("finish")}
 			/>
 		</VStack>
 	);
@@ -153,7 +145,7 @@ interface ChoiceFieldTypes {
 	alphaBet: string;
 	text: string;
 	isActive?: boolean;
-	onPress: any;
+	onPress?: any;
 }
 
 const ChoiceField = ({ alphaBet, text, isActive, onPress }: ChoiceFieldTypes) => {
@@ -188,4 +180,4 @@ const ChoiceField = ({ alphaBet, text, isActive, onPress }: ChoiceFieldTypes) =>
 	);
 };
 
-export default memo(Play);
+export default memo(Review);
