@@ -4,10 +4,10 @@ import Layout from "../../../components/Layout";
 import { RootParamList } from "../../../navigations/index";
 import Finish from "./finish";
 import Start from "./start";
-import TryOutRun from "./tryOutRun";
+import Play from "./play";
+import { tryOutContext } from "./contextApi";
 
 type TryOutScreenPropsTypes = NativeStackScreenProps<RootParamList, "TryOut">;
-export const tryOutContext: any = createContext(null);
 
 export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
 	const [tryOutState, setTryOutState] = useState<string>("start");
@@ -20,10 +20,13 @@ export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
 		case "finish":
 			renderScreen = <Finish />;
 			break;
+		case "play":
+			renderScreen = <Play />;
+			break;
 		default:
-			renderScreen = <TryOutRun />;
 			break;
 	}
+
 	return (
 		<Layout>
 			<tryOutContext.Provider value={{ tryOutState, setTryOutState }}>

@@ -1,8 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { FlatList, Heading, HStack } from "native-base";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { RefreshControl } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
+import TryOutScreenSkeleton from "../../components/skeleton/TryOutScreenSkeleton";
 import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 
@@ -10,6 +12,21 @@ type MyTryOutPropsTypes = NativeStackScreenProps<RootParamList, "MyTryOut">;
 
 export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 	const [tryoutData, setTryoutData] = useState<CardTryOutTypes[]>(cardData);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
+		console.log(isLoading);
+	}, []);
+
+	const onRefresh = useCallback(() => {
+		setIsLoading(true);
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
+	}, []);
 
 	const handleSelectTab = (category: string) => {
 		if (category === "All") {
@@ -38,13 +55,17 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 
 	return (
 		<Layout>
-			<FlatList
-				showsVerticalScrollIndicator={false}
-				ListHeaderComponent={() => <Tab />}
-				data={tryoutData}
-				keyExtractor={(item) => item.id + ""}
-				renderItem={({ item }) => <CardTryOut {...item} />}
-			/>
+			{isLoading && <TryOutScreenSkeleton />}
+			{!isLoading && (
+				<FlatList
+					refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
+					showsVerticalScrollIndicator={false}
+					ListHeaderComponent={() => <Tab />}
+					data={tryoutData}
+					keyExtractor={(item) => item.id + ""}
+					renderItem={({ item }) => <CardTryOut {...item} />}
+				/>
+			)}
 		</Layout>
 	);
 }

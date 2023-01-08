@@ -10,13 +10,37 @@ import {
 	Ionicons,
 } from "@expo/vector-icons";
 import { RootParamList } from "../../navigations";
-import { TouchableOpacity } from "react-native";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
-import { PropsWithChildren, useLayoutEffect } from "react";
+import {
+	PropsWithChildren,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
+import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
 export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
+		console.log(isLoading);
+	}, []);
+
+	const onRefresh = useCallback(() => {
+		setIsLoading(true);
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
+	}, []);
+
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			title: "",
@@ -43,49 +67,65 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 
 	return (
 		<Layout>
-			<ScrollView showsVerticalScrollIndicator={false}>
-				<Banner />
-				<HStack my="3" mt="8" px="1" flexWrap="wrap" justifyContent="space-between">
-					<IconRounded>
-						<FontAwesome5 name="brain" size={30} color="#FFF" />
-					</IconRounded>
-					<IconRounded>
-						<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
-					</IconRounded>
-					<IconRounded>
-						<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
-					</IconRounded>
-					<IconRounded>
-						<Fontisto name="atom" size={30} color="#FFF" />
-					</IconRounded>
-				</HStack>
-				<HStack my="3" px="1" flexWrap="wrap" justifyContent="space-between">
-					<IconRounded>
-						<FontAwesome5 name="brain" size={30} color="#FFF" />
-					</IconRounded>
-					<IconRounded>
-						<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
-					</IconRounded>
-					<IconRounded>
-						<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
-					</IconRounded>
-					<IconRounded>
-						<Fontisto name="atom" size={30} color="#FFF" />
-					</IconRounded>
-				</HStack>
+			{isLoading && <SkeletonHomeScreen />}
+			{!isLoading && (
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
+				>
+					<Banner />
+					<Box
+						borderWidth={1}
+						my="5"
+						p="5"
+						backgroundColor="white"
+						borderColor="gray.200"
+						borderRadius="5"
+						rounded="md"
+					>
+						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
+							<IconRounded>
+								<FontAwesome5 name="brain" size={30} color="#FFF" />
+							</IconRounded>
+							<IconRounded>
+								<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
+							</IconRounded>
+							<IconRounded>
+								<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
+							</IconRounded>
+							<IconRounded>
+								<Fontisto name="atom" size={30} color="#FFF" />
+							</IconRounded>
+						</HStack>
+						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
+							<IconRounded>
+								<FontAwesome5 name="brain" size={30} color="#FFF" />
+							</IconRounded>
+							<IconRounded>
+								<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
+							</IconRounded>
+							<IconRounded>
+								<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
+							</IconRounded>
+							<IconRounded>
+								<Fontisto name="atom" size={30} color="#FFF" />
+							</IconRounded>
+						</HStack>
+					</Box>
 
-				<Heading mt="5" color={BASE_COLOR.text.primary} fontStyle="italic">
-					Recomend
-				</Heading>
+					<Heading mt="5" color={BASE_COLOR.text.primary} fontStyle="italic">
+						Recomend
+					</Heading>
 
-				{cardData.map((item) => (
-					<CardTryOut
-						key={item.id}
-						{...item}
-						onPress={() => navigation.navigate("TryOut")}
-					/>
-				))}
-			</ScrollView>
+					{cardData.map((item) => (
+						<CardTryOut
+							key={item.id}
+							{...item}
+							onPress={() => navigation.navigate("TryOut")}
+						/>
+					))}
+				</ScrollView>
+			)}
 		</Layout>
 	);
 }

@@ -2,10 +2,10 @@ import { Button, HStack, Progress, Text, VStack } from "native-base";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import React, { memo, useContext } from "react";
-import { tryOutContext } from ".";
+import { tryOutContext } from "./contextApi";
 
-const TryOutRun = () => {
-	const { tryOutState, setTryOutState }: any = useContext(tryOutContext);
+const Play = () => {
+	const { setTryOutState }: any = useContext(tryOutContext);
 
 	return (
 		<VStack flex={1} justifyContent="center" alignItems="center">
@@ -30,4 +30,4 @@ const TryOutRun = () => {
 	);
 };
 
-export default memo(TryOutRun);
+export default memo(Play);

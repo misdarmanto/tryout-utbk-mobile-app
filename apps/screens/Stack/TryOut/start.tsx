@@ -4,7 +4,7 @@ import { BASE_COLOR } from "../../../utilities/baseColor";
 import { heightPercentage, widthPercentage } from "../../../utilities/dimension";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useContext } from "react";
-import { tryOutContext } from ".";
+import { tryOutContext } from "./contextApi";
 
 const Start = () => {
 	const { tryOutState, setTryOutState }: any = useContext(tryOutContext);
