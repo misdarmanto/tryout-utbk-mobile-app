@@ -1,10 +1,21 @@
-import { Avatar, Box, HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
+import {
+	Avatar,
+	Box,
+	Button,
+	HStack,
+	Pressable,
+	Progress,
+	ScrollView,
+	Text,
+	VStack,
+} from "native-base";
 import React, { memo, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
+import { LocalStorage } from "../../../utilities/localStorage";
 
 const Play = () => {
 	const { setTryOutState, navigation, tryOutData, setTryOutData }: any =
@@ -19,14 +30,18 @@ const Play = () => {
 
 	tryOutData[index].answer = choiceSelected;
 
+	const storage = new LocalStorage("tryout1");
+
 	useEffect(() => {
 		setQuestion(tryOutData[index]);
+		(async () => {
+			const data = tryOutData[index];
+		})();
 	}, [index]);
 
 	const handleNextQuestion = () => {
 		if (index === tryOutData.length - 1) {
 			setOpenModal(true);
-			console.log(tryOutData);
 			setTryOutData(tryOutData);
 			return;
 		}
@@ -105,6 +120,14 @@ const Play = () => {
 					/>
 				</VStack>
 			</ScrollView>
+
+			<Button
+				onPress={async () => {
+					await LocalStorage.clearAll();
+				}}
+			>
+				Clear
+			</Button>
 
 			<HStack
 				justifyContent="space-between"
