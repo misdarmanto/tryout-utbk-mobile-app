@@ -6,7 +6,7 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { RootContext } from "../../../utilities/rootContext";
-import { ContextApiTypes } from "../../types/contextApiTypes";
+import { ContextApiTypes } from "../../../types/contextApiTypes";
 
 const Start = () => {
 	const { setTryOutState, navigation }: any = useContext(tryOutContext);

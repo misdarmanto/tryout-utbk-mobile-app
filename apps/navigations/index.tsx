@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FontAwesome5, Feather, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -13,6 +13,8 @@ import LoginScreen from "../screens/Auth/Login";
 import { BASE_COLOR } from "../utilities/baseColor";
 import NotificationScreen from "../screens/Stack/Notification";
 import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
+import { RootContext } from "../utilities/rootContext";
+import { ContextApiTypes } from "../types/contextApiTypes";
 
 export type RootParamList = {
 	Main: undefined;
@@ -77,11 +79,12 @@ const MyTheme = {
 };
 
 export default function AppNavigations() {
-	const isAuth = true;
+	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+
 	return (
 		<NavigationContainer theme={MyTheme}>
 			<Stack.Navigator initialRouteName="Main">
-				{isAuth && (
+				{userInfo.isAuth && (
 					<>
 						<Stack.Screen
 							name="Main"
@@ -95,7 +98,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 					</>
 				)}
-				{!isAuth && (
+				{!userInfo.isAuth && (
 					<>
 						<Stack.Screen name="Login" component={LoginScreen} />
 						<Stack.Screen name="SignUp" component={SignUpScreen} />

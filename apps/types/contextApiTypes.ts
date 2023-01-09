@@ -1,6 +1,7 @@
 export interface UserInfoTypes {
 	name: string;
 	email: string;
+	isAuth: boolean;
 	coin: number;
 }
 

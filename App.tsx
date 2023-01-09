@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AppNavigations from "./apps/navigations";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import { RootContext } from "./apps/utilities/rootContext";
-import { AppInfoTypes, UserInfoTypes } from "./apps/screens/types/contextApiTypes";
+import { AppInfoTypes, UserInfoTypes } from "./apps/types/contextApiTypes";
 
 // Define the config
 const config = {
@@ -22,7 +22,7 @@ export default function App() {
 	const [appInfo, setAppInfo] = useState<AppInfoTypes>();
 
 	useEffect(() => {
-		setUserInfo({ name: "Jack M", email: "Jack@mail.com", coin: 50 });
+		setUserInfo({ name: "Jack M", email: "Jack@mail.com", coin: 50, isAuth: false });
 		setAppInfo({ countDown: "30 day, 12 hour" });
 	}, []);
 

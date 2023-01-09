@@ -22,7 +22,7 @@ import {
 } from "react";
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes } from "../types/contextApiTypes";
+import { ContextApiTypes } from "../../types/contextApiTypes";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
