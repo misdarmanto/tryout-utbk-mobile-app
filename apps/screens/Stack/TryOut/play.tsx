@@ -28,29 +28,34 @@ const Play = () => {
 	const [choiceSelected, setChoiceSelected] = useState("");
 	let progressValue = ((index + 1) / tryOutData.length) * 100;
 
-	tryOutData[index].answer = choiceSelected;
+	console.log(tryOutData);
 
 	const storage = new LocalStorage("tryout1");
 
 	useEffect(() => {
 		setQuestion(tryOutData[index]);
-		(async () => {
-			const data = tryOutData[index];
-		})();
 	}, [index]);
 
-	const handleNextQuestion = () => {
+	const handleNextQuestion = async () => {
 		if (index === tryOutData.length - 1) {
 			setOpenModal(true);
+			await storage.store(tryOutData);
 			setTryOutData(tryOutData);
 			return;
 		}
+
+		tryOutData[index].answer = choiceSelected;
+		if (tryOutData[index].answer !== "") {
+			setChoiceSelected(tryOutData[index].answer);
+		}
+
 		setChoiceSelected("");
 		setIndex((value) => value + 1);
 	};
 
-	const handlePreviousQuestion = () => {
+	const handlePreviousQuestion = async () => {
 		if (0 >= index) return;
+		setChoiceSelected(tryOutData[index].answer);
 		setIndex((value) => value - 1);
 	};
 
@@ -96,25 +101,25 @@ const Play = () => {
 				<VStack space={2} my="10">
 					<ChoiceField
 						alphaBet="A"
-						isActive={choiceSelected === "A"}
+						isActive={choiceSelected === "A" || question.answer === "A"}
 						onPress={() => setChoiceSelected("A")}
 						text={question.choices.A}
 					/>
 					<ChoiceField
 						alphaBet="B"
-						isActive={choiceSelected === "B"}
+						isActive={choiceSelected === "B" || question.answer === "B"}
 						onPress={() => setChoiceSelected("B")}
 						text={question.choices.B}
 					/>
 					<ChoiceField
 						alphaBet="C"
-						isActive={choiceSelected === "C"}
+						isActive={choiceSelected === "C" || question.answer === "C"}
 						onPress={() => setChoiceSelected("C")}
 						text={question.choices.C}
 					/>
 					<ChoiceField
 						alphaBet="D"
-						isActive={choiceSelected === "D"}
+						isActive={choiceSelected === "D" || question.answer === "D"}
 						onPress={() => setChoiceSelected("D")}
 						text={question.choices.D}
 					/>

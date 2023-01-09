@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useContext } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Avatar, Heading, HStack, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
@@ -6,10 +6,13 @@ import { RootParamList } from "../../navigations";
 import { FontAwesome5, Ionicons, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { TouchableOpacity } from "react-native";
+import { RootContext } from "../../utilities/rootContext";
+import { ContextApiTypes } from "../types/contextApiTypes";
 
 type ProfilePropsTypes = NativeStackScreenProps<RootParamList, "Profile">;
 
 export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
+	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	return (
 		<Layout>
 			<HStack
@@ -24,16 +27,16 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 				rounded="md"
 			>
 				<HStack alignItems="center" space={2}>
-					<Avatar>M</Avatar>
+					<Avatar>{userInfo.name[0]}</Avatar>
 					<VStack>
-						<Heading color={BASE_COLOR.text.primary}>Misdar</Heading>
-						<Text color={BASE_COLOR.text.primary}>misdar@mail.com</Text>
+						<Heading color={BASE_COLOR.text.primary}>{userInfo.name}</Heading>
+						<Text color={BASE_COLOR.text.primary}>{userInfo.email}</Text>
 					</VStack>
 				</HStack>
 				<HStack space={1} alignItems="center">
 					<FontAwesome5 name="bitcoin" size={32} color="#FFD700" />
 					<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						100
+						{userInfo.coin}
 					</Text>
 				</HStack>
 			</HStack>

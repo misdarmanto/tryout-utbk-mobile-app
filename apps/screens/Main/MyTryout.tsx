@@ -13,12 +13,12 @@ type MyTryOutPropsTypes = NativeStackScreenProps<RootParamList, "MyTryOut">;
 export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 	const [tryoutData, setTryoutData] = useState<CardTryOutTypes[]>(cardData);
 	const [isLoading, setIsLoading] = useState(true);
+	const [activeTab, setActiveTab] = useState("All");
 
 	useEffect(() => {
 		setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
-		console.log(isLoading);
 	}, []);
 
 	const onRefresh = useCallback(() => {
@@ -29,6 +29,7 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 	}, []);
 
 	const handleSelectTab = (category: string) => {
+		setActiveTab(category);
 		if (category === "All") {
 			setTryoutData(cardData);
 			return;
@@ -44,7 +45,7 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 				{TAB_HEADER_NAMES.map((name, index) => (
 					<RenderTabHeader
 						key={index}
-						isActive={true}
+						isActive={activeTab === name}
 						onPress={() => handleSelectTab(name)}
 						title={name}
 					/>

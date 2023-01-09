@@ -3,11 +3,27 @@ import { TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { heightPercentage, widthPercentage } from "../../../utilities/dimension";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
+import { RootContext } from "../../../utilities/rootContext";
+import { ContextApiTypes } from "../../types/contextApiTypes";
 
 const Start = () => {
-	const { tryOutState, setTryOutState }: any = useContext(tryOutContext);
+	const { setTryOutState, navigation }: any = useContext(tryOutContext);
+	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+
+	const [isError, setIsError] = useState(false);
+
+	useLayoutEffect(() => {
+		if (100 >= userInfo.coin) {
+			setIsError(true);
+		}
+	}, []);
+
+	const handleTryOutState = () => {
+		if (isError) return;
+		setTryOutState("play");
+	};
 
 	return (
 		<VStack flex={1} justifyContent="center" alignItems="center">
@@ -92,7 +108,8 @@ const Start = () => {
 
 				<TouchableOpacity
 					style={{ marginVertical: heightPercentage(5) }}
-					onPress={() => setTryOutState("play")}
+					onPress={handleTryOutState}
+					disabled={isError}
 				>
 					<HStack
 						justifyContent="center"
@@ -105,6 +122,14 @@ const Start = () => {
 						</Text>
 					</HStack>
 				</TouchableOpacity>
+				{isError && (
+					<HStack alignItems="center" space="1">
+						<Text color="red.500">Coin mu tidak cukup, yuk top up </Text>
+						<TouchableOpacity onPress={() => navigation.navigate("Pyment")}>
+							<Text color={BASE_COLOR.primary}>di sini!</Text>
+						</TouchableOpacity>
+					</HStack>
+				)}
 			</Box>
 		</VStack>
 	);

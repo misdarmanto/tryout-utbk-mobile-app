@@ -71,8 +71,9 @@ export class LocalStorage {
 
 			const previousData: any[] = await this.get();
 			if (previousData?.length === 0) throw Error("data not found");
-
 			const index = previousData.findIndex((data) => data.id === id);
+			if (index === -1) throw Error("id not found!");
+
 			previousData[index] = { id, ...newData };
 			this.remove();
 			this.store(previousData);

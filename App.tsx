@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppNavigations from "./apps/navigations";
 import { NativeBaseProvider, extendTheme } from "native-base";
+import { RootContext } from "./apps/utilities/rootContext";
+import { AppInfoTypes, UserInfoTypes } from "./apps/screens/types/contextApiTypes";
 
 // Define the config
 const config = {
@@ -16,9 +18,19 @@ declare module "native-base" {
 }
 
 export default function App() {
+	const [userInfo, setUserInfo] = useState<UserInfoTypes>();
+	const [appInfo, setAppInfo] = useState<AppInfoTypes>();
+
+	useEffect(() => {
+		setUserInfo({ name: "Jack M", email: "Jack@mail.com", coin: 50 });
+		setAppInfo({ countDown: "30 day, 12 hour" });
+	}, []);
+
 	return (
 		<NativeBaseProvider>
-			<AppNavigations />
+			<RootContext.Provider value={{ userInfo, appInfo }}>
+				<AppNavigations />
+			</RootContext.Provider>
 		</NativeBaseProvider>
 	);
 }

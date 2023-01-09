@@ -15,17 +15,19 @@ import { BASE_COLOR } from "../../utilities/baseColor";
 import {
 	PropsWithChildren,
 	useCallback,
+	useContext,
 	useEffect,
 	useLayoutEffect,
-	useRef,
 	useState,
 } from "react";
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
-import { useNavigation } from "@react-navigation/native";
+import { RootContext } from "../../utilities/rootContext";
+import { ContextApiTypes } from "../types/contextApiTypes";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
 export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
+	const { userInfo, appInfo } = useContext<ContextApiTypes>(RootContext);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -48,7 +50,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			headerLeft: () => (
 				<HStack px="2" alignItems="center" space={2}>
 					<Text color={BASE_COLOR.text.primary} fontSize="xl">
-						Hi, Misdar
+						Hi, {userInfo.name}
 					</Text>
 				</HStack>
 			),
@@ -87,7 +89,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					showsVerticalScrollIndicator={false}
 					refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
 				>
-					<Banner onTopUpPress={() => navigation.navigate("Pyment")} />
+					<Banner
+						countDown={appInfo.countDown}
+						coin={userInfo.coin}
+						onTopUpPress={() => navigation.navigate("Pyment")}
+					/>
 					<Box
 						borderWidth={1}
 						my="5"
@@ -144,20 +150,26 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	);
 }
 
-const Banner = ({ onTopUpPress }: { onTopUpPress: any }) => {
+interface BannerTypes {
+	onTopUpPress?: any;
+	countDown?: string;
+	coin: number;
+}
+
+const Banner = ({ onTopUpPress, countDown, coin }: BannerTypes) => {
 	return (
 		<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
 			<HStack justifyContent="space-between">
 				<Box justifyContent="space-between">
 					<Text fontSize="sm" color="white" pb="3">
-						30 day, 12 hour menuju utbk
+						{countDown} menuju utbk
 					</Text>
 
 					<HStack space={2}>
 						<HStack space={1}>
 							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
 							<Text fontSize="sm" fontWeight="bold" color="white">
-								100
+								{coin}
 							</Text>
 						</HStack>
 						<TouchableOpacity onPress={onTopUpPress}>
