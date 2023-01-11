@@ -1,4 +1,4 @@
-export interface TryOutDataTypes {
+export interface QuestionTypes {
 	id: number;
 	question: string;
 	choices: {
@@ -12,7 +12,13 @@ export interface TryOutDataTypes {
 	review: string;
 }
 
-export const TRYOUT_DATA: TryOutDataTypes[] = [
+export interface TryOutDataTypes {
+	timmer: number;
+	finished: boolean;
+	questions: QuestionTypes[];
+}
+
+const QUESTIONS: QuestionTypes[] = [
 	{
 		id: 1,
 		question: "question 1?",
@@ -79,3 +85,9 @@ export const TRYOUT_DATA: TryOutDataTypes[] = [
 		review: "hello",
 	},
 ];
+
+export const TRYOUT_DATA: TryOutDataTypes = {
+	finished: false,
+	timmer: 10,
+	questions: QUESTIONS,
+};

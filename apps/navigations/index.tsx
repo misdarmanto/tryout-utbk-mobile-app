@@ -15,6 +15,7 @@ import NotificationScreen from "../screens/Stack/Notification";
 import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
 import { RootContext } from "../utilities/rootContext";
 import { ContextApiTypes } from "../types/contextApiTypes";
+import RankTryOutScreen from "../screens/Stack/RankTryOut";
 
 export type RootParamList = {
 	Main: undefined;
@@ -27,6 +28,7 @@ export type RootParamList = {
 	Login: undefined;
 	SignUp: undefined;
 	Notification: undefined;
+	RankTryOut: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -43,13 +45,7 @@ function TabNavigation() {
 						case "MyTryOut":
 							return <FontAwesome5 name="tasks" size={24} color={color} />;
 						case "Pyment":
-							return (
-								<MaterialCommunityIcons
-									name="cart-outline"
-									size={30}
-									color={color}
-								/>
-							);
+							return <MaterialCommunityIcons name="cart-outline" size={30} color={color} />;
 						case "Profile":
 							return <AntDesign name="user" size={30} color={color} />;
 						default:
@@ -96,6 +92,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="TryOut" component={TryOutScreen} />
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
+						<Stack.Screen name="RankTryOut" component={RankTryOutScreen} />
 					</>
 				)}
 				{!userInfo.isAuth && (

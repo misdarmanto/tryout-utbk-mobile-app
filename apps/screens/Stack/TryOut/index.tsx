@@ -14,8 +14,8 @@ import { CheckAnswerTypes } from "./types/tryOutContextTypes";
 type TryOutScreenPropsTypes = NativeStackScreenProps<RootParamList, "TryOut">;
 
 export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
-	const [tryOutState, setTryOutState] = useState<string>("start");
-	const [tryOutData, setTryOutData] = useState<TryOutDataTypes[]>(TRYOUT_DATA);
+	const [tryOutState, setTryOutState] = useState<"start" | "play" | "finish" | "review">("start");
+	const [tryOutData, setTryOutData] = useState<TryOutDataTypes>(TRYOUT_DATA);
 	const checkAnswer: CheckAnswerTypes = { correct: 0, wrong: 0, empty: 0 };
 
 	let renderScreen;

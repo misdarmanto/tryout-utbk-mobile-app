@@ -2,24 +2,11 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Box, HStack, Text, Heading, ScrollView } from "native-base";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
-import {
-	FontAwesome5,
-	MaterialIcons,
-	Fontisto,
-	MaterialCommunityIcons,
-	Ionicons,
-} from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons, Fontisto, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { RootParamList } from "../../navigations";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
-import {
-	PropsWithChildren,
-	useCallback,
-	useContext,
-	useEffect,
-	useLayoutEffect,
-	useState,
-} from "react";
+import { PropsWithChildren, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types/contextApiTypes";
@@ -44,6 +31,14 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		}, 2000);
 	}, []);
 
+	const handleCardOnPress = (isFinish: boolean | any) => {
+		if (isFinish) {
+			navigation.navigate("RankTryOut");
+		} else {
+			navigation.navigate("TryOut");
+		}
+	};
+
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			title: "",
@@ -57,11 +52,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			headerRight: () => (
 				<HStack px="3" alignItems="center" space={2}>
 					<TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-						<Ionicons
-							name="ios-notifications"
-							size={30}
-							color={BASE_COLOR.text.primary}
-						/>
+						<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
 					</TouchableOpacity>
 				</HStack>
 			),
@@ -70,10 +61,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 
 	const IconRounded: React.FC<PropsWithChildren> = ({ children }) => {
 		return (
-			<TouchableOpacity
-				onPress={() => navigation.navigate("DetailTryOut")}
-				activeOpacity={0.8}
-			>
+			<TouchableOpacity onPress={() => navigation.navigate("DetailTryOut")} activeOpacity={0.8}>
 				<Box backgroundColor={BASE_COLOR.primary} rounded="full" p={5}>
 					{children}
 				</Box>
@@ -133,16 +121,12 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 						</HStack>
 					</Box>
 
-					<Heading mt="5" color={BASE_COLOR.text.primary} fontStyle="italic">
+					<Heading mt="5" color={BASE_COLOR.text.primary} fontFamily="lato" fontStyle="italic">
 						Recomend
 					</Heading>
 
 					{cardData.map((item) => (
-						<CardTryOut
-							key={item.id}
-							{...item}
-							onPress={() => navigation.navigate("TryOut")}
-						/>
+						<CardTryOut key={item.id} {...item} onPress={() => handleCardOnPress(item.isFinish)} />
 					))}
 				</ScrollView>
 			)}
@@ -194,6 +178,7 @@ const cardData: CardTryOutTypes[] = [
 		enrollTotal: 1000,
 		exampTotal: 50,
 		isFree: true,
+		isFinish: false,
 	},
 	{
 		id: 2,
@@ -202,6 +187,7 @@ const cardData: CardTryOutTypes[] = [
 		exampTotal: 50,
 		coinTotal: 300,
 		isFree: false,
+		isFinish: true,
 	},
 	{
 		id: 3,
@@ -209,6 +195,7 @@ const cardData: CardTryOutTypes[] = [
 		enrollTotal: 1000,
 		exampTotal: 50,
 		isFree: true,
+		isFinish: false,
 	},
 	{
 		id: 4,
@@ -217,6 +204,7 @@ const cardData: CardTryOutTypes[] = [
 		exampTotal: 50,
 		coinTotal: 300,
 		isFree: false,
+		isFinish: true,
 	},
 	{
 		id: 5,
@@ -224,6 +212,7 @@ const cardData: CardTryOutTypes[] = [
 		enrollTotal: 1000,
 		exampTotal: 50,
 		isFree: true,
+		isFinish: false,
 	},
 	{
 		id: 6,
@@ -232,5 +221,6 @@ const cardData: CardTryOutTypes[] = [
 		exampTotal: 50,
 		coinTotal: 300,
 		isFree: false,
+		isFinish: false,
 	},
 ];

@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FlatList, Heading, HStack } from "native-base";
+import { Box, FlatList, Heading, HStack } from "native-base";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
@@ -41,7 +41,7 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 	const Tab = () => {
 		const TAB_HEADER_NAMES = ["All", "TPS", "Saintek", "Soshum"];
 		return (
-			<HStack alignItems="center" justifyContent="space-between" px={2} py={2}>
+			<HStack alignItems="center" justifyContent="space-between" px={1} py={5}>
 				{TAB_HEADER_NAMES.map((name, index) => (
 					<RenderTabHeader
 						key={index}
@@ -80,13 +80,24 @@ interface RenderTabHeaderTypes {
 }
 
 const RenderTabHeader = ({ title, onPress, isActive }: RenderTabHeaderTypes) => (
-	<Heading
-		fontSize="xl"
-		color={isActive ? BASE_COLOR.primary : BASE_COLOR.text.primary}
-		onPress={onPress}
+	<Box
+		backgroundColor="#FFF"
+		px="5"
+		p="2"
+		mx="1"
+		borderWidth="1"
+		borderColor={isActive ? BASE_COLOR.primary : "gray.300"}
+		borderRadius="full"
 	>
-		{title}
-	</Heading>
+		<Heading
+			fontFamily="lato"
+			fontSize="md"
+			color={isActive ? BASE_COLOR.primary : BASE_COLOR.text.primary}
+			onPress={onPress}
+		>
+			{title}
+		</Heading>
+	</Box>
 );
 
 const cardData: CardTryOutTypes[] = [

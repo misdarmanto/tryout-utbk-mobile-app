@@ -7,20 +7,21 @@ import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
 import { LocalStorage } from "../../../utilities/localStorage";
 import { TryOutContextTypes } from "./types/tryOutContextTypes";
-import { TryOutDataTypes } from "./fakeData";
+import { QuestionTypes, TryOutDataTypes } from "./fakeData";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 const Play = () => {
-	const { setTryOutState, navigation, tryOutData, setTryOutData }: any =
-		useContext(tryOutContext);
+	const { setTryOutState, navigation, tryOutData, setTryOutData }: any = useContext(tryOutContext);
+
 	const { checkAnswer } = useContext<TryOutContextTypes>(tryOutContext);
 
 	const [openModal, setOpenModal] = useState(false);
 	const [choiceSelected, setChoiceSelected] = useState("");
 	const [index, setIndex] = useState(0);
 
-	let progressValue = ((index + 1) / tryOutData.length) * 100;
 	const storage = new LocalStorage("tryout1");
-	const CURRENT_QUESTION: TryOutDataTypes = tryOutData[index];
+	const CURRENT_QUESTION: QuestionTypes = tryOutData.questions[index];
+	let progressValue = ((index + 1) / tryOutData.questions.length) * 100;
 
 	useEffect(() => {
 		const currentAnswer = CURRENT_QUESTION.answer;
@@ -44,10 +45,10 @@ const Play = () => {
 	};
 
 	const handleNextQuestion = useCallback(async () => {
-		if (index === tryOutData.length - 1) {
+		if (index === tryOutData.questions.length - 1) {
 			setOpenModal(true);
 			await storage.store(tryOutData);
-			setTryOutData(tryOutData);
+			setTryOutData(CURRENT_QUESTION);
 			return;
 		}
 		handleChekAnswer();
@@ -67,10 +68,16 @@ const Play = () => {
 
 	const HeaderRightComponent = () => (
 		<HStack px="3" alignItems="center" space={2}>
-			<MaterialIcons name="timer" size={24} color={BASE_COLOR.text.primary} />
-			<Text color={BASE_COLOR.text.primary} fontSize="md">
-				60:00:20
-			</Text>
+			<CountdownCircleTimer
+				isPlaying
+				size={30}
+				duration={tryOutData.timmer}
+				strokeWidth={3}
+				colors={["#1E90FF", "#47D5C0", "#FF87A4", "#FF87A4"]}
+				colorsTime={[10, 5, 2, 0]}
+			>
+				{({ remainingTime }) => <Text>{remainingTime}</Text>}
+			</CountdownCircleTimer>
 		</HStack>
 	);
 
