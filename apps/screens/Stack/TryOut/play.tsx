@@ -1,62 +1,68 @@
-import {
-	Avatar,
-	Box,
-	Button,
-	HStack,
-	Pressable,
-	Progress,
-	ScrollView,
-	Text,
-	VStack,
-} from "native-base";
-import React, { memo, useContext, useEffect, useLayoutEffect, useState } from "react";
+import { Avatar, Box, HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
+import React, { memo, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
 import { LocalStorage } from "../../../utilities/localStorage";
+import { TryOutContextTypes } from "./types/tryOutContextTypes";
+import { TryOutDataTypes } from "./fakeData";
 
 const Play = () => {
 	const { setTryOutState, navigation, tryOutData, setTryOutData }: any =
 		useContext(tryOutContext);
-	const [openModal, setOpenModal] = useState(false);
+	const { checkAnswer } = useContext<TryOutContextTypes>(tryOutContext);
 
-	const [question, setQuestion] = useState(tryOutData[0]);
+	const [openModal, setOpenModal] = useState(false);
+	const [choiceSelected, setChoiceSelected] = useState("");
 	const [index, setIndex] = useState(0);
 
-	const [choiceSelected, setChoiceSelected] = useState("");
 	let progressValue = ((index + 1) / tryOutData.length) * 100;
-
-	console.log(tryOutData);
-
 	const storage = new LocalStorage("tryout1");
+	const CURRENT_QUESTION: TryOutDataTypes = tryOutData[index];
 
 	useEffect(() => {
-		setQuestion(tryOutData[index]);
+		const currentAnswer = CURRENT_QUESTION.answer;
+		if (currentAnswer !== "") setChoiceSelected(currentAnswer);
+		if (currentAnswer === "") setChoiceSelected("");
 	}, [index]);
 
-	const handleNextQuestion = async () => {
+	useEffect(() => {
+		CURRENT_QUESTION.answer = choiceSelected;
+		if (tryOutData[index]) checkAnswer.correct;
+	}, [choiceSelected]);
+
+	const handleChekAnswer = () => {
+		if (choiceSelected === CURRENT_QUESTION.correctAnswer) {
+			checkAnswer.correct += 1;
+		}
+		if (choiceSelected !== CURRENT_QUESTION.correctAnswer) {
+			checkAnswer.wrong = checkAnswer.wrong <= 0 ? checkAnswer.wrong + 1 : 0;
+		}
+		console.log(checkAnswer);
+	};
+
+	const handleNextQuestion = useCallback(async () => {
 		if (index === tryOutData.length - 1) {
 			setOpenModal(true);
 			await storage.store(tryOutData);
 			setTryOutData(tryOutData);
 			return;
 		}
-
-		tryOutData[index].answer = choiceSelected;
-		if (tryOutData[index].answer !== "") {
-			setChoiceSelected(tryOutData[index].answer);
-		}
-
-		setChoiceSelected("");
+		handleChekAnswer();
 		setIndex((value) => value + 1);
-	};
+	}, [index]);
 
-	const handlePreviousQuestion = async () => {
+	const handlePreviousQuestion = useCallback(() => {
 		if (0 >= index) return;
-		setChoiceSelected(tryOutData[index].answer);
+		handleChekAnswer();
 		setIndex((value) => value - 1);
+	}, [index]);
+
+	const handleSelectAnswer = (alphabet: string) => {
+		if (choiceSelected !== "") setChoiceSelected("");
+		setChoiceSelected(alphabet);
 	};
 
 	const HeaderRightComponent = () => (
@@ -95,45 +101,36 @@ const Play = () => {
 				</HStack>
 
 				<Box my="10">
-					<Text color={BASE_COLOR.text.primary}>{question.question}</Text>
+					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.question}</Text>
 				</Box>
 
 				<VStack space={2} my="10">
 					<ChoiceField
 						alphaBet="A"
-						isActive={choiceSelected === "A" || question.answer === "A"}
-						onPress={() => setChoiceSelected("A")}
-						text={question.choices.A}
+						isActive={choiceSelected === "A"}
+						onPress={() => handleSelectAnswer("A")}
+						text={CURRENT_QUESTION.choices.A}
 					/>
 					<ChoiceField
 						alphaBet="B"
-						isActive={choiceSelected === "B" || question.answer === "B"}
-						onPress={() => setChoiceSelected("B")}
-						text={question.choices.B}
+						isActive={choiceSelected === "B"}
+						onPress={() => handleSelectAnswer("B")}
+						text={CURRENT_QUESTION.choices.B}
 					/>
 					<ChoiceField
 						alphaBet="C"
-						isActive={choiceSelected === "C" || question.answer === "C"}
-						onPress={() => setChoiceSelected("C")}
-						text={question.choices.C}
+						isActive={choiceSelected === "C"}
+						onPress={() => handleSelectAnswer("C")}
+						text={CURRENT_QUESTION.choices.C}
 					/>
 					<ChoiceField
 						alphaBet="D"
-						isActive={choiceSelected === "D" || question.answer === "D"}
-						onPress={() => setChoiceSelected("D")}
-						text={question.choices.D}
+						isActive={choiceSelected === "D"}
+						onPress={() => handleSelectAnswer("D")}
+						text={CURRENT_QUESTION.choices.D}
 					/>
 				</VStack>
 			</ScrollView>
-
-			<Button
-				onPress={async () => {
-					await LocalStorage.clearAll();
-				}}
-			>
-				Clear
-			</Button>
-
 			<HStack
 				justifyContent="space-between"
 				py="3"

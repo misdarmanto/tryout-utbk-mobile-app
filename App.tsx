@@ -22,7 +22,7 @@ export default function App() {
 	const [appInfo, setAppInfo] = useState<AppInfoTypes>();
 
 	useEffect(() => {
-		setUserInfo({ name: "Jack M", email: "Jack@mail.com", coin: 50, isAuth: false });
+		setUserInfo({ name: "Jack M", email: "Jack@mail.com", coin: 500, isAuth: true });
 		setAppInfo({ countDown: "30 day, 12 hour" });
 	}, []);
 
