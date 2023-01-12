@@ -55,7 +55,7 @@ const Play = () => {
 			<CountdownCircleTimer
 				isPlaying
 				size={30}
-				duration={tryOutData.timmer}
+				duration={tryOutData.time}
 				strokeWidth={3}
 				colors={["#1E90FF", "#47D5C0", "#FF87A4", "#FF87A4"]}
 				colorsTime={[10, 5, 2, 0]}

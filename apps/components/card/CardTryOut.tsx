@@ -38,7 +38,12 @@ export const CardTryOut = (props: CardTryOutTypes) => {
 				</VStack>
 				<VStack justifyContent="space-between" width={widthPercentage(75)}>
 					<HStack justifyContent="space-between">
-						<Text fontSize="md" fontFamily="lato" fontWeight="extrabold" color={BASE_COLOR.text.primary}>
+						<Text
+							fontSize="md"
+							fontFamily="lato"
+							fontWeight="extrabold"
+							color={BASE_COLOR.text.primary}
+						>
 							{title}
 						</Text>
 						{isFree && !isFinish && (
@@ -59,8 +64,8 @@ export const CardTryOut = (props: CardTryOutTypes) => {
 						)}
 						{isFinish && (
 							<HStack space={1}>
-								<MaterialIcons name="verified-user" size={24} color={BASE_COLOR.yellow} />
-								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.yellow}>
+								<MaterialIcons name="verified-user" size={24} color={BASE_COLOR.green} />
+								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.green}>
 									done
 								</Text>
 							</HStack>

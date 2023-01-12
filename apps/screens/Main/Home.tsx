@@ -126,7 +126,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					</Heading>
 
 					{cardData.map((item) => (
-						<CardTryOut key={item.id} {...item} onPress={() => handleCardOnPress(item.isFinish)} />
+						<CardTryOut
+							key={item.id}
+							{...item}
+							onPress={() => handleCardOnPress(item.isFinish)}
+						/>
 					))}
 				</ScrollView>
 			)}

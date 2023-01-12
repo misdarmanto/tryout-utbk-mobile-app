@@ -13,9 +13,12 @@ export interface QuestionTypes {
 }
 
 export interface TryOutDataTypes {
-	timmer: number;
-	finished: boolean;
+	id: string;
+	time: number;
+	total: number;
+	enrollTotal: number;
 	questions: QuestionTypes[];
+	finish: boolean;
 }
 
 const QUESTIONS: QuestionTypes[] = [
@@ -87,7 +90,10 @@ const QUESTIONS: QuestionTypes[] = [
 ];
 
 export const TRYOUT_DATA: TryOutDataTypes = {
-	finished: false,
-	timmer: 10,
+	id: "qA12SgxVZ",
+	time: 10,
+	total: QUESTIONS.length,
+	enrollTotal: 1000,
+	finish: false,
 	questions: QUESTIONS,
 };

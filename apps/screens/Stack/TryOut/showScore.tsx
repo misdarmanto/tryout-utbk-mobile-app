@@ -1,4 +1,4 @@
-import { Box, HStack, Pressable, Text, VStack } from "native-base";
+import { Box, HStack, Pressable, Progress, Text, VStack } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { heightPercentage, widthPercentage } from "../../../utilities/dimension";
@@ -13,7 +13,7 @@ import { TryOutDataTypes } from "./fakeData";
 const ShowScore = () => {
 	const { setTryOutState, navigation, tryOutDataFinish }: any = useContext(tryOutContext);
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
-	const [score, setScore] = useState<ScoreTypes>();
+	const [score, setScore] = useState<ScoreTypes>({ correct: 0, wrong: 0, empty: 0 });
 
 	const [isError, setIsError] = useState(false);
 
@@ -21,6 +21,7 @@ const ShowScore = () => {
 		if (100 >= userInfo.coin) {
 			setIsError(true);
 		}
+
 		const finished: TryOutDataTypes = tryOutDataFinish;
 
 		const correct = finished.questions.filter((question) => {
@@ -41,9 +42,10 @@ const ShowScore = () => {
 	console.log(score);
 
 	const handleTryOutState = () => {
-		if (isError) return;
-		setTryOutState("play");
+		setTryOutState("review");
 	};
+
+	let progressValue = ((score?.correct! + 1) / tryOutDataFinish.questions.length) * 100;
 
 	return (
 		<VStack flex={1} justifyContent="center" alignItems="center">
@@ -57,51 +59,85 @@ const ShowScore = () => {
 				borderRadius="5"
 				rounded="md"
 			>
-				<HStack m={2} justifyContent="space-between">
+				<HStack alignItems="center">
+					<Progress
+						value={progressValue}
+						w={widthPercentage(68)}
+						my="5"
+						size="xl"
+						bg="coolGray.100"
+						_filledTrack={{
+							bg: BASE_COLOR.primary,
+						}}
+					/>
+					<Text color={BASE_COLOR.text.primary} ml="3" fontSize="md" fontWeight="bold">
+						{progressValue}%
+					</Text>
+				</HStack>
+
+				<HStack my={8} justifyContent="space-between">
+					<VStack
+						p={3}
+						px={5}
+						backgroundColor={BASE_COLOR.green}
+						alignItems="center"
+						justifyContent="center"
+						rounded="md"
+					>
+						<Text color="#FFF" fontFamily="lato" fontSize="md">
+							{score.correct}
+						</Text>
+						<Text color="#FFF" fontSize="sm">
+							benar
+						</Text>
+					</VStack>
+
+					<VStack
+						p={3}
+						px={5}
+						backgroundColor={BASE_COLOR.red[200]}
+						alignItems="center"
+						justifyContent="center"
+						rounded="md"
+					>
+						<Text color="#FFF" fontFamily="lato" fontSize="md">
+							{score.wrong}
+						</Text>
+						<Text color="#FFF" fontSize="sm">
+							salah
+						</Text>
+					</VStack>
+
+					<VStack
+						p={3}
+						px={5}
+						backgroundColor={BASE_COLOR.yellow}
+						alignItems="center"
+						justifyContent="center"
+						rounded="md"
+					>
+						<Text color="#FFF" fontFamily="lato" fontSize="md">
+							{score.empty}
+						</Text>
+						<Text color="#FFF" fontSize="sm">
+							salah
+						</Text>
+					</VStack>
+				</HStack>
+
+				<HStack justifyContent="space-between">
 					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<FontAwesome5 name="book" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100 soal
+							{tryOutDataFinish.total} soal
 						</Text>
 					</HStack>
-					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
-						<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
-						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100
-						</Text>
-					</HStack>
-				</HStack>
 
-				<HStack m={2} justifyContent="space-between">
 					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<MaterialIcons name="timer" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100 menit
+							{tryOutDataFinish.time} menit
 						</Text>
-					</HStack>
-					<HStack space={2}>
-						<Pressable
-							_pressed={{ backgroundColor: BASE_COLOR.blue[50] }}
-							backgroundColor={BASE_COLOR.blue[100]}
-							rounded="md"
-							p={2}
-							px={5}
-						>
-							<Text color={BASE_COLOR.text.primary} fontSize="md">
-								+
-							</Text>
-						</Pressable>
-						<Pressable
-							_pressed={{ backgroundColor: BASE_COLOR.blue[50] }}
-							backgroundColor={BASE_COLOR.blue[100]}
-							rounded="md"
-							p={2}
-							px={5}
-						>
-							<Text color={BASE_COLOR.text.primary} fontSize="md">
-								-
-							</Text>
-						</Pressable>
 					</HStack>
 				</HStack>
 
@@ -112,18 +148,10 @@ const ShowScore = () => {
 				>
 					<HStack justifyContent="center" backgroundColor={BASE_COLOR.primary} rounded="md" p={2}>
 						<Text color="#FFF" fontSize="md">
-							Mulai
+							Review
 						</Text>
 					</HStack>
 				</TouchableOpacity>
-				{isError && (
-					<HStack alignItems="center" space="1">
-						<Text color="red.500">Coin mu tidak cukup, yuk top up </Text>
-						<TouchableOpacity onPress={() => navigation.navigate("Pyment")}>
-							<Text color={BASE_COLOR.primary}>di sini!</Text>
-						</TouchableOpacity>
-					</HStack>
-				)}
 			</Box>
 		</VStack>
 	);
