@@ -1,19 +1,16 @@
 import { Avatar, Box, HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
 import React, { memo, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
 import { LocalStorage } from "../../../utilities/localStorage";
-import { TryOutContextTypes } from "./types/tryOutContextTypes";
-import { QuestionTypes, TryOutDataTypes } from "./fakeData";
+import { QuestionTypes } from "./fakeData";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 const Play = () => {
-	const { setTryOutState, navigation, tryOutData, setTryOutData }: any = useContext(tryOutContext);
-
-	const { checkAnswer } = useContext<TryOutContextTypes>(tryOutContext);
+	const { navigation, tryOutData, setTryOutDataFinish, setTryOutState }: any = useContext(tryOutContext);
 
 	const [openModal, setOpenModal] = useState(false);
 	const [choiceSelected, setChoiceSelected] = useState("");
@@ -31,33 +28,20 @@ const Play = () => {
 
 	useEffect(() => {
 		CURRENT_QUESTION.answer = choiceSelected;
-		if (tryOutData[index]) checkAnswer.correct;
 	}, [choiceSelected]);
-
-	const handleChekAnswer = () => {
-		if (choiceSelected === CURRENT_QUESTION.correctAnswer) {
-			checkAnswer.correct += 1;
-		}
-		if (choiceSelected !== CURRENT_QUESTION.correctAnswer) {
-			checkAnswer.wrong = checkAnswer.wrong <= 0 ? checkAnswer.wrong + 1 : 0;
-		}
-		console.log(checkAnswer);
-	};
 
 	const handleNextQuestion = useCallback(async () => {
 		if (index === tryOutData.questions.length - 1) {
 			setOpenModal(true);
-			await storage.store(tryOutData);
-			setTryOutData(CURRENT_QUESTION);
+			setTryOutDataFinish(tryOutData);
+			// await storage.store(tryOutData);
 			return;
 		}
-		handleChekAnswer();
 		setIndex((value) => value + 1);
 	}, [index]);
 
 	const handlePreviousQuestion = useCallback(() => {
 		if (0 >= index) return;
-		handleChekAnswer();
 		setIndex((value) => value - 1);
 	}, [index]);
 
@@ -175,7 +159,7 @@ const Play = () => {
 				modalText="Apakah yakin jawaban mu sudah selesai?"
 				btnNoTitle="Koreksi"
 				btnYesTitle="Selesai"
-				onBtnYesClick={() => setTryOutState("review")}
+				onBtnYesClick={() => setTryOutState("showScore")}
 			/>
 		</VStack>
 	);

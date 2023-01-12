@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../../components/Layout";
 import { RootParamList } from "../../../navigations/index";
 import { tryOutContext } from "./contextApi";
@@ -9,14 +9,15 @@ import Start from "./start";
 import Play from "./play";
 import Review from "./review";
 import { TryOutDataTypes, TRYOUT_DATA } from "./fakeData";
-import { CheckAnswerTypes } from "./types/tryOutContextTypes";
+import { TryoutStateTypes } from "./types/tryOutContextTypes";
+import ShowScore from "./showScore";
 
 type TryOutScreenPropsTypes = NativeStackScreenProps<RootParamList, "TryOut">;
 
 export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
-	const [tryOutState, setTryOutState] = useState<"start" | "play" | "finish" | "review">("start");
+	const [tryOutState, setTryOutState] = useState<TryoutStateTypes>("start");
 	const [tryOutData, setTryOutData] = useState<TryOutDataTypes>(TRYOUT_DATA);
-	const checkAnswer: CheckAnswerTypes = { correct: 0, wrong: 0, empty: 0 };
+	const [tryOutDataFinish, setTryOutDataFinish] = useState<TryOutDataTypes>();
 
 	let renderScreen;
 	switch (tryOutState) {
@@ -28,6 +29,9 @@ export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
 			break;
 		case "finish":
 			renderScreen = <Finish />;
+			break;
+		case "showScore":
+			renderScreen = <ShowScore />;
 			break;
 		case "review":
 			renderScreen = <Review />;
@@ -45,7 +49,8 @@ export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
 					navigation,
 					tryOutData,
 					setTryOutData,
-					checkAnswer,
+					tryOutDataFinish,
+					setTryOutDataFinish,
 				}}
 			>
 				{renderScreen}
