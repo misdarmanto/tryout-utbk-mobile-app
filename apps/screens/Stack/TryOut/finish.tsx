@@ -3,11 +3,56 @@ import { TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { heightPercentage, widthPercentage } from "../../../utilities/dimension";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
+import { RootContext } from "../../../utilities/rootContext";
+import { ContextApiTypes } from "../../../types/contextApiTypes";
+import { ScoreTypes } from "./types/tryOutContextTypes";
+import { TryOutDataTypes } from "./fakeData";
 
 const Finish = () => {
-	const { tryOutState, setTryOutState }: any = useContext(tryOutContext);
+	const { setTryOutState, navigation, tryOutDataFinish }: any = useContext(tryOutContext);
+	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+	const [score, setScore] = useState<ScoreTypes>({ correct: 0, wrong: 0, empty: 0 });
+
+	const [isError, setIsError] = useState(false);
+
+	useLayoutEffect(() => {
+		if (100 >= userInfo.coin) {
+			setIsError(true);
+		}
+
+		const finished: TryOutDataTypes = tryOutDataFinish;
+
+		const correct = finished.questions.filter((question) => {
+			return question.answer === question.correctAnswer;
+		});
+
+		const wrong = finished.questions.filter((question) => {
+			return question.answer !== question.correctAnswer && question.answer !== "";
+		});
+
+		const empty = finished.questions.filter((question) => {
+			return question.answer === "";
+		});
+
+		setScore({ correct: correct.length, wrong: wrong.length, empty: empty.length });
+	}, []);
+
+	console.log(score);
+
+	const handleTryOutState = () => {
+		setTryOutState("review");
+	};
+
+	let progressValue = ((score?.correct! + 1) / tryOutDataFinish.questions.length) * 100;
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: "Score",
+			headerRight: () => "",
+		});
+	}, []);
 
 	return (
 		<VStack flex={1} justifyContent="center" alignItems="center">
@@ -23,105 +68,92 @@ const Finish = () => {
 			>
 				<HStack alignItems="center">
 					<Progress
-						value={45}
-						w={widthPercentage(60)}
-						mx="4"
-						size="md"
+						value={progressValue}
+						w={widthPercentage(68)}
+						my="5"
+						size="xl"
 						bg="coolGray.100"
 						_filledTrack={{
 							bg: BASE_COLOR.primary,
 						}}
 					/>
-					<Text color={BASE_COLOR.text.primary} fontSize="md" fontWeight="bold">
-						80%
+					<Text color={BASE_COLOR.text.primary} ml="3" fontSize="md" fontWeight="bold">
+						{progressValue}%
 					</Text>
 				</HStack>
-				<HStack m={2} my={8} justifyContent="space-between">
+
+				<HStack my={8} justifyContent="space-between">
 					<VStack
+						p={3}
 						px={5}
-						py={3}
-						backgroundColor={BASE_COLOR.yellow}
-						rounded="md"
+						backgroundColor={BASE_COLOR.green}
 						alignItems="center"
 						justifyContent="center"
-					>
-						<Text color="#FFF" fontSize="md" fontWeight="bold">
-							10
-						</Text>
-						<Text color="#FFF" fontSize="md">
-							Benar
-						</Text>
-					</VStack>
-					<VStack
-						px={5}
-						py={3}
-						backgroundColor={BASE_COLOR.red[200]}
 						rounded="md"
-						alignItems="center"
-						justifyContent="center"
 					>
-						<Text color="#FFF" fontSize="md" fontWeight="bold">
-							10
+						<Text color="#FFF" fontFamily="lato" fontSize="md">
+							{score.correct}
 						</Text>
-						<Text color="#FFF" fontSize="md">
-							Salah
+						<Text color="#FFF" fontSize="sm">
+							benar
 						</Text>
 					</VStack>
 
 					<VStack
-						px={4}
-						py={3}
-						backgroundColor={BASE_COLOR.text.secondaryGray}
-						rounded="md"
+						p={3}
+						px={5}
+						backgroundColor={BASE_COLOR.red[200]}
 						alignItems="center"
 						justifyContent="center"
+						rounded="md"
 					>
-						<Text color="#FFF" fontSize="md" fontWeight="bold">
-							0
+						<Text color="#FFF" fontFamily="lato" fontSize="md">
+							{score.wrong}
 						</Text>
-						<Text color="#FFF" fontSize="md">
-							Kosong
+						<Text color="#FFF" fontSize="sm">
+							salah
+						</Text>
+					</VStack>
+
+					<VStack
+						p={3}
+						px={5}
+						backgroundColor={BASE_COLOR.yellow}
+						alignItems="center"
+						justifyContent="center"
+						rounded="md"
+					>
+						<Text color="#FFF" fontFamily="lato" fontSize="md">
+							{score.empty}
+						</Text>
+						<Text color="#FFF" fontSize="sm">
+							salah
 						</Text>
 					</VStack>
 				</HStack>
 
-				<HStack m={2} justifyContent="space-between">
-					<HStack
-						space={2}
-						p={2}
-						px={5}
-						backgroundColor={BASE_COLOR.blue[100]}
-						rounded="md"
-					>
+				<HStack justifyContent="space-between">
+					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<FontAwesome5 name="book" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100 soal
+							{tryOutDataFinish.total} soal
 						</Text>
 					</HStack>
-					<HStack
-						space={2}
-						p={2}
-						px={5}
-						backgroundColor={BASE_COLOR.blue[100]}
-						rounded="md"
-					>
+
+					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<MaterialIcons name="timer" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100 menit
+							{tryOutDataFinish.time} menit
 						</Text>
 					</HStack>
 				</HStack>
 
 				<TouchableOpacity
 					style={{ marginVertical: heightPercentage(5) }}
-					onPress={() => setTryOutState("play")}
+					onPress={handleTryOutState}
+					disabled={isError}
 				>
-					<HStack
-						justifyContent="center"
-						backgroundColor={BASE_COLOR.primary}
-						rounded="full"
-						p={2}
-					>
+					<HStack justifyContent="center" backgroundColor={BASE_COLOR.primary} rounded="md" p={2}>
 						<Text color="#FFF" fontSize="md">
 							Review
 						</Text>

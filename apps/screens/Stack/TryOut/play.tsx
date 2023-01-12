@@ -1,4 +1,4 @@
-import { Avatar, Box, HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
+import { Box, HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
 import React, { memo, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { AntDesign } from "@expo/vector-icons";
@@ -8,6 +8,7 @@ import ModalPrimary from "../../../components/Modal/ModalPrimary";
 import { LocalStorage } from "../../../utilities/localStorage";
 import { QuestionTypes } from "./fakeData";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import ChoiceField from "../../../components/form/choiceField";
 
 const Play = () => {
 	const { navigation, tryOutData, setTryOutDataFinish, setTryOutState }: any = useContext(tryOutContext);
@@ -67,6 +68,7 @@ const Play = () => {
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
+			title: "TryOut",
 			headerRight: () => <HeaderRightComponent />,
 		});
 	}, []);
@@ -159,48 +161,9 @@ const Play = () => {
 				modalText="Apakah yakin jawaban mu sudah selesai?"
 				btnNoTitle="Koreksi"
 				btnYesTitle="Selesai"
-				onBtnYesClick={() => setTryOutState("showScore")}
+				onBtnYesClick={() => setTryOutState("finish")}
 			/>
 		</VStack>
-	);
-};
-
-interface ChoiceFieldTypes {
-	alphaBet: string;
-	text: string;
-	isActive?: boolean;
-	onPress: any;
-}
-
-const ChoiceField = ({ alphaBet, text, isActive, onPress }: ChoiceFieldTypes) => {
-	return (
-		<Pressable
-			onPress={onPress}
-			py="3"
-			px="5"
-			borderWidth="1"
-			borderColor="gray.100"
-			bg={isActive ? BASE_COLOR.primary : "#FFF"}
-			rounded="md"
-			_pressed={{ bg: BASE_COLOR.blue[100] }}
-		>
-			<HStack alignItems="center" space={3}>
-				<Avatar
-					size="md"
-					backgroundColor={isActive ? "#FFF" : BASE_COLOR.primary}
-					_text={{
-						color: isActive ? BASE_COLOR.primary : "#FFF",
-						fontSize: "xl",
-						fontWeight: "bold",
-					}}
-				>
-					{alphaBet}
-				</Avatar>
-				<Text fontSize="md" color={isActive ? "#FFF" : BASE_COLOR.text.primary}>
-					{text}
-				</Text>
-			</HStack>
-		</Pressable>
 	);
 };
 

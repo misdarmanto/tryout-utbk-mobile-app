@@ -7,9 +7,12 @@ import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { RootContext } from "../../../utilities/rootContext";
 import { ContextApiTypes } from "../../../types/contextApiTypes";
+import { TryOutContextTypes } from "./types/tryOutContextTypes";
 
 const Start = () => {
 	const { setTryOutState, navigation }: any = useContext(tryOutContext);
+
+	const { tryOutData } = useContext<TryOutContextTypes>(tryOutContext);
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 
 	const [isError, setIsError] = useState(false);
@@ -24,6 +27,15 @@ const Start = () => {
 		if (isError) return;
 		setTryOutState("play");
 	};
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: "Start",
+			headerRight: () => "",
+		});
+	}, []);
+
+	if (!tryOutData) return <Text></Text>;
 
 	return (
 		<VStack flex={1} justifyContent="center" alignItems="center">
@@ -41,43 +53,25 @@ const Start = () => {
 					Title Tryout #1
 				</Heading>
 				<HStack m={2} justifyContent="space-between">
-					<HStack
-						space={2}
-						p={2}
-						px={5}
-						backgroundColor={BASE_COLOR.blue[100]}
-						rounded="md"
-					>
+					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<FontAwesome5 name="book" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100 soal
+							{tryOutData.total} soal
 						</Text>
 					</HStack>
-					<HStack
-						space={2}
-						p={2}
-						px={5}
-						backgroundColor={BASE_COLOR.blue[100]}
-						rounded="md"
-					>
+					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100
+							{tryOutData.coin}
 						</Text>
 					</HStack>
 				</HStack>
 
 				<HStack m={2} justifyContent="space-between">
-					<HStack
-						space={2}
-						p={2}
-						px={5}
-						backgroundColor={BASE_COLOR.blue[100]}
-						rounded="md"
-					>
+					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
 						<MaterialIcons name="timer" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							100 menit
+							{tryOutData.time} menit
 						</Text>
 					</HStack>
 					<HStack space={2}>
@@ -111,12 +105,7 @@ const Start = () => {
 					onPress={handleTryOutState}
 					disabled={isError}
 				>
-					<HStack
-						justifyContent="center"
-						backgroundColor={BASE_COLOR.primary}
-						rounded="md"
-						p={2}
-					>
+					<HStack justifyContent="center" backgroundColor={BASE_COLOR.primary} rounded="md" p={2}>
 						<Text color="#FFF" fontSize="md">
 							Mulai
 						</Text>

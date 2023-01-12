@@ -5,7 +5,7 @@ import { heightPercentage, widthPercentage } from "../../utilities/dimension";
 import { Text } from "native-base";
 import { BASE_COLOR } from "../../utilities/baseColor";
 
-export default function NotInternetSCree() {
+export default function NotInternetAnimation() {
 	return (
 		<View
 			style={{

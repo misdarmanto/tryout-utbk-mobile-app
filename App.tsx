@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
 import AppNavigations from "./apps/navigations";
-import { NativeBaseProvider, extendTheme, Text } from "native-base";
+import { NativeBaseProvider, extendTheme } from "native-base";
+import { Text } from "react-native";
 import { RootContext } from "./apps/utilities/rootContext";
 import { AppInfoTypes, UserInfoTypes } from "./apps/types/contextApiTypes";
 import { useFonts } from "expo-font";
 import NetInfo from "@react-native-community/netinfo";
-import NotInternetScreen from "./apps/screens/Stack/OflineScreen";
+import { onAuthStateChanged } from "firebase/auth";
+
+import { LogBox } from "react-native";
+import _ from "lodash";
+import { auth } from "./apps/configs/firebase";
+import NotInternetAnimation from "./apps/components/animations/Ofline";
+import LoadingAnimation from "./apps/components/animations/Loading";
+LogBox.ignoreLogs(["Warning:..."]); // ignore specific logs
+LogBox.ignoreAllLogs(); // ignore all logs
+const _console = _.clone(console);
+console.warn = (message) => {
+	if (message.indexOf("Setting a timer") <= -1) {
+		_console.warn(message);
+	}
+};
 
 // Define the config
 const config = {
@@ -24,6 +39,7 @@ export default function App() {
 	const [userInfo, setUserInfo] = useState<UserInfoTypes>();
 	const [appInfo, setAppInfo] = useState<AppInfoTypes>();
 	const [isOffline, setIsOffLine] = useState<any>(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
@@ -34,8 +50,28 @@ export default function App() {
 	}, []);
 
 	useEffect(() => {
-		setUserInfo({ name: "Jack M", email: "Jack@mail.com", coin: 500, isAuth: true });
-		setAppInfo({ countDown: "30 day, 12 hour" });
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				const userData: UserInfoTypes = {
+					isAuth: true,
+					email: user.email + "",
+					name: user.displayName + "",
+					coin: 500,
+				};
+				setAppInfo({ countDown: "30 day, 12 hour" });
+				setUserInfo(userData);
+			} else {
+				const userData: UserInfoTypes = {
+					isAuth: false,
+					email: "",
+					name: "",
+					coin: 0,
+				};
+				setUserInfo(userData);
+				setAppInfo({ countDown: "30 day, 12 hour" });
+			}
+			setIsLoading(false);
+		});
 	}, []);
 
 	const [loaded] = useFonts({
@@ -47,10 +83,12 @@ export default function App() {
 		return null;
 	}
 
+	if (isLoading) return <Text>Loading...</Text>;
+
 	return (
 		<NativeBaseProvider>
 			<RootContext.Provider value={{ userInfo, appInfo }}>
-				{/* {isOffline ? <NotInternetScreen /> : <AppNavigations />} */}
+				{/* {isOffline ? <NotInternetAnimation /> : <AppNavigations />} */}
 				<AppNavigations />
 			</RootContext.Provider>
 		</NativeBaseProvider>

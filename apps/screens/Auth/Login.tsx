@@ -18,6 +18,9 @@ import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { MaterialIcons } from "@expo/vector-icons";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../configs/firebase";
+
 type LoginScreenPropsTypes = NativeStackScreenProps<RootParamList, "Login">;
 
 export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
@@ -36,8 +39,8 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 		setErrorInput({ inputName: "", isError: false, message: "" });
 	};
 
-	const handleSubmit = () => {
-		let inputName = "";
+	const handleSubmit = async () => {
+		let inputName = "default";
 		try {
 			if (email === "") {
 				inputName = "email";
@@ -53,8 +56,32 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 				inputName = "password";
 				throw Error("password minimal 6 karakter!");
 			}
+
+			const userCredential = await signInWithEmailAndPassword(auth, email, password);
+			console.log(userCredential);
 		} catch (error: any) {
 			console.log(error);
+			switch (error.code) {
+				case "auth/invalid-email":
+					error.message = "Opss... email tidak valid";
+					break;
+				case "auth/email-already-in-use":
+					error.message = "Opss... email sudah digunakan";
+					break;
+				case "auth/user-not-found":
+					error.message = "Opss... user tidak ditemukan, silahkan buat akun";
+					break;
+				case "auth/wrong-password":
+					error.message = "Opss... Password salah";
+					break;
+				case "auth/too-many-requests":
+					error.message =
+						"Access to this account has been temporarily disabled due to many failed login attempts. try again later!";
+
+					break;
+				default:
+					break;
+			}
 			setErrorInput({ inputName: inputName, isError: true, message: error.message });
 		}
 	};
@@ -91,12 +118,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 							isInvalid={errorInput.isError && errorInput.inputName === "email"}
 							onChangeText={handleSetEmail}
 							InputLeftElement={
-								<Icon
-									as={<MaterialIcons name="email" />}
-									size={5}
-									ml="2"
-									color="muted.400"
-								/>
+								<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />
 							}
 							placeholder="E-mail"
 							_focus={{ bg: BASE_COLOR.blue[100], borderColor: BASE_COLOR.primary }}
@@ -123,9 +145,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 									<Icon
 										as={
 											<MaterialIcons
-												name={
-													showPassword ? "visibility" : "visibility-off"
-												}
+												name={showPassword ? "visibility" : "visibility-off"}
 											/>
 										}
 										size={5}
@@ -146,6 +166,19 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 							{errorInput.message}
 						</FormControl.ErrorMessage>
 					</FormControl>
+
+					<FormControl>
+						<FormControl.ErrorMessage
+							isInvalid={errorInput.isError && errorInput.inputName === "default"}
+							leftIcon={<WarningOutlineIcon size="xs" />}
+							_text={{
+								fontSize: "xs",
+							}}
+						>
+							{errorInput.message}
+						</FormControl.ErrorMessage>
+					</FormControl>
+
 					<Pressable
 						onPress={handleSubmit}
 						bg={BASE_COLOR.primary}

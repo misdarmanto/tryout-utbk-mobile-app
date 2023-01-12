@@ -18,6 +18,7 @@ export interface TryOutDataTypes {
 	total: number;
 	enrollTotal: number;
 	questions: QuestionTypes[];
+	coin: number;
 	finish: boolean;
 }
 
@@ -95,5 +96,6 @@ export const TRYOUT_DATA: TryOutDataTypes = {
 	total: QUESTIONS.length,
 	enrollTotal: 1000,
 	finish: false,
+	coin: 50,
 	questions: QUESTIONS,
 };

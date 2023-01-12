@@ -1,4 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../configs/firebase";
+
 import {
 	Box,
 	FormControl,
@@ -13,6 +16,7 @@ import {
 	VStack,
 	WarningOutlineIcon,
 } from "native-base";
+
 import { useState } from "react";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
@@ -43,8 +47,8 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 		setErrorInput({ inputName: "", isError: false, message: "" });
 	};
 
-	const handleSubmit = () => {
-		let inputName = "";
+	const handleSubmit = async () => {
+		let inputName = "default";
 		try {
 			if (email === "") {
 				inputName = "email";
@@ -63,10 +67,25 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 
 			if (password.length < 6) {
 				inputName = "password";
-				throw Error("password minimal 6 karakter!");
+				throw Error("gunakan password minimal 6 karakter!");
 			}
+
+			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+			console.log(userCredential);
 		} catch (error: any) {
 			console.log(error);
+			switch (error.code) {
+				case "auth/invalid-email":
+					error.message = "Opss... email tidak valid";
+					break;
+				case "auth/email-already-in-use":
+					error.message = "email sudah digunakan";
+					break;
+				case "auth/weak-password":
+					error.message = "password tidak aman. gunakan password lain!";
+
+					break;
+			}
 			setErrorInput({ inputName: inputName, isError: true, message: error.message });
 		}
 	};
@@ -154,9 +173,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 							<FormControl.Label>Password</FormControl.Label>
 							<Input
 								onChangeText={handleSetPassword}
-								isInvalid={
-									errorInput.isError && errorInput.inputName === "password"
-								}
+								isInvalid={errorInput.isError && errorInput.inputName === "password"}
 								type={showPassword ? "text" : "password"}
 								_focus={{
 									bg: BASE_COLOR.blue[100],
@@ -167,11 +184,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 										<Icon
 											as={
 												<MaterialIcons
-													name={
-														showPassword
-															? "visibility"
-															: "visibility-off"
-													}
+													name={showPassword ? "visibility" : "visibility-off"}
 												/>
 											}
 											size={5}
@@ -183,9 +196,19 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 								placeholder="Password"
 							/>
 							<FormControl.ErrorMessage
-								isInvalid={
-									errorInput.isError && errorInput.inputName === "password"
-								}
+								isInvalid={errorInput.isError && errorInput.inputName === "password"}
+								leftIcon={<WarningOutlineIcon size="xs" />}
+								_text={{
+									fontSize: "xs",
+								}}
+							>
+								{errorInput.message}
+							</FormControl.ErrorMessage>
+						</FormControl>
+
+						<FormControl>
+							<FormControl.ErrorMessage
+								isInvalid={errorInput.isError && errorInput.inputName === "default"}
 								leftIcon={<WarningOutlineIcon size="xs" />}
 								_text={{
 									fontSize: "xs",

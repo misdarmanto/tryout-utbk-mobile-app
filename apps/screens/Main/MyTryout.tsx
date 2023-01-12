@@ -1,16 +1,20 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Box, FlatList, Heading, HStack } from "native-base";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
 import TryOutScreenSkeleton from "../../components/skeleton/TryOutScreenSkeleton";
 import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
+import { RootContext } from "../../utilities/rootContext";
+import { ContextApiTypes } from "../../types/contextApiTypes";
 
 type MyTryOutPropsTypes = NativeStackScreenProps<RootParamList, "MyTryOut">;
 
 export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
+	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+
 	const [tryoutData, setTryoutData] = useState<CardTryOutTypes[]>(cardData);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("All");
@@ -36,6 +40,14 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 		}
 		const newTab = cardData.filter((item: CardTryOutTypes) => item.category === category);
 		setTryoutData(newTab);
+	};
+
+	const handleCardOnPress = () => {
+		if (!userInfo.isAuth) {
+			navigation.navigate("Login");
+			return;
+		}
+		navigation.navigate("DetailTryOut");
 	};
 
 	const Tab = () => {
@@ -64,9 +76,7 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 					ListHeaderComponent={() => <Tab />}
 					data={tryoutData}
 					keyExtractor={(item) => item.id + ""}
-					renderItem={({ item }) => (
-						<CardTryOut onPress={() => navigation.navigate("DetailTryOut")} {...item} />
-					)}
+					renderItem={({ item }) => <CardTryOut onPress={handleCardOnPress} {...item} />}
 				/>
 			)}
 		</Layout>

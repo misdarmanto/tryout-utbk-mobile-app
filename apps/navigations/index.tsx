@@ -34,6 +34,7 @@ export type RootParamList = {
 const Tab = createBottomTabNavigator<RootParamList>();
 
 function TabNavigation() {
+	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
@@ -59,7 +60,7 @@ function TabNavigation() {
 			<Tab.Screen name="Home" component={HomeScreen} />
 			<Tab.Screen name="MyTryOut" component={MyTryOutScreen} />
 			<Tab.Screen name="Pyment" component={PymentScreen} />
-			<Tab.Screen name="Profile" component={ProfileScreen} />
+			{userInfo.isAuth && <Tab.Screen name="Profile" component={ProfileScreen} />}
 		</Tab.Navigator>
 	);
 }
@@ -80,15 +81,15 @@ export default function AppNavigations() {
 	return (
 		<NavigationContainer theme={MyTheme}>
 			<Stack.Navigator initialRouteName="Main">
+				<Stack.Screen
+					name="Main"
+					component={TabNavigation}
+					options={{
+						headerShown: false,
+					}}
+				/>
 				{userInfo.isAuth && (
 					<>
-						<Stack.Screen
-							name="Main"
-							component={TabNavigation}
-							options={{
-								headerShown: false,
-							}}
-						/>
 						<Stack.Screen name="TryOut" component={TryOutScreen} />
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />

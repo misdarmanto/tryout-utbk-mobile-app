@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, HStack, Text, Heading, ScrollView } from "native-base";
+import { Box, HStack, Text, Heading, ScrollView, Pressable } from "native-base";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
 import { FontAwesome5, MaterialIcons, Fontisto, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
@@ -32,6 +32,10 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	}, []);
 
 	const handleCardOnPress = (isFinish: boolean | any) => {
+		if (!userInfo.isAuth) {
+			navigation.navigate("Login");
+			return;
+		}
 		if (isFinish) {
 			navigation.navigate("RankTryOut");
 		} else {
@@ -45,28 +49,64 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			headerLeft: () => (
 				<HStack px="2" alignItems="center" space={2}>
 					<Text color={BASE_COLOR.text.primary} fontSize="xl">
-						Hi, {userInfo.name}
+						{userInfo.isAuth ? `Hi, ${userInfo.name}` : "Welcome"}
 					</Text>
 				</HStack>
 			),
 			headerRight: () => (
 				<HStack px="3" alignItems="center" space={2}>
-					<TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-						<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
-					</TouchableOpacity>
+					{userInfo.isAuth && (
+						<TouchableOpacity onPress={() => navigation.navigate("Notification")}>
+							<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
+						</TouchableOpacity>
+					)}
+					{!userInfo.isAuth && (
+						<Pressable
+							borderWidth="1"
+							borderColor={BASE_COLOR.text.primary}
+							px="2"
+							mx="2"
+							p="1"
+							rounded="md"
+							onPress={() => navigation.navigate("Login")}
+							_pressed={{
+								backgroundColor: BASE_COLOR.blue[100],
+							}}
+						>
+							<Text color={BASE_COLOR.text.primary} fontSize="md" fontWeight="bold">
+								Login
+							</Text>
+						</Pressable>
+					)}
 				</HStack>
 			),
 		});
-	}, []);
+	}, [userInfo.isAuth]);
 
 	const IconRounded: React.FC<PropsWithChildren> = ({ children }) => {
+		const handleIconOnPress = () => {
+			if (!userInfo.isAuth) {
+				navigation.navigate("Login");
+				return;
+			}
+			navigation.navigate("DetailTryOut");
+		};
+
 		return (
-			<TouchableOpacity onPress={() => navigation.navigate("DetailTryOut")} activeOpacity={0.8}>
+			<TouchableOpacity onPress={handleIconOnPress} activeOpacity={0.8}>
 				<Box backgroundColor={BASE_COLOR.primary} rounded="full" p={5}>
 					{children}
 				</Box>
 			</TouchableOpacity>
 		);
+	};
+
+	const handleOnTopUpPress = () => {
+		if (!userInfo.isAuth) {
+			navigation.navigate("Login");
+			return;
+		}
+		navigation.navigate("Pyment");
 	};
 
 	return (
@@ -80,7 +120,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					<Banner
 						countDown={appInfo.countDown}
 						coin={userInfo.coin}
-						onTopUpPress={() => navigation.navigate("Pyment")}
+						onTopUpPress={handleOnTopUpPress}
 					/>
 					<Box
 						borderWidth={1}

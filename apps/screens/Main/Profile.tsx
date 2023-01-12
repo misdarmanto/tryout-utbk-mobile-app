@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useContext } from "react";
+import React, { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Avatar, Heading, HStack, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
@@ -8,11 +8,20 @@ import { BASE_COLOR } from "../../utilities/baseColor";
 import { TouchableOpacity } from "react-native";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types/contextApiTypes";
+import { signOut } from "firebase/auth";
+import { auth } from "../../configs/firebase";
+import ModalPrimary from "../../components/Modal/ModalPrimary";
 
 type ProfilePropsTypes = NativeStackScreenProps<RootParamList, "Profile">;
 
 export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+	const [openModal, setOpenModal] = useState(false);
+
+	const handleLogOut = async () => {
+		await signOut(auth);
+	};
+
 	return (
 		<Layout>
 			<HStack
@@ -50,43 +59,49 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 				</CardProfileList>
 
 				<CardProfileList>
-					<MaterialCommunityIcons
-						name="key-outline"
-						size={30}
-						color={BASE_COLOR.text.primary}
-					/>
+					<MaterialCommunityIcons name="key-outline" size={30} color={BASE_COLOR.text.primary} />
 					<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
 						Reset Password
 					</Text>
 				</CardProfileList>
 
-				<CardProfileList>
-					<Ionicons name="exit-outline" size={30} color={BASE_COLOR.text.primary} />
-					<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Keluar
-					</Text>
-				</CardProfileList>
+				<TouchableOpacity activeOpacity={0.5} onPress={() => setOpenModal(true)}>
+					<CardProfileList>
+						<Ionicons name="exit-outline" size={30} color={BASE_COLOR.text.primary} />
+						<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
+							Keluar
+						</Text>
+					</CardProfileList>
+				</TouchableOpacity>
 			</VStack>
+
+			<ModalPrimary
+				openModel={openModal}
+				onCloseModal={setOpenModal}
+				modalHeaderTitle="Keluar"
+				modalText="Apakah anda yakin ingin keluar?"
+				btnNoTitle="cancel"
+				btnYesTitle="keluar"
+				onBtnYesClick={handleLogOut}
+			/>
 		</Layout>
 	);
 }
 
 const CardProfileList: React.FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<TouchableOpacity activeOpacity={0.5}>
-			<HStack
-				backgroundColor="#FFF"
-				p={5}
-				space={5}
-				alignItems="center"
-				borderWidth={1}
-				borderColor="gray.200"
-				my={1}
-				borderRadius="5"
-				rounded="md"
-			>
-				{children}
-			</HStack>
-		</TouchableOpacity>
+		<HStack
+			backgroundColor="#FFF"
+			p={5}
+			space={5}
+			alignItems="center"
+			borderWidth={1}
+			borderColor="gray.200"
+			my={1}
+			borderRadius="5"
+			rounded="md"
+		>
+			{children}
+		</HStack>
 	);
 };
