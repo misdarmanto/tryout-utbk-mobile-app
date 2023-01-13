@@ -13,6 +13,7 @@ import _ from "lodash";
 import { auth } from "./apps/configs/firebase";
 import NotInternetAnimation from "./apps/components/animations/Ofline";
 import LoadingAnimation from "./apps/components/animations/Loading";
+import { FireStoreUserDB } from "./apps/firebase/firebaseDB";
 LogBox.ignoreLogs(["Warning:..."]); // ignore specific logs
 LogBox.ignoreAllLogs(); // ignore all logs
 const _console = _.clone(console);
@@ -51,26 +52,28 @@ export default function App() {
 
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				const userData: UserInfoTypes = {
-					isAuth: true,
-					email: user.email + "",
-					name: user.displayName + "",
-					coin: 500,
-				};
-				setAppInfo({ countDown: "30 day, 12 hour" });
-				setUserInfo(userData);
-			} else {
-				const userData: UserInfoTypes = {
-					isAuth: false,
-					email: "",
-					name: "",
-					coin: 0,
-				};
-				setUserInfo(userData);
-				setAppInfo({ countDown: "30 day, 12 hour" });
-			}
-			setIsLoading(false);
+			(async () => {
+				if (user) {
+					const userDb = new FireStoreUserDB();
+					const userData: UserInfoTypes = await userDb.getUser({ documentId: user.email! });
+					console.log(userData);
+					userData.isAuth = true;
+					setUserInfo(userData);
+					setAppInfo({ countDown: "30 day, 12 hour" });
+				}
+
+				if (!user) {
+					const userData: UserInfoTypes = {
+						isAuth: false,
+						email: "",
+						name: "",
+						coin: 0,
+					};
+					setUserInfo(userData);
+					setAppInfo({ countDown: "30 day, 12 hour" });
+				}
+				setIsLoading(false);
+			})();
 		});
 	}, []);
 

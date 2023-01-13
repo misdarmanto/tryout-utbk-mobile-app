@@ -1,4 +1,4 @@
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { firestoreDB } from "../configs/firebase";
 import { TryOutDataTypes } from "../screens/Stack/TryOut/fakeData";
 import { UserInfoTypes } from "../types/userInfoTypes";
@@ -19,12 +19,25 @@ export class FireStoreTryOutDB {
 }
 
 export class FireStoreUserDB {
-	private collectionPath = doc(collection(firestoreDB, "User"));
-	private documentPath = (documentId: string) => doc(firestoreDB, documentId, "User");
+	private collectionName = "User";
+	private collectionPath = doc(collection(firestoreDB, this.collectionName));
+	private documentPath = (documentId: string) => doc(firestoreDB, this.collectionName, documentId);
 
 	public async setUser({ documentId, data }: { documentId: string; data: UserInfoTypes }) {
 		try {
-			await setDoc(doc(firestoreDB, documentId, "User"), data);
+			await setDoc(this.documentPath(documentId.toLowerCase()), data);
+			return this;
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	}
+
+	public async getUser({ documentId }: { documentId: string }) {
+		try {
+			const docSnap = await getDoc(this.documentPath(documentId));
+			if (!docSnap.exists()) throw Error("No such document!");
+			return docSnap.data();
 		} catch (error: any) {
 			console.log(error);
 			return error;

@@ -32,6 +32,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [errorInput, setErrorInput] = useState({ inputName: "", isError: false, message: "" });
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSetEmail = (input: string) => {
 		setEmail(input);
@@ -49,6 +50,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 	};
 
 	const handleSubmit = async () => {
+		setIsLoading(true);
 		let inputName = "default";
 		try {
 			if (email === "") {
@@ -71,19 +73,19 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				throw Error("gunakan password minimal 6 karakter!");
 			}
 
+			await createUserWithEmailAndPassword(auth, email, password);
+
 			const userDb = new FireStoreUserDB();
 			await userDb.setUser({
-				documentId: email,
+				documentId: email.toLocaleLowerCase(),
 				data: {
 					name: name,
-					email: email,
+					email: email.toLocaleLowerCase(),
 					coin: 50,
 					enrollTryOutId: [],
-					notifications: [],
+					notifications: [{ id: Date.now() + "", message: `Welcome ${name} to tryout utbk 2023` }],
 				},
 			});
-
-			await createUserWithEmailAndPassword(auth, email, password);
 		} catch (error: any) {
 			console.log(error);
 			switch (error.code) {
@@ -99,6 +101,8 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 					break;
 			}
 			setErrorInput({ inputName: inputName, isError: true, message: error.message });
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -232,13 +236,14 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 
 						<Pressable
 							onPress={handleSubmit}
+							disabled={isLoading}
 							bg={BASE_COLOR.primary}
 							p="2"
 							rounded="xl"
 							_pressed={{ bg: BASE_COLOR.blue[200] }}
 						>
 							<Text textAlign="center" fontSize="xl" color="#FFF">
-								Sign Up
+								{isLoading ? "Submit..." : "Sign Up"}
 							</Text>
 						</Pressable>
 

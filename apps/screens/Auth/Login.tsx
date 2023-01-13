@@ -28,6 +28,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [errorInput, setErrorInput] = useState({ inputName: "", isError: false, message: "" });
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSetEmail = (input: string) => {
 		setEmail(input);
@@ -40,6 +41,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 	};
 
 	const handleSubmit = async () => {
+		setIsLoading(true);
 		let inputName = "default";
 		try {
 			if (email === "") {
@@ -57,8 +59,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 				throw Error("password minimal 6 karakter!");
 			}
 
-			const userCredential = await signInWithEmailAndPassword(auth, email, password);
-			console.log(userCredential);
+			await signInWithEmailAndPassword(auth, email, password);
 		} catch (error: any) {
 			console.log(error);
 			switch (error.code) {
@@ -83,6 +84,8 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 					break;
 			}
 			setErrorInput({ inputName: inputName, isError: true, message: error.message });
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -181,13 +184,14 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 
 					<Pressable
 						onPress={handleSubmit}
+						disabled={isLoading}
 						bg={BASE_COLOR.primary}
 						p="2"
 						rounded="xl"
 						_pressed={{ bg: BASE_COLOR.blue[200] }}
 					>
 						<Text textAlign="center" fontSize="xl" color="#FFF">
-							Login
+							{isLoading ? "Login..." : "Login"}
 						</Text>
 					</Pressable>
 
