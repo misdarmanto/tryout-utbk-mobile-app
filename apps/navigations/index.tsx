@@ -4,7 +4,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/Main/Home";
-import MyTryOutScreen from "../screens/Main/MyTryout";
+import ExercisesScreen from "../screens/Main/Exercises";
 import PymentScreen from "../screens/Main/Pyment";
 import ProfileScreen from "../screens/Main/Profile";
 import TryOutScreen from "../screens/Stack/TryOut";
@@ -20,7 +20,7 @@ import RankTryOutScreen from "../screens/Stack/RankTryOut";
 export type RootParamList = {
 	Main: undefined;
 	Home: undefined;
-	MyTryOut: undefined;
+	Exercises: undefined;
 	TryOut: undefined;
 	Profile: undefined;
 	Pyment: undefined;
@@ -39,11 +39,12 @@ function TabNavigation() {
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
 				tabBarShowLabel: false,
+				headerTitleStyle: { fontFamily: "lato", color: BASE_COLOR.text.primary },
 				tabBarIcon: ({ color }) => {
 					switch (route.name) {
 						case "Home":
 							return <Feather name="home" size={24} color={color} />;
-						case "MyTryOut":
+						case "Exercises":
 							return <FontAwesome5 name="tasks" size={24} color={color} />;
 						case "Pyment":
 							return <MaterialCommunityIcons name="cart-outline" size={30} color={color} />;
@@ -58,7 +59,7 @@ function TabNavigation() {
 			})}
 		>
 			<Tab.Screen name="Home" component={HomeScreen} />
-			<Tab.Screen name="MyTryOut" component={MyTryOutScreen} />
+			<Tab.Screen name="Exercises" component={ExercisesScreen} />
 			<Tab.Screen name="Pyment" component={PymentScreen} />
 			{userInfo.isAuth && <Tab.Screen name="Profile" component={ProfileScreen} />}
 		</Tab.Navigator>
@@ -80,7 +81,12 @@ export default function AppNavigations() {
 
 	return (
 		<NavigationContainer theme={MyTheme}>
-			<Stack.Navigator initialRouteName="Main">
+			<Stack.Navigator
+				initialRouteName="Main"
+				screenOptions={{
+					headerTitleStyle: { fontFamily: "lato", color: BASE_COLOR.text.primary },
+				}}
+			>
 				<Stack.Screen
 					name="Main"
 					component={TabNavigation}

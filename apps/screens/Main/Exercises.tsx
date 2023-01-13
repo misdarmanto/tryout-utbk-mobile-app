@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, FlatList, Heading, HStack } from "native-base";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { Box, FlatList, Heading, HStack, ScrollView } from "native-base";
+import { useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
@@ -10,9 +10,9 @@ import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types/contextApiTypes";
 
-type MyTryOutPropsTypes = NativeStackScreenProps<RootParamList, "MyTryOut">;
+type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "Exercises">;
 
-export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
+export default function ExercisesScreen({ navigation }: ExercisesPropsTypes) {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 
 	const [tryoutData, setTryoutData] = useState<CardTryOutTypes[]>(cardData);
@@ -23,6 +23,12 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 		setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
+	}, []);
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: "Latihan Soal",
+		});
 	}, []);
 
 	const onRefresh = useCallback(() => {
@@ -53,16 +59,18 @@ export default function MyTryOutScreen({ navigation }: MyTryOutPropsTypes) {
 	const Tab = () => {
 		const TAB_HEADER_NAMES = ["All", "TPS", "Saintek", "Soshum"];
 		return (
-			<HStack alignItems="center" justifyContent="space-between" px={1} py={5}>
-				{TAB_HEADER_NAMES.map((name, index) => (
-					<RenderTabHeader
-						key={index}
-						isActive={activeTab === name}
-						onPress={() => handleSelectTab(name)}
-						title={name}
-					/>
-				))}
-			</HStack>
+			<ScrollView showsHorizontalScrollIndicator={false} horizontal>
+				<HStack alignItems="center" justifyContent="space-between" px={1} py={5}>
+					{TAB_HEADER_NAMES.map((name, index) => (
+						<RenderTabHeader
+							key={index}
+							isActive={activeTab === name}
+							onPress={() => handleSelectTab(name)}
+							title={name}
+						/>
+					))}
+				</HStack>
+			</ScrollView>
 		);
 	};
 

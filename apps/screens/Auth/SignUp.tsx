@@ -22,6 +22,7 @@ import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { MaterialIcons } from "@expo/vector-icons";
+import { FireStoreUserDB } from "../../firebase/firebaseDB";
 
 type SignUpScreenPropsTypes = NativeStackScreenProps<RootParamList, "SignUp">;
 
@@ -70,8 +71,19 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				throw Error("gunakan password minimal 6 karakter!");
 			}
 
-			const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-			console.log(userCredential);
+			const userDb = new FireStoreUserDB();
+			await userDb.setUser({
+				documentId: email,
+				data: {
+					name: name,
+					email: email,
+					coin: 50,
+					enrollTryOutId: [],
+					notifications: [],
+				},
+			});
+
+			await createUserWithEmailAndPassword(auth, email, password);
 		} catch (error: any) {
 			console.log(error);
 			switch (error.code) {
