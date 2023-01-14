@@ -1,29 +1,30 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Button, FlatList, HStack, Text } from "native-base";
+import { FlatList, HStack, Text } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ButtonPrimary } from "../../components/button/ButtonPrimary";
 import { BASE_COLOR } from "../../utilities/baseColor";
-
+import { RootContext } from "../../utilities/rootContext";
+import { ContextApiTypes } from "../../types";
+import { useContext } from "react";
+import { toMoney } from "../../utilities/toMony";
 type PymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "Pyment">;
 
 export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
-	const CARD_PYMENT_DATA = [
-		{ id: 1, totalCoin: 100, totalAmount: 10000 },
-		{ id: 2, totalCoin: 100, totalAmount: 10000 },
-		{ id: 3, totalCoin: 100, totalAmount: 10000 },
-		{ id: 4, totalCoin: 100, totalAmount: 10000 },
-		{ id: 5, totalCoin: 100, totalAmount: 10000 },
-		{ id: 6, totalCoin: 100, totalAmount: 10000 },
-	];
+	const { appInfo } = useContext<ContextApiTypes>(RootContext);
+
 	return (
 		<Layout>
 			<FlatList
-				data={CARD_PYMENT_DATA}
+				data={appInfo.payment}
 				keyExtractor={(item) => item.id + ""}
 				renderItem={({ item }) => (
-					<CardPyment totalCoin={item.totalAmount} totalAmount={item.totalAmount} />
+					<CardPyment
+						onPress={() => navigation.navigate("DetailPayment", { item })}
+						totalCoin={item.totalCoin}
+						totalAmount={item.totalAmount}
+					/>
 				)}
 			/>
 		</Layout>
@@ -33,9 +34,10 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 interface CardPymentTpes {
 	totalCoin: number;
 	totalAmount: number;
+	onPress?: any;
 }
 
-const CardPyment = ({ totalCoin, totalAmount }: CardPymentTpes) => {
+const CardPyment = ({ totalCoin, totalAmount, onPress }: CardPymentTpes) => {
 	return (
 		<HStack
 			backgroundColor="#FFF"
@@ -57,10 +59,10 @@ const CardPyment = ({ totalCoin, totalAmount }: CardPymentTpes) => {
 			<HStack space={1}>
 				<FontAwesome5 name="money-bill-wave" size={24} color={BASE_COLOR.text.primary} />
 				<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
-					Rp.{totalAmount}
+					Rp.{toMoney(totalAmount)}
 				</Text>
 			</HStack>
-			<ButtonPrimary title="Beli" style={{ paddingHorizontal: 15 }} />
+			<ButtonPrimary title="Top Up" onPress={onPress} style={{ paddingHorizontal: 15 }} />
 		</HStack>
 	);
 };

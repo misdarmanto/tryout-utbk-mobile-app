@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AppNavigations from "./apps/navigations";
-import { NativeBaseProvider, extendTheme } from "native-base";
-import { Text } from "react-native";
+import { NativeBaseProvider, extendTheme, Spinner } from "native-base";
+import { Text, View } from "react-native";
 import { RootContext } from "./apps/utilities/rootContext";
-import { AppInfoTypes, UserInfoTypes } from "./apps/types/contextApiTypes";
+import { AppInfoTypes, UserInfoTypes } from "./apps/types";
 import { useFonts } from "expo-font";
 import NetInfo from "@react-native-community/netinfo";
 import { onAuthStateChanged } from "firebase/auth";
@@ -13,7 +13,10 @@ import _ from "lodash";
 import { auth } from "./apps/configs/firebase";
 import NotInternetAnimation from "./apps/components/animations/Ofline";
 import LoadingAnimation from "./apps/components/animations/Loading";
-import { FireStoreUserDB } from "./apps/firebase/firebaseDB";
+import { FireStoreAppInfoDB, FireStoreUserDB } from "./apps/firebase/firebaseDB";
+import MaintenanceAnimation from "./apps/components/animations/Maintenance";
+import Layout from "./apps/components/Layout";
+import { BASE_COLOR } from "./apps/utilities/baseColor";
 LogBox.ignoreLogs(["Warning:..."]); // ignore specific logs
 LogBox.ignoreAllLogs(); // ignore all logs
 const _console = _.clone(console);
@@ -59,7 +62,6 @@ export default function App() {
 					console.log(userData);
 					userData.isAuth = true;
 					setUserInfo(userData);
-					setAppInfo({ countDown: "30 day, 12 hour" });
 				}
 
 				if (!user) {
@@ -70,8 +72,12 @@ export default function App() {
 						coin: 0,
 					};
 					setUserInfo(userData);
-					setAppInfo({ countDown: "30 day, 12 hour" });
 				}
+
+				const appInfoDB = new FireStoreAppInfoDB();
+				const appData = await appInfoDB.getInfo({ documentId: "general" });
+				setAppInfo(appData);
+
 				setIsLoading(false);
 			})();
 		});
@@ -86,7 +92,23 @@ export default function App() {
 		return null;
 	}
 
-	if (isLoading) return <Text>Loading...</Text>;
+	if (isLoading)
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					backgroundColor: "#FFF",
+				}}
+			>
+				<Text style={{ color: BASE_COLOR.text.primary }}>Loading...</Text>
+			</View>
+		);
+
+	console.log(appInfo);
+
+	if (appInfo?.maintenanceMode) return <MaintenanceAnimation />;
 
 	return (
 		<NativeBaseProvider>

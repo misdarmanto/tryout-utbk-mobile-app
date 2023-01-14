@@ -14,8 +14,9 @@ import { BASE_COLOR } from "../utilities/baseColor";
 import NotificationScreen from "../screens/Stack/Notification";
 import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
 import { RootContext } from "../utilities/rootContext";
-import { ContextApiTypes } from "../types/contextApiTypes";
+import { ContextApiTypes } from "../types";
 import RankTryOutScreen from "../screens/Stack/RankTryOut";
+import DetailPaymentScreen from "../screens/Stack/DetailPayment";
 
 export type RootParamList = {
 	Main: undefined;
@@ -29,6 +30,7 @@ export type RootParamList = {
 	SignUp: undefined;
 	Notification: undefined;
 	RankTryOut: undefined;
+	DetailPayment: { item: any };
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -100,6 +102,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 						<Stack.Screen name="RankTryOut" component={RankTryOutScreen} />
+						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
 					</>
 				)}
 				{!userInfo.isAuth && (

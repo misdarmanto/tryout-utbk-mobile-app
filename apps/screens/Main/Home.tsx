@@ -9,7 +9,7 @@ import { BASE_COLOR } from "../../utilities/baseColor";
 import { PropsWithChildren, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes } from "../../types/contextApiTypes";
+import { ContextApiTypes } from "../../types";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
@@ -58,6 +58,17 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					{userInfo.isAuth && (
 						<TouchableOpacity onPress={() => navigation.navigate("Notification")}>
 							<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
+							{userInfo.notifications?.length !== 0 && (
+								<Box
+									rounded="full"
+									backgroundColor="red.500"
+									top="0"
+									right="0"
+									p="2"
+									position="absolute"
+									zIndex="2"
+								/>
+							)}
 						</TouchableOpacity>
 					)}
 					{!userInfo.isAuth && (
@@ -118,7 +129,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
 				>
 					<Banner
-						countDown={appInfo.countDown}
+						countDown={appInfo.banner.countDown}
 						coin={userInfo.coin}
 						onTopUpPress={handleOnTopUpPress}
 					/>
@@ -189,9 +200,11 @@ const Banner = ({ onTopUpPress, countDown, coin }: BannerTypes) => {
 		<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
 			<HStack justifyContent="space-between">
 				<Box justifyContent="space-between">
-					<Text fontSize="sm" color="white" pb="3">
-						{countDown} menuju utbk
-					</Text>
+					{countDown && (
+						<Text fontSize="sm" color="white" pb="3">
+							{countDown}
+						</Text>
+					)}
 
 					<HStack space={2}>
 						<HStack space={1}>

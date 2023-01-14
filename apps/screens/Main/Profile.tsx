@@ -7,7 +7,7 @@ import { FontAwesome5, Ionicons, AntDesign, MaterialCommunityIcons } from "@expo
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { TouchableOpacity } from "react-native";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes } from "../../types/contextApiTypes";
+import { ContextApiTypes } from "../../types";
 import { signOut } from "firebase/auth";
 import { auth } from "../../configs/firebase";
 import ModalPrimary from "../../components/Modal/ModalPrimary";

@@ -8,7 +8,7 @@ import TryOutScreenSkeleton from "../../components/skeleton/TryOutScreenSkeleton
 import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes } from "../../types/contextApiTypes";
+import { ContextApiTypes } from "../../types";
 
 type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "Exercises">;
 
