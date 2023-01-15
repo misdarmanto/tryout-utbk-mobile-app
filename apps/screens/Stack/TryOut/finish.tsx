@@ -6,9 +6,10 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { RootContext } from "../../../utilities/rootContext";
-import { ContextApiTypes } from "../../../types/contextApiTypes";
-import { ScoreTypes } from "./types/tryOutContextTypes";
-import { TryOutDataTypes } from "./fakeData";
+
+import { ContextApiTypes } from "../../../types";
+import { ScoreTypes } from ".";
+import { TryOutDataTypes } from "../../../types/tryOutDataTypes";
 
 const Finish = () => {
 	const { setTryOutState, navigation, tryOutDataFinish }: any = useContext(tryOutContext);

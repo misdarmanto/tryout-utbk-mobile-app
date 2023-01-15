@@ -10,36 +10,47 @@ import { PropsWithChildren, useCallback, useContext, useEffect, useLayoutEffect,
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
+import { TryOutDataTypes } from "../../types/tryOutDataTypes";
+import { FirestoreDB } from "../../firebase/firebaseDB";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
 export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	const { userInfo, appInfo } = useContext<ContextApiTypes>(RootContext);
+
+	const { tryOutData, setTryOutData }: any = useContext(RootContext);
+
 	const [isLoading, setIsLoading] = useState(true);
+	const cardData: TryOutDataTypes[] = tryOutData;
+
+	const firestoreDB = new FirestoreDB("TryOut");
 
 	useEffect(() => {
-		setTimeout(() => {
+		(async () => {
+			const data = await firestoreDB.getCollection();
+			setTryOutData(data);
 			setIsLoading(false);
-		}, 2000);
-		console.log(isLoading);
+		})();
 	}, []);
 
-	const onRefresh = useCallback(() => {
+	const onRefresh = useCallback(async () => {
 		setIsLoading(true);
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 2000);
+		const data = await firestoreDB.getCollection();
+		setTryOutData(data);
+		setIsLoading(false);
 	}, []);
 
-	const handleCardOnPress = (isFinish: boolean | any) => {
+	const handleCardOnPress = (tryOutItem: TryOutDataTypes) => {
 		if (!userInfo.isAuth) {
 			navigation.navigate("Login");
 			return;
 		}
+
+		const isFinish = userInfo.enrollTryOutId?.includes(tryOutItem.id);
 		if (isFinish) {
 			navigation.navigate("RankTryOut");
 		} else {
-			navigation.navigate("TryOut");
+			navigation.navigate("TryOut", { tryOutItem });
 		}
 	};
 
@@ -179,8 +190,14 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					{cardData.map((item) => (
 						<CardTryOut
 							key={item.id}
-							{...item}
-							onPress={() => handleCardOnPress(item.isFinish)}
+							coinTotal={item.coin}
+							isFree={item.coin === 0}
+							isFinish={userInfo.enrollTryOutId?.includes(item.id)}
+							exampTotal={item.total}
+							title={item.title}
+							id={item.id}
+							enrollTotal={item.enrollTotal}
+							onPress={() => handleCardOnPress(item)}
 						/>
 					))}
 				</ScrollView>
@@ -228,56 +245,56 @@ const Banner = ({ onTopUpPress, countDown, coin }: BannerTypes) => {
 	);
 };
 
-const cardData: CardTryOutTypes[] = [
-	{
-		id: 1,
-		title: "Tryout UTBK Saintek #1",
-		enrollTotal: 1000,
-		exampTotal: 50,
-		isFree: true,
-		isFinish: false,
-	},
-	{
-		id: 2,
-		title: "Tryout UTBK Saintek #2",
-		enrollTotal: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		isFinish: true,
-	},
-	{
-		id: 3,
-		title: "Tryout UTBK TPS #2",
-		enrollTotal: 1000,
-		exampTotal: 50,
-		isFree: true,
-		isFinish: false,
-	},
-	{
-		id: 4,
-		title: "Tryout UTBK Soshum #1",
-		enrollTotal: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		isFinish: true,
-	},
-	{
-		id: 5,
-		title: "Tryout UTBK TPS #2",
-		enrollTotal: 1000,
-		exampTotal: 50,
-		isFree: true,
-		isFinish: false,
-	},
-	{
-		id: 6,
-		title: "Tryout UTBK Soshum #1",
-		enrollTotal: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		isFinish: false,
-	},
-];
+// const cardData: CardTryOutTypes[] = [
+// 	{
+// 		id: 1,
+// 		title: "Tryout UTBK Saintek #1",
+// 		enrollTotal: 1000,
+// 		exampTotal: 50,
+// 		isFree: true,
+// 		isFinish: false,
+// 	},
+// 	{
+// 		id: 2,
+// 		title: "Tryout UTBK Saintek #2",
+// 		enrollTotal: 1000,
+// 		exampTotal: 50,
+// 		coinTotal: 300,
+// 		isFree: false,
+// 		isFinish: true,
+// 	},
+// 	{
+// 		id: 3,
+// 		title: "Tryout UTBK TPS #2",
+// 		enrollTotal: 1000,
+// 		exampTotal: 50,
+// 		isFree: true,
+// 		isFinish: false,
+// 	},
+// 	{
+// 		id: 4,
+// 		title: "Tryout UTBK Soshum #1",
+// 		enrollTotal: 1000,
+// 		exampTotal: 50,
+// 		coinTotal: 300,
+// 		isFree: false,
+// 		isFinish: true,
+// 	},
+// 	{
+// 		id: 5,
+// 		title: "Tryout UTBK TPS #2",
+// 		enrollTotal: 1000,
+// 		exampTotal: 50,
+// 		isFree: true,
+// 		isFinish: false,
+// 	},
+// 	{
+// 		id: 6,
+// 		title: "Tryout UTBK Soshum #1",
+// 		enrollTotal: 1000,
+// 		exampTotal: 50,
+// 		coinTotal: 300,
+// 		isFree: false,
+// 		isFinish: false,
+// 	},
+// ];

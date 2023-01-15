@@ -6,8 +6,9 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { RootContext } from "../../../utilities/rootContext";
-import { ContextApiTypes } from "../../../types/contextApiTypes";
-import { TryOutContextTypes } from "./types/tryOutContextTypes";
+import { ContextApiTypes } from "../../../types";
+import { TryOutContextTypes } from ".";
+import { FirestoreDB } from "../../../firebase/firebaseDB";
 
 const Start = () => {
 	const { setTryOutState, navigation }: any = useContext(tryOutContext);
@@ -18,13 +19,20 @@ const Start = () => {
 	const [isError, setIsError] = useState(false);
 
 	useLayoutEffect(() => {
-		if (100 >= userInfo.coin) {
+		if (tryOutData.coin > userInfo.coin) {
 			setIsError(true);
 		}
 	}, []);
 
 	const handleTryOutState = () => {
 		if (isError) return;
+
+		const newCoin = userInfo.coin - tryOutData.coin;
+		if (newCoin < 0) return;
+
+		const updateCoin = new FirestoreDB("User");
+		updateCoin.update({ documentId: userInfo.email, newData: { coin: newCoin } });
+		userInfo.coin = newCoin;
 		setTryOutState("play");
 	};
 

@@ -66,7 +66,7 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 						<Text color={BASE_COLOR.text.secondaryGray} fontSize="sm">
 							lakukan pembayaran menggunakan salah satu metode pembayaran berikut dan upload
 							bukti pembayaran di form yang telah disediakan, kami akan segera memprosess. Jika
-							terdapat kendala silahkan hubungi +6281379574223
+							terdapat kendala silahkan hubungi nomor whatsapp berikut +62813-7957-4223
 						</Text>
 					</HStack>
 

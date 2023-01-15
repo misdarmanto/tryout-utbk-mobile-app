@@ -13,10 +13,10 @@ import _ from "lodash";
 import { auth } from "./apps/configs/firebase";
 import NotInternetAnimation from "./apps/components/animations/Ofline";
 import LoadingAnimation from "./apps/components/animations/Loading";
-import { FireStoreAppInfoDB, FireStoreUserDB } from "./apps/firebase/firebaseDB";
+import { FirestoreDB } from "./apps/firebase/firebaseDB";
 import MaintenanceAnimation from "./apps/components/animations/Maintenance";
-import Layout from "./apps/components/Layout";
 import { BASE_COLOR } from "./apps/utilities/baseColor";
+import { TryOutDataTypes } from "./apps/types/tryOutDataTypes";
 LogBox.ignoreLogs(["Warning:..."]); // ignore specific logs
 LogBox.ignoreAllLogs(); // ignore all logs
 const _console = _.clone(console);
@@ -42,6 +42,8 @@ declare module "native-base" {
 export default function App() {
 	const [userInfo, setUserInfo] = useState<UserInfoTypes>();
 	const [appInfo, setAppInfo] = useState<AppInfoTypes>();
+	const [tryOutData, setTryOutData] = useState<TryOutDataTypes[]>();
+
 	const [isOffline, setIsOffLine] = useState<any>(false);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -53,12 +55,13 @@ export default function App() {
 		return () => removeNetInfoSubscription();
 	}, []);
 
+	console.log("render again");
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			(async () => {
 				if (user) {
-					const userDb = new FireStoreUserDB();
-					const userData: UserInfoTypes = await userDb.getUser({ documentId: user.email! });
+					const userDb = new FirestoreDB("User");
+					const userData: UserInfoTypes = await userDb.get({ documentId: user.email! });
 					console.log(userData);
 					userData.isAuth = true;
 					setUserInfo(userData);
@@ -74,8 +77,8 @@ export default function App() {
 					setUserInfo(userData);
 				}
 
-				const appInfoDB = new FireStoreAppInfoDB();
-				const appData = await appInfoDB.getInfo({ documentId: "general" });
+				const appInfoDB = new FirestoreDB("AppInfo");
+				const appData = await appInfoDB.get({ documentId: "general" });
 				setAppInfo(appData);
 
 				setIsLoading(false);
@@ -106,13 +109,11 @@ export default function App() {
 			</View>
 		);
 
-	console.log(appInfo);
-
 	if (appInfo?.maintenanceMode) return <MaintenanceAnimation />;
 
 	return (
 		<NativeBaseProvider>
-			<RootContext.Provider value={{ userInfo, appInfo }}>
+			<RootContext.Provider value={{ userInfo, appInfo, tryOutData, setTryOutData }}>
 				{/* {isOffline ? <NotInternetAnimation /> : <AppNavigations />} */}
 				<AppNavigations />
 			</RootContext.Provider>

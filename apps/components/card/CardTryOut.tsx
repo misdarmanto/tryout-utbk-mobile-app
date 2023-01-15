@@ -6,7 +6,7 @@ import { widthPercentage } from "../../utilities/dimension";
 import { ButtonPrimary } from "../button/ButtonPrimary";
 
 export interface CardTryOutTypes {
-	id: number;
+	id: string;
 	title: string;
 	exampTotal: number;
 	enrollTotal: number;

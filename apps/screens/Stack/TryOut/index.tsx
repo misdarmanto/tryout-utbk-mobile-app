@@ -7,19 +7,32 @@ import Finish from "./finish";
 import Start from "./start";
 import Play from "./play";
 import Review from "./review";
-import { TryOutDataTypes, TRYOUT_DATA } from "./fakeData";
-import { TryoutStateTypes } from "./types/tryOutContextTypes";
+import { TryOutDataTypes } from "../../../types/tryOutDataTypes";
+import { TRYOUT_DATA } from "./fakeData";
 
 type TryOutScreenPropsTypes = NativeStackScreenProps<RootParamList, "TryOut">;
 
-export default function TryOutScreen({ navigation }: TryOutScreenPropsTypes) {
+export interface ScoreTypes {
+	correct: number;
+	wrong: number;
+	empty: number;
+}
+
+export type TryoutStateTypes = "start" | "play" | "finish" | "review" | "showScore";
+
+export interface TryOutContextTypes {
+	checkAnswer: ScoreTypes;
+	tryoutState: TryoutStateTypes;
+	tryOutData: TryOutDataTypes;
+}
+
+export default function TryOutScreen({ route, navigation }: TryOutScreenPropsTypes) {
 	const [tryOutState, setTryOutState] = useState<TryoutStateTypes>("start");
-	const [tryOutData, setTryOutData] = useState<TryOutDataTypes>();
 	const [tryOutDataFinish, setTryOutDataFinish] = useState<TryOutDataTypes>();
 
-	useEffect(() => {
-		setTryOutData(TRYOUT_DATA);
-	}, []);
+	const { tryOutItem } = route.params;
+
+	const [tryOutData, setTryOutData] = useState(tryOutItem);
 
 	let renderScreen;
 	switch (tryOutState) {
