@@ -92,7 +92,7 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 					mt="5"
 				>
 					<Heading color={BASE_COLOR.text.primary} fontSize="md">
-						Upload Bukti Pembayaran Di sini
+						Upload Bukti Pembayaran Di Sini
 					</Heading>
 					<TouchableOpacity>
 						<HStack space="2" alignItems="center">

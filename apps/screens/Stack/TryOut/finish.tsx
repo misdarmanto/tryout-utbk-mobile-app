@@ -118,7 +118,7 @@ const Finish = () => {
 
 					<VStack
 						p={3}
-						px={5}
+						px={4}
 						backgroundColor={BASE_COLOR.yellow}
 						alignItems="center"
 						justifyContent="center"
@@ -128,7 +128,7 @@ const Finish = () => {
 							{score.empty}
 						</Text>
 						<Text color="#FFF" fontSize="sm">
-							salah
+							kosong
 						</Text>
 					</VStack>
 				</HStack>
@@ -149,14 +149,10 @@ const Finish = () => {
 					</HStack>
 				</HStack>
 
-				<TouchableOpacity
-					style={{ marginVertical: heightPercentage(5) }}
-					onPress={handleTryOutState}
-					disabled={isError}
-				>
+				<TouchableOpacity style={{ marginVertical: heightPercentage(5) }} onPress={handleTryOutState}>
 					<HStack justifyContent="center" backgroundColor={BASE_COLOR.primary} rounded="md" p={2}>
 						<Text color="#FFF" fontSize="md">
-							Review
+							Pembahasan
 						</Text>
 					</HStack>
 				</TouchableOpacity>

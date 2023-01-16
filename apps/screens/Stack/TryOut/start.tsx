@@ -48,8 +48,6 @@ const Start = () => {
 	return (
 		<VStack flex={1} justifyContent="center" alignItems="center">
 			<Box
-				width={widthPercentage(90)}
-				minH={heightPercentage(30)}
 				backgroundColor="#FFF"
 				p={5}
 				borderWidth={1}
@@ -57,17 +55,26 @@ const Start = () => {
 				borderRadius="5"
 				rounded="md"
 			>
-				<Heading color={BASE_COLOR.text.primary} fontWeight="bold" my={5}>
-					Title Tryout #1
+				<Heading color={BASE_COLOR.text.primary} fontFamily="lato" fontWeight="bold" my={5}>
+					{tryOutData.title}
 				</Heading>
 				<HStack m={2} justifyContent="space-between">
-					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
+					<Text color={BASE_COLOR.text.primary} fontSize="md">
+						Total Soal:
+					</Text>
+					<HStack space={2} p={2} px={5} rounded="md">
 						<FontAwesome5 name="book" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
 							{tryOutData.total} soal
 						</Text>
 					</HStack>
-					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
+				</HStack>
+
+				<HStack m={2} justifyContent="space-between">
+					<Text color={BASE_COLOR.text.primary} fontSize="md">
+						Total Coin:
+					</Text>
+					<HStack space={2} p={2} px={5} rounded="md">
 						<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
 							{tryOutData.coin}
@@ -76,13 +83,16 @@ const Start = () => {
 				</HStack>
 
 				<HStack m={2} justifyContent="space-between">
-					<HStack space={2} p={2} px={5} backgroundColor={BASE_COLOR.blue[100]} rounded="md">
+					<Text color={BASE_COLOR.text.primary} fontSize="md">
+						Waktu Pengerjaan:
+					</Text>
+					<HStack space={2} p={2} px={5} rounded="md">
 						<MaterialIcons name="timer" size={24} color={BASE_COLOR.text.primary} />
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
 							{tryOutData.time} menit
 						</Text>
 					</HStack>
-					<HStack space={2}>
+					{/* <HStack space={2}>
 						<Pressable
 							_pressed={{ backgroundColor: BASE_COLOR.blue[50] }}
 							backgroundColor={BASE_COLOR.blue[100]}
@@ -105,8 +115,15 @@ const Start = () => {
 								-
 							</Text>
 						</Pressable>
-					</HStack>
+					</HStack> */}
 				</HStack>
+
+				<Text color={BASE_COLOR.text.secondaryGray} fontSize="sm" textAlign="justify">
+					kamu akan mengerjakan {tryOutData.title} dengan waktu pengerjaan {tryOutData.time} menit,
+					total koin yang dibutuhkan untuk mengerjakan soal ini adalah {tryOutData.coin} coin.
+					pastikan koneksi internet mu lancar agar bisa mendapatkan hasil yang maksimal, selamat
+					mengerjakan!
+				</Text>
 
 				<TouchableOpacity
 					style={{ marginVertical: heightPercentage(5) }}

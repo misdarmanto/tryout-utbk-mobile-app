@@ -1,7 +1,7 @@
 import { Box, HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
 import React, { memo, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
-import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import { QuestionTypes } from "./fakeData";
@@ -46,25 +46,40 @@ const Review = () => {
 	return (
 		<VStack justifyContent="space-between" flex={1}>
 			<ScrollView showsVerticalScrollIndicator={false}>
-				<HStack alignItems="center">
-					<Progress
-						value={progressValue}
-						w={widthPercentage(75)}
-						mx="4"
-						my="5"
-						size="xl"
-						bg="coolGray.100"
-						_filledTrack={{
-							bg: BASE_COLOR.primary,
-						}}
-					/>
-					<Text color={BASE_COLOR.text.primary} fontSize="md" fontWeight="bold">
-						{progressValue}%
-					</Text>
+				<HStack alignItems="center" justifyContent="space-between">
+					<HStack alignItems="center">
+						<Progress
+							value={progressValue}
+							w={widthPercentage(62)}
+							mx="4"
+							my="5"
+							size="xl"
+							bg="coolGray.100"
+							_filledTrack={{
+								bg: BASE_COLOR.primary,
+							}}
+						/>
+						<Text color={BASE_COLOR.text.primary} fontSize="md" fontWeight="bold">
+							{progressValue}%
+						</Text>
+					</HStack>
+					<HStack alignItems="center" space={1}>
+						<Text fontFamily="lato" color={BASE_COLOR.text.primary}>{`${index + 1}/${
+							tryOutDataFinish.questions.length
+						}`}</Text>
+						<FontAwesome5 name="book" size={16} color={BASE_COLOR.text.primary} />
+					</HStack>
 				</HStack>
 
-				<Box my="10">
+				<Box my="8">
 					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.question}</Text>
+				</Box>
+
+				<Box>
+					<Text fontFamily="lato" color={BASE_COLOR.text.primary}>
+						Pembahasan:
+					</Text>
+					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.review}</Text>
 				</Box>
 
 				<VStack space={2} my="10">
