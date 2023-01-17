@@ -1,5 +1,5 @@
 import { Avatar, HStack, Image, Pressable, Text } from "native-base";
-import React from "react";
+import React, { memo } from "react";
 import { BASE_COLOR } from "../../utilities/baseColor";
 
 interface ChoiceFieldTypes {
@@ -47,4 +47,4 @@ const ChoiceField = ({ alphaBet, text, isActive, imageUrl, onPress }: ChoiceFiel
 	);
 };
 
-export default ChoiceField;
+export default memo(ChoiceField);

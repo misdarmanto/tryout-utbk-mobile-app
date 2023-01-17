@@ -6,7 +6,8 @@ import { LocalStorage } from "../../utilities/localStorage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes } from "../../types";
+import { ContextApiTypes, NotificationsTypes } from "../../types";
+import { FirestoreDB } from "../../firebase/firebaseDB";
 
 type NotificationScreenPropsTypes = NativeStackScreenProps<RootParamList, "Notification">;
 
@@ -14,9 +15,35 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	const [listPerson, setListPerson] = useState<any[]>([]);
 	const [name, setName] = useState("");
-	const [notificationList, setNotificationList] = useState(userInfo.notifications);
+	const [notificationList, setNotificationList] = useState<NotificationsTypes[]>([]);
 
 	const storage = new LocalStorage("notification");
+
+	const remoreNotificationFromFirestore = async () => {
+		const updateCoin = new FirestoreDB("User");
+		await updateCoin.update({ documentId: userInfo.email, newData: { notifications: [] } });
+		userInfo.notifications = [];
+	};
+
+	useEffect(() => {
+		(async () => {
+			const localNotification = await storage.get();
+			console.log(localNotification);
+
+			if (userInfo.notifications.length === 0) {
+				setNotificationList(localNotification);
+				return;
+			}
+
+			if (userInfo.notifications.length !== 0) {
+				const notificationUpdated = [...localNotification, ...userInfo.notifications];
+				setNotificationList(notificationUpdated);
+				await storage.store(notificationUpdated);
+				await remoreNotificationFromFirestore();
+				return;
+			}
+		})();
+	}, []);
 
 	const handleSaveData = async () => {
 		const store = await storage.store([{ name: name }]);
@@ -67,6 +94,7 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 					</VStack>
 				)}
 			/>
+			{/* <Button onPress={handleRemove}>Remove</Button> */}
 		</Layout>
 	);
 };

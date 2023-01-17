@@ -32,6 +32,7 @@ export class LocalStorage {
 	}
 
 	public async store(values: any[]) {
+		if (values.length === 0) return;
 		const isInputInvalid = this.checkInput(values);
 		if (isInputInvalid) return;
 

@@ -12,6 +12,7 @@ import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
 import { TryOutDataTypes } from "../../types/tryOutDataTypes";
 import { FirestoreDB } from "../../firebase/firebaseDB";
+import { widthPercentage } from "../../utilities/dimension";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
@@ -68,7 +69,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				<HStack px="3" alignItems="center" space={2}>
 					{userInfo.isAuth && (
 						<TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-							<Ionicons name="ios-notifications" size={30} color={BASE_COLOR.text.primary} />
+							<Ionicons name="ios-notifications" size={25} color={BASE_COLOR.text.primary} />
 							{userInfo.notifications?.length !== 0 && (
 								<Box
 									rounded="full"
@@ -105,7 +106,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		});
 	}, [userInfo.isAuth]);
 
-	const IconRounded: React.FC<PropsWithChildren> = ({ children }) => {
+	const IconRounded = ({ Icon, title }: { Icon: any; title: string }) => {
 		const handleIconOnPress = () => {
 			if (!userInfo.isAuth) {
 				navigation.navigate("Login");
@@ -117,8 +118,19 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		return (
 			<TouchableOpacity onPress={handleIconOnPress} activeOpacity={0.8}>
 				<Box backgroundColor={BASE_COLOR.primary} rounded="full" p={5}>
-					{children}
+					{Icon}
 				</Box>
+				<Text
+					textAlign="center"
+					fontFamily="lato"
+					mt="1"
+					fontSize="xs"
+					color={BASE_COLOR.text.primary}
+					lineHeight="xs"
+					width={widthPercentage(16)}
+				>
+					{title}
+				</Text>
 			</TouchableOpacity>
 		);
 	};
@@ -147,39 +159,49 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					<Box
 						borderWidth={1}
 						my="5"
-						p="5"
+						p="3"
 						backgroundColor="white"
 						borderColor="gray.200"
 						borderRadius="5"
 						rounded="md"
 					>
 						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
-							<IconRounded>
-								<FontAwesome5 name="brain" size={30} color="#FFF" />
-							</IconRounded>
-							<IconRounded>
-								<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
-							</IconRounded>
-							<IconRounded>
-								<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
-							</IconRounded>
-							<IconRounded>
-								<Fontisto name="atom" size={30} color="#FFF" />
-							</IconRounded>
+							<IconRounded
+								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
+								title="penalaran umum"
+							/>
+							<IconRounded
+								Icon={<FontAwesome5 name="square-root-alt" size={25} color="#FFF" />}
+								title="matematika"
+							/>
+							<IconRounded
+								Icon={<MaterialCommunityIcons name="virus" size={25} color="#FFF" />}
+								title="Biologi"
+							/>
+
+							<IconRounded
+								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
+								title="Fisika"
+							/>
 						</HStack>
+
 						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
-							<IconRounded>
-								<FontAwesome5 name="brain" size={30} color="#FFF" />
-							</IconRounded>
-							<IconRounded>
-								<FontAwesome5 name="square-root-alt" size={30} color="#FFF" />
-							</IconRounded>
-							<IconRounded>
-								<MaterialCommunityIcons name="virus" size={30} color="#FFF" />
-							</IconRounded>
-							<IconRounded>
-								<Fontisto name="atom" size={30} color="#FFF" />
-							</IconRounded>
+							<IconRounded
+								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
+								title="Bahasa Inggris"
+							/>
+							<IconRounded
+								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
+								title="Geograpi"
+							/>
+							<IconRounded
+								Icon={<FontAwesome5 name="square-root-alt" size={25} color="#FFF" />}
+								title="Bahasa Indonesia"
+							/>
+							<IconRounded
+								Icon={<MaterialCommunityIcons name="virus" size={25} color="#FFF" />}
+								title="Sejarah"
+							/>
 						</HStack>
 					</Box>
 

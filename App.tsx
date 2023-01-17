@@ -62,7 +62,6 @@ export default function App() {
 				if (user) {
 					const userDb = new FirestoreDB("User");
 					const userData: UserInfoTypes = await userDb.get({ documentId: user.email! });
-					console.log(userData);
 					userData.isAuth = true;
 					setUserInfo(userData);
 				}
@@ -73,6 +72,8 @@ export default function App() {
 						email: "",
 						name: "",
 						coin: 0,
+						notifications: [],
+						enrollTryOutId: [],
 					};
 					setUserInfo(userData);
 				}

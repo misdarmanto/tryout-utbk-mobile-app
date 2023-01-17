@@ -9,7 +9,7 @@ export interface UserInfoTypes {
 	email: string;
 	isAuth?: boolean;
 	coin: number;
-	notifications?: NotificationsTypes[];
+	notifications: NotificationsTypes[];
 	enrollTryOutId?: string[];
 }
 
