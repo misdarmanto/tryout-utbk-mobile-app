@@ -13,17 +13,24 @@ export interface UserInfoTypes {
 	enrollTryOutId?: string[];
 }
 
-export interface PymentTypes {
+export interface PriceTypes {
 	id: string;
 	totalCoin: number;
 	totalAmount: number;
 }
 
+export interface PaymentTypes {
+	paymentMethods: string[];
+	priceList: PriceTypes[];
+}
+
+export interface BannerTypes {
+	countDown: string;
+}
+
 export interface AppInfoTypes {
-	banner: {
-		countDown: string;
-	};
-	payment: PymentTypes[];
+	banner: BannerTypes;
+	payment: PaymentTypes;
 	maintenanceMode: boolean;
 	appVersion: number;
 }

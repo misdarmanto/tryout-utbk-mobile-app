@@ -5,7 +5,7 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 
 export class FirebaseStorage {
 	public async pickImageFromStorage() {
-		const result = await ImagePicker.launchImageLibraryAsync({
+		const result: any = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			allowsEditing: true,
 			aspect: [1, 1],
@@ -15,7 +15,12 @@ export class FirebaseStorage {
 
 		if (result.canceled) return null;
 
-		return result.assets;
+		if (result.assets[0].base64.length > 4371340) {
+			alert("maximum size 2MB");
+			return;
+		}
+
+		return result.assets[0].uri;
 	}
 
 	public async getCompressImage(uri: string) {
@@ -48,11 +53,11 @@ export class FirebaseStorage {
 		}
 	}
 
-	public async uploadImage(imageUri: string) {
+	public async uploadImage({ imageUri, fileName }: { imageUri: string; fileName: string }) {
 		const compressedImage = await this.getCompressImage(imageUri);
 		const imageBlob: any = await this.getImageBolb(compressedImage.uri);
 
-		const imagePath = "payment/" + "IMG" + Date.now() + ".jpg";
+		const imagePath = `payment/${fileName}_${Date.now()}.jpg`;
 		const imageRef = ref(storage, imagePath);
 		await uploadBytesResumable(imageRef, imageBlob);
 		return getDownloadURL(imageRef).then((url) => ({

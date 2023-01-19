@@ -17,7 +17,7 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 	return (
 		<Layout>
 			<FlatList
-				data={appInfo.payment}
+				data={appInfo.payment.priceList}
 				keyExtractor={(item) => item.id + ""}
 				renderItem={({ item }) => (
 					<CardPyment
