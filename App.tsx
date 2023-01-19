@@ -74,6 +74,7 @@ export default function App() {
 						coin: 0,
 						notifications: [],
 						enrollTryOutId: [],
+						waitingListTransaction: [],
 					};
 					setUserInfo(userData);
 				}
@@ -114,7 +115,7 @@ export default function App() {
 
 	return (
 		<NativeBaseProvider>
-			<RootContext.Provider value={{ userInfo, appInfo, tryOutData, setTryOutData }}>
+			<RootContext.Provider value={{ userInfo, setUserInfo, appInfo, tryOutData, setTryOutData }}>
 				{/* {isOffline ? <NotInternetAnimation /> : <AppNavigations />} */}
 				<AppNavigations />
 			</RootContext.Provider>

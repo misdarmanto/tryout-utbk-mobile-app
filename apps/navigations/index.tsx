@@ -14,7 +14,7 @@ import { BASE_COLOR } from "../utilities/baseColor";
 import NotificationScreen from "../screens/Stack/Notification";
 import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
 import { RootContext } from "../utilities/rootContext";
-import { ContextApiTypes } from "../types";
+import { ContextApiTypes, PriceTypes } from "../types";
 import RankTryOutScreen from "../screens/Stack/RankTryOut";
 import DetailPaymentScreen from "../screens/Stack/DetailPayment";
 import { TryOutDataTypes } from "../screens/Stack/TryOut/fakeData";
@@ -31,7 +31,7 @@ export type RootParamList = {
 	SignUp: undefined;
 	Notification: undefined;
 	RankTryOut: undefined;
-	DetailPayment: { item: any };
+	DetailPayment: { item: PriceTypes };
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();

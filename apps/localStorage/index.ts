@@ -31,6 +31,35 @@ export class LocalStorage {
 		}
 	}
 
+	public async setItem(item: any) {
+		try {
+			const data = JSON.stringify(item);
+			await AsyncStorage.setItem(this.key, data);
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	}
+
+	public async getItem() {
+		try {
+			const result = await AsyncStorage.getItem(this.key);
+			return result != null ? result : null;
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	}
+
+	public async remove() {
+		try {
+			await AsyncStorage.removeItem(this.key);
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	}
+
 	public async store(values: any[]) {
 		if (values.length === 0) return;
 		const isInputInvalid = this.checkInput(values);
@@ -59,7 +88,7 @@ export class LocalStorage {
 	public async get() {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.key);
-			return jsonValue != null ? JSON.parse(jsonValue) : [];
+			return jsonValue != null ? JSON.parse(jsonValue) : null;
 		} catch (error: any) {
 			console.log(error);
 			return error;
@@ -78,15 +107,6 @@ export class LocalStorage {
 			previousData[index] = { id, ...newData };
 			this.remove();
 			this.store(previousData);
-		} catch (error: any) {
-			console.log(error);
-			return error;
-		}
-	}
-
-	public async remove() {
-		try {
-			await AsyncStorage.removeItem(this.key);
 		} catch (error: any) {
 			console.log(error);
 			return error;

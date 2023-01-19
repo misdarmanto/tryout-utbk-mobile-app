@@ -2,7 +2,7 @@ import { Button, FlatList, HStack, Input, Stack, Text, VStack } from "native-bas
 import Layout from "../../components/Layout";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootParamList } from "../../navigations";
-import { LocalStorage } from "../../utilities/localStorage";
+import { LocalStorage } from "../../localStorage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";

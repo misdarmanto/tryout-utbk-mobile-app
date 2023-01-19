@@ -60,9 +60,7 @@ export class FirebaseStorage {
 		const imagePath = `payment/${fileName}_${Date.now()}.jpg`;
 		const imageRef = ref(storage, imagePath);
 		await uploadBytesResumable(imageRef, imageBlob);
-		return getDownloadURL(imageRef).then((url) => ({
-			imageUri: url,
-			path: imagePath,
-		}));
+		const uri = await getDownloadURL(imageRef).then((url) => url);
+		return uri;
 	}
 }

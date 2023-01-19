@@ -23,7 +23,7 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 					<CardPyment
 						onPress={() => navigation.navigate("DetailPayment", { item })}
 						totalCoin={item.totalCoin}
-						totalAmount={item.totalAmount}
+						totalAmount={item.totalPrice}
 					/>
 				)}
 			/>

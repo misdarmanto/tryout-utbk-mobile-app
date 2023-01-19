@@ -5,23 +5,25 @@ export interface NotificationsTypes {
 }
 
 export interface UserInfoTypes {
+	isAuth?: boolean;
 	name: string;
 	email: string;
-	isAuth?: boolean;
 	coin: number;
 	notifications: NotificationsTypes[];
-	enrollTryOutId?: string[];
+	enrollTryOutId: string[];
+	waitingListTransaction: string[];
 }
 
 export interface PriceTypes {
 	id: string;
 	totalCoin: number;
-	totalAmount: number;
+	totalPrice: number;
 }
 
 export interface PaymentTypes {
 	paymentMethods: string[];
 	priceList: PriceTypes[];
+	message: string;
 }
 
 export interface BannerTypes {

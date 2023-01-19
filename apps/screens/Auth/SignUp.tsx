@@ -22,7 +22,8 @@ import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { MaterialIcons } from "@expo/vector-icons";
-import { FireStoreUserDB } from "../../firebase/firebaseDB";
+import { FirestoreDB } from "../../firebase/firebaseDB";
+import { UserInfoTypes } from "../../types/index";
 
 type SignUpScreenPropsTypes = NativeStackScreenProps<RootParamList, "SignUp">;
 
@@ -75,16 +76,27 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 
 			await createUserWithEmailAndPassword(auth, email, password);
 
-			const userDb = new FireStoreUserDB();
-			await userDb.setUser({
+			const currentDateTime = new Date();
+			const userDb = new FirestoreDB("User");
+
+			const userData: UserInfoTypes = {
+				name: name,
+				email: email.toLocaleLowerCase(),
+				coin: 50,
+				enrollTryOutId: [],
+				notifications: [
+					{
+						id: Date.now() + "",
+						message: `Welcome ${name} to tryout utbk 2023`,
+						date: currentDateTime.toDateString(),
+					},
+				],
+				waitingListTransaction: [],
+			};
+
+			await userDb.set({
 				documentId: email.toLocaleLowerCase(),
-				data: {
-					name: name,
-					email: email.toLocaleLowerCase(),
-					coin: 50,
-					enrollTryOutId: [],
-					notifications: [{ id: Date.now() + "", message: `Welcome ${name} to tryout utbk 2023` }],
-				},
+				data: userData,
 			});
 		} catch (error: any) {
 			console.log(error);
