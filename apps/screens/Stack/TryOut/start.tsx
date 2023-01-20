@@ -1,12 +1,12 @@
-import { Box, Heading, HStack, Pressable, Text, VStack } from "native-base";
+import { Box, Heading, HStack, Text, VStack } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../../utilities/baseColor";
-import { heightPercentage, widthPercentage } from "../../../utilities/dimension";
+import { heightPercentage } from "../../../utilities/dimension";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { RootContext } from "../../../utilities/rootContext";
-import { ContextApiTypes } from "../../../types";
+import { ContextApiTypes, UserInfoTypes } from "../../../types";
 import { TryOutContextTypes } from ".";
 import { FirestoreDB } from "../../../firebase/firebaseDB";
 
@@ -25,16 +25,33 @@ const Start = () => {
 		}
 	}, []);
 
-	const handleTryOutState = () => {
+	const updateUserInfo = async ({ enrollId, newCoin }: { enrollId: string; newCoin: number }) => {
+		const userDB = new FirestoreDB("User");
+
+		const newUserInfo: UserInfoTypes = {
+			...userInfo,
+			coin: newCoin,
+			enrollTryOutId: [...userInfo.enrollTryOutId, enrollId],
+		};
+
+		await userDB.update({
+			documentId: userInfo.email,
+			newData: newUserInfo,
+		});
+		setUserInfo(newUserInfo);
+	};
+
+	const handleTryOutState = async () => {
 		if (isError) return;
 
 		const newCoin = userInfo.coin - tryOutData.coin;
 		if (newCoin < 0) return;
 
-		const updateCoin = new FirestoreDB("User");
-		updateCoin.update({ documentId: userInfo.email, newData: { coin: newCoin } });
-		userInfo.coin = newCoin;
-		setUserInfo(userInfo);
+		await updateUserInfo({
+			newCoin: newCoin,
+			enrollId: tryOutData.id,
+		});
+
 		setTryOutState("play");
 	};
 
@@ -94,30 +111,6 @@ const Start = () => {
 							{tryOutData.time} menit
 						</Text>
 					</HStack>
-					{/* <HStack space={2}>
-						<Pressable
-							_pressed={{ backgroundColor: BASE_COLOR.blue[50] }}
-							backgroundColor={BASE_COLOR.blue[100]}
-							rounded="md"
-							p={2}
-							px={5}
-						>
-							<Text color={BASE_COLOR.text.primary} fontSize="md">
-								+
-							</Text>
-						</Pressable>
-						<Pressable
-							_pressed={{ backgroundColor: BASE_COLOR.blue[50] }}
-							backgroundColor={BASE_COLOR.blue[100]}
-							rounded="md"
-							p={2}
-							px={5}
-						>
-							<Text color={BASE_COLOR.text.primary} fontSize="md">
-								-
-							</Text>
-						</Pressable>
-					</HStack> */}
 				</HStack>
 
 				<Text color={BASE_COLOR.text.secondaryGray} fontSize="sm" textAlign="justify">

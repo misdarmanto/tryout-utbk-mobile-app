@@ -46,7 +46,7 @@ const Finish = () => {
 		setTryOutState("review");
 	};
 
-	let progressValue = ((score?.correct! + 1) / tryOutDataFinish.questions.length) * 100;
+	const progressValue = (score?.correct! / tryOutDataFinish.questions.length) * 100;
 
 	useLayoutEffect(() => {
 		navigation.setOptions({

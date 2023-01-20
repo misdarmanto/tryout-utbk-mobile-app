@@ -23,8 +23,6 @@ const Play = () => {
 	const CURRENT_QUESTION: QuestionTypes = tryOutData.questions[index];
 	const progressValue = ((index + 1) / tryOutData.questions.length) * 100;
 
-	let TIME_SPEND = 0;
-
 	useEffect(() => {
 		const currentAnswer = CURRENT_QUESTION.answer;
 		if (currentAnswer !== "") setChoiceSelected(currentAnswer);
@@ -35,13 +33,15 @@ const Play = () => {
 		CURRENT_QUESTION.answer = choiceSelected;
 	}, [choiceSelected]);
 
+	const saveTryOutDataRecord = () => {
+		const finalAnswer: TryOutDataTypes = tryOutData;
+		setTryOutDataFinish(finalAnswer);
+	};
+
 	const handleNextQuestion = useCallback(async () => {
 		if (index === tryOutData.questions.length - 1) {
-			const finalAnswer: TryOutDataTypes = tryOutData;
-			finalAnswer.time = TIME_SPEND;
-			console.log(finalAnswer);
+			saveTryOutDataRecord();
 			setOpenModal(true);
-			setTryOutDataFinish(tryOutData);
 			return;
 		}
 		setIndex((value) => value + 1);
@@ -60,18 +60,23 @@ const Play = () => {
 	const HeaderRightComponent = () => {
 		const timeInMinute = tryOutData.time * 60;
 
+		const onCompleteTimmer = () => {
+			saveTryOutDataRecord();
+			setTryOutState("finish");
+		};
+
 		return (
 			<HStack alignItems="center" space={2}>
 				<CountdownCircleTimer
 					isPlaying
+					onComplete={onCompleteTimmer}
 					size={32}
-					duration={timeInMinute}
+					duration={10}
 					strokeWidth={3}
 					colors={["#1E90FF", "#47D5C0", "#FF87A4", "#FF87A4"]}
 					colorsTime={[10, 5, 2, 0]}
 				>
 					{({ remainingTime }) => {
-						TIME_SPEND = remainingTime;
 						const timeInMinute = Math.round(remainingTime / 60);
 						return <Text color={BASE_COLOR.text.primary}>{timeInMinute}</Text>;
 					}}
@@ -79,9 +84,6 @@ const Play = () => {
 				<Text fontFamily="lato" color={BASE_COLOR.text.primary}>
 					Menit
 				</Text>
-				{/* <TouchableOpacity onPress={() => setIndex(1)}>
-					<Ionicons name="ios-grid" size={24} color={BASE_COLOR.text.primary} />
-				</TouchableOpacity> */}
 			</HStack>
 		);
 	};
