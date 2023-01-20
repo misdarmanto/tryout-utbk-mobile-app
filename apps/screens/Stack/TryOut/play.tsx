@@ -6,11 +6,11 @@ import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
 import { LocalStorage } from "../../../localStorage";
-import { QuestionTypes } from "./fakeData";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import ChoiceField from "../../../components/form/choiceField";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { TryOutDataTypes, QuestionTypes } from "../../../types/tryOutDataTypes";
 
 const Play = () => {
 	const { navigation, tryOutData, setTryOutDataFinish, setTryOutState }: any = useContext(tryOutContext);
@@ -21,7 +21,9 @@ const Play = () => {
 
 	const storage = new LocalStorage("tryout1");
 	const CURRENT_QUESTION: QuestionTypes = tryOutData.questions[index];
-	let progressValue = ((index + 1) / tryOutData.questions.length) * 100;
+	const progressValue = ((index + 1) / tryOutData.questions.length) * 100;
+
+	let TIME_SPEND = 0;
 
 	useEffect(() => {
 		const currentAnswer = CURRENT_QUESTION.answer;
@@ -35,9 +37,11 @@ const Play = () => {
 
 	const handleNextQuestion = useCallback(async () => {
 		if (index === tryOutData.questions.length - 1) {
+			const finalAnswer: TryOutDataTypes = tryOutData;
+			finalAnswer.time = TIME_SPEND;
+			console.log(finalAnswer);
 			setOpenModal(true);
 			setTryOutDataFinish(tryOutData);
-			// await storage.store(tryOutData);
 			return;
 		}
 		setIndex((value) => value + 1);
@@ -53,30 +57,34 @@ const Play = () => {
 		setChoiceSelected(alphabet);
 	};
 
-	const timeInMinute = tryOutData.time * 60;
-	const HeaderRightComponent = () => (
-		<HStack alignItems="center" space={2}>
-			<CountdownCircleTimer
-				isPlaying
-				size={32}
-				duration={timeInMinute}
-				strokeWidth={3}
-				colors={["#1E90FF", "#47D5C0", "#FF87A4", "#FF87A4"]}
-				colorsTime={[10, 5, 2, 0]}
-			>
-				{({ remainingTime }) => {
-					const timeInMinute = Math.round(remainingTime / 60);
-					return <Text color={BASE_COLOR.text.primary}>{timeInMinute}</Text>;
-				}}
-			</CountdownCircleTimer>
-			<Text fontFamily="lato" color={BASE_COLOR.text.primary}>
-				Menit
-			</Text>
-			<TouchableOpacity onPress={() => setIndex(1)}>
-				<Ionicons name="ios-grid" size={24} color={BASE_COLOR.text.primary} />
-			</TouchableOpacity>
-		</HStack>
-	);
+	const HeaderRightComponent = () => {
+		const timeInMinute = tryOutData.time * 60;
+
+		return (
+			<HStack alignItems="center" space={2}>
+				<CountdownCircleTimer
+					isPlaying
+					size={32}
+					duration={timeInMinute}
+					strokeWidth={3}
+					colors={["#1E90FF", "#47D5C0", "#FF87A4", "#FF87A4"]}
+					colorsTime={[10, 5, 2, 0]}
+				>
+					{({ remainingTime }) => {
+						TIME_SPEND = remainingTime;
+						const timeInMinute = Math.round(remainingTime / 60);
+						return <Text color={BASE_COLOR.text.primary}>{timeInMinute}</Text>;
+					}}
+				</CountdownCircleTimer>
+				<Text fontFamily="lato" color={BASE_COLOR.text.primary}>
+					Menit
+				</Text>
+				{/* <TouchableOpacity onPress={() => setIndex(1)}>
+					<Ionicons name="ios-grid" size={24} color={BASE_COLOR.text.primary} />
+				</TouchableOpacity> */}
+			</HStack>
+		);
+	};
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -122,13 +130,13 @@ const Play = () => {
 						size="xl"
 					/> */}
 					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.question}</Text>
-					<Image
+					{/* <Image
 						source={{
 							uri: "https://wallpaperaccess.com/full/317501.jpg",
 						}}
 						alt="Alternate Text"
 						size="xl"
-					/>
+					/> */}
 				</VStack>
 
 				<VStack space={2} my="10">
@@ -142,8 +150,8 @@ const Play = () => {
 						alphaBet="B"
 						isActive={choiceSelected === "B"}
 						onPress={() => handleSelectAnswer("B")}
-						// text={CURRENT_QUESTION.choices.B}
-						imageUrl="https://wallpaperaccess.com/full/317501.jpg"
+						text={CURRENT_QUESTION.choices.B}
+						// imageUrl="https://wallpaperaccess.com/full/317501.jpg"
 					/>
 					<ChoiceField
 						alphaBet="C"

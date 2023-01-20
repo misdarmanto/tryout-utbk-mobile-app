@@ -15,6 +15,7 @@ const Start = () => {
 
 	const { tryOutData } = useContext<TryOutContextTypes>(tryOutContext);
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+	const { setUserInfo }: any = useContext(RootContext);
 
 	const [isError, setIsError] = useState(false);
 
@@ -33,6 +34,7 @@ const Start = () => {
 		const updateCoin = new FirestoreDB("User");
 		updateCoin.update({ documentId: userInfo.email, newData: { coin: newCoin } });
 		userInfo.coin = newCoin;
+		setUserInfo(userInfo);
 		setTryOutState("play");
 	};
 
