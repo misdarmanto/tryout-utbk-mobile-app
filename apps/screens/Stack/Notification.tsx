@@ -27,7 +27,7 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 
 	useEffect(() => {
 		(async () => {
-			const localNotification = await storage.get();
+			const localNotification = (await storage.get()) || [];
 			console.log(localNotification);
 
 			if (userInfo.notifications.length === 0) {
@@ -88,7 +88,7 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 						</HStack>
 						<HStack justifyContent="flex-end">
 							<Text fontSize="11" color={BASE_COLOR.text.primary}>
-								{item.date}
+								{item.createdAt}
 							</Text>
 						</HStack>
 					</VStack>

@@ -1,7 +1,7 @@
 export interface NotificationsTypes {
 	id: string;
 	message: string;
-	date: string;
+	createdAt: string;
 }
 
 export interface UserInfoTypes {

@@ -27,11 +27,12 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 
 	const KEY = `${userInfo.email}_${item.id}`;
 	const transactionLocalStorage = new LocalStorage(KEY);
+	const documentName = `${userInfo.email}_${item.id}`;
 
 	const storage = new FirebaseStorage();
 
 	useEffect(() => {
-		const userTransactionsChek = userInfo.waitingListTransaction?.includes(item.id);
+		const userTransactionsChek = userInfo.waitingListTransaction?.includes(documentName);
 		if (userTransactionsChek) {
 			setIsWaiting(true);
 		}
@@ -46,6 +47,23 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 		}
 	};
 
+	const updateUserInfo = async () => {
+		const userDb = new FirestoreDB("User");
+
+		await userDb.update({
+			documentId: userInfo.email,
+			newData: {
+				waitingListTransaction: [...userInfo?.waitingListTransaction, documentName],
+			},
+		});
+
+		const newUserInfo: UserInfoTypes = {
+			...userInfo,
+			waitingListTransaction: [...userInfo.waitingListTransaction, documentName],
+		};
+		setUserInfo(newUserInfo);
+	};
+
 	interface WriteLogTansactionTypes {
 		id: string;
 		userName: string;
@@ -53,38 +71,30 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 		coin: number;
 		price: number;
 		image: string;
-		isVerify: boolean;
+		status: "waiting" | "verified" | "rejected";
 	}
 
 	const writeLogTransaction = async (transaction: WriteLogTansactionTypes) => {
 		const userTransactions = new FirestoreDB("Transactions");
-		const documentName = `${userInfo.email}_${item.id}`;
 
 		const currentDateTime = new Date();
 		await userTransactions.set({
 			documentId: documentName,
 			data: {
-				id: item.id,
-				time: currentDateTime.toDateString(),
+				id: documentName,
+				createdAt: currentDateTime.toDateString(),
 				userName: transaction.userName,
 				email: transaction.email,
 				coin: transaction.coin,
 				price: transaction.price,
 				image: transaction.image,
-				isVerify: transaction.isVerify,
+				status: transaction.status,
 			},
 		});
-
-		const newUserInfo: UserInfoTypes = {
-			...userInfo,
-			waitingListTransaction: [...userInfo.waitingListTransaction, item.id],
-		};
-		setUserInfo(newUserInfo);
 	};
 
 	const handleUploadeImage = async () => {
 		setLoading(true);
-		const userDb = new FirestoreDB("User");
 
 		try {
 			const imageUri = await storage.uploadImage({
@@ -99,15 +109,10 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 				coin: item.totalCoin,
 				price: item.totalPrice,
 				image: imageUri,
-				isVerify: false,
+				status: "waiting",
 			});
 
-			const newData: UserInfoTypes = {
-				...userInfo,
-				waitingListTransaction: [...userInfo?.waitingListTransaction, item.id],
-			};
-
-			await userDb.update({ documentId: userInfo.email, newData: newData });
+			await updateUserInfo();
 
 			alert("Berhasil di upload, pembayaran mu sedang diverifikasi");
 			setImage("");
