@@ -17,13 +17,13 @@ import { RootContext } from "../utilities/rootContext";
 import { ContextApiTypes, PriceTypes } from "../types";
 import RankTryOutScreen from "../screens/Stack/RankTryOut";
 import DetailPaymentScreen from "../screens/Stack/DetailPayment";
-import { TryOutDataTypes } from "../screens/Stack/TryOut/fakeData";
+import { TryOutDataTypes } from "../types/tryOutDataTypes";
 
 export type RootParamList = {
 	Main: undefined;
 	Home: undefined;
 	Exercises: undefined;
-	TryOut: { tryOutItem: TryOutDataTypes };
+	TryOut: { tryOutData: TryOutDataTypes };
 	Profile: undefined;
 	Pyment: undefined;
 	DetailTryOut: undefined;

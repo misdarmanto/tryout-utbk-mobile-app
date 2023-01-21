@@ -1,14 +1,15 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { FlatList, HStack, Text } from "native-base";
+import { HStack, ScrollView, Text } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { ButtonPrimary } from "../../components/button/ButtonPrimary";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
 import { useContext } from "react";
 import { toMoney } from "../../utilities/toMony";
+import { TouchableOpacity } from "react-native";
+
 type PymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "Pyment">;
 
 export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
@@ -16,28 +17,33 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 
 	return (
 		<Layout>
-			<FlatList
-				data={appInfo.payment.priceList}
-				keyExtractor={(item) => item.id + ""}
-				renderItem={({ item }) => (
-					<CardPyment
-						onPress={() => navigation.navigate("DetailPayment", { item })}
-						totalCoin={item.totalCoin}
-						totalAmount={item.totalPrice}
-					/>
-				)}
-			/>
+			<ScrollView showsVerticalScrollIndicator={false}>
+				<CardPyment title="Watch Ads" totalCoin={5} totalAmount={0} />
+
+				{appInfo.payment.priceList.map((item, index: number) => {
+					return (
+						<CardPyment
+							key={index}
+							title="Top Up"
+							onPress={() => navigation.navigate("DetailPayment", { item })}
+							totalCoin={item.totalCoin}
+							totalAmount={item.totalPrice}
+						/>
+					);
+				})}
+			</ScrollView>
 		</Layout>
 	);
 }
 
 interface CardPymentTpes {
+	title?: string;
 	totalCoin: number;
 	totalAmount: number;
 	onPress?: any;
 }
 
-const CardPyment = ({ totalCoin, totalAmount, onPress }: CardPymentTpes) => {
+const CardPyment = ({ title = "Top Up", totalCoin, totalAmount, onPress }: CardPymentTpes) => {
 	return (
 		<HStack
 			backgroundColor="#FFF"
@@ -62,7 +68,17 @@ const CardPyment = ({ totalCoin, totalAmount, onPress }: CardPymentTpes) => {
 					Rp.{toMoney(totalAmount)}
 				</Text>
 			</HStack>
-			<ButtonPrimary title="Top Up" onPress={onPress} style={{ paddingHorizontal: 15 }} />
+			<TouchableOpacity
+				onPress={onPress}
+				style={{
+					backgroundColor: BASE_COLOR.primary,
+					padding: 5,
+					paddingHorizontal: 10,
+					borderRadius: 5,
+				}}
+			>
+				<Text style={{ color: "#FFF", fontSize: 15 }}>{title}</Text>
+			</TouchableOpacity>
 		</HStack>
 	);
 };

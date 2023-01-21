@@ -17,6 +17,7 @@ const Start = () => {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	const { setUserInfo }: any = useContext(RootContext);
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
 
 	useLayoutEffect(() => {
@@ -43,15 +44,17 @@ const Start = () => {
 
 	const handleTryOutState = async () => {
 		if (isError) return;
-
 		const newCoin = userInfo.coin - tryOutData.coin;
 		if (newCoin < 0) return;
+
+		setIsLoading(true);
 
 		await updateUserInfo({
 			newCoin: newCoin,
 			enrollId: tryOutData.id,
 		});
 
+		setIsLoading(false);
 		setTryOutState("play");
 	};
 
@@ -127,7 +130,7 @@ const Start = () => {
 				>
 					<HStack justifyContent="center" backgroundColor={BASE_COLOR.primary} rounded="md" p={2}>
 						<Text color="#FFF" fontSize="md">
-							Mulai
+							{isLoading ? "Loading.." : "Mulai"}
 						</Text>
 					</HStack>
 				</TouchableOpacity>

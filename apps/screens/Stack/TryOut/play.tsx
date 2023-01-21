@@ -19,7 +19,6 @@ const Play = () => {
 	const [choiceSelected, setChoiceSelected] = useState("");
 	const [index, setIndex] = useState(0);
 
-	const storage = new LocalStorage("tryout1");
 	const CURRENT_QUESTION: QuestionTypes = tryOutData.questions[index];
 	const progressValue = ((index + 1) / tryOutData.questions.length) * 100;
 
@@ -57,6 +56,10 @@ const Play = () => {
 		setChoiceSelected(alphabet);
 	};
 
+	const handleChangeTryOutState = () => {
+		setTryOutState("finish");
+	};
+
 	const HeaderRightComponent = () => {
 		const timeInMinute = tryOutData.time * 60;
 
@@ -71,7 +74,7 @@ const Play = () => {
 					isPlaying
 					onComplete={onCompleteTimmer}
 					size={32}
-					duration={10}
+					duration={timeInMinute}
 					strokeWidth={3}
 					colors={["#1E90FF", "#47D5C0", "#FF87A4", "#FF87A4"]}
 					colorsTime={[10, 5, 2, 0]}
@@ -206,7 +209,7 @@ const Play = () => {
 				modalText="Apakah yakin jawaban mu sudah selesai?"
 				btnNoTitle="Koreksi"
 				btnYesTitle="Selesai"
-				onBtnYesClick={() => setTryOutState("finish")}
+				onBtnYesClick={handleChangeTryOutState}
 			/>
 		</VStack>
 	);

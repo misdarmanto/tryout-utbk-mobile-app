@@ -6,15 +6,14 @@ import { LocalStorage } from "../../localStorage";
 import { useContext, useEffect, useRef, useState } from "react";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes, NotificationsTypes } from "../../types";
+import { ContextApiTypes, NotificationsTypes, UserInfoTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 
 type NotificationScreenPropsTypes = NativeStackScreenProps<RootParamList, "Notification">;
 
 const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
-	const [listPerson, setListPerson] = useState<any[]>([]);
-	const [name, setName] = useState("");
+	const { setUserInfo }: any = useContext(RootContext);
 	const [notificationList, setNotificationList] = useState<NotificationsTypes[]>([]);
 
 	const storage = new LocalStorage("notification");
@@ -22,7 +21,11 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 	const remoreNotificationFromFirestore = async () => {
 		const updateCoin = new FirestoreDB("User");
 		await updateCoin.update({ documentId: userInfo.email, newData: { notifications: [] } });
+	};
+
+	const updateUserInfo = () => {
 		userInfo.notifications = [];
+		setUserInfo(userInfo);
 	};
 
 	useEffect(() => {
@@ -38,32 +41,17 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 			if (userInfo.notifications.length !== 0) {
 				const notificationUpdated = [...localNotification, ...userInfo.notifications];
 				setNotificationList(notificationUpdated);
+				await storage.remove();
 				await storage.store(notificationUpdated);
 				await remoreNotificationFromFirestore();
+				updateUserInfo();
 				return;
 			}
 		})();
 	}, []);
 
-	const handleSaveData = async () => {
-		const store = await storage.store([{ name: name }]);
-	};
-
-	const handleGetData = async () => {
-		const store = await storage.get();
-		console.log(store);
-		setListPerson(store);
-	};
-
 	const handleRemove = async () => {
 		storage.remove();
-	};
-
-	const handleUpdate = async () => {
-		storage.update(1673238792912, {
-			id: 1673238792912,
-			name: "Hello world",
-		});
 	};
 
 	return (
@@ -94,7 +82,7 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 					</VStack>
 				)}
 			/>
-			{/* <Button onPress={handleRemove}>Remove</Button> */}
+			<Button onPress={handleRemove}>Remove</Button>
 		</Layout>
 	);
 };

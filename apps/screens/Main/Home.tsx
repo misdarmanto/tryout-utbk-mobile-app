@@ -6,7 +6,7 @@ import { FontAwesome5, MaterialIcons, Fontisto, MaterialCommunityIcons, Ionicons
 import { RootParamList } from "../../navigations";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
-import { PropsWithChildren, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import SkeletonHomeScreen from "../../components/skeleton/HomeScreenSkeleton";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
@@ -41,18 +41,21 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		setIsLoading(false);
 	}, []);
 
-	const handleCardOnPress = (tryOutItem: TryOutDataTypes) => {
+	const handleCardOnPress = (item: TryOutDataTypes) => {
 		if (!userInfo.isAuth) {
 			navigation.navigate("Login");
 			return;
 		}
 
-		const isFinish = userInfo.enrollTryOutId?.includes(tryOutItem.id);
-		if (isFinish) {
-			navigation.navigate("RankTryOut");
-		} else {
-			navigation.navigate("TryOut", { tryOutItem });
-		}
+		// const isFinish = userInfo.enrollTryOutId?.includes(item.id);
+		// if (isFinish) {
+		// 	navigation.navigate("RankTryOut");
+		// } else {
+		// 	navigation.navigate("TryOut", { item });
+		// }
+		const newItem = item.questions.map((item: any) => ({ ...item, answer: "" }));
+		item.questions = newItem;
+		navigation.navigate("TryOut", { tryOutData: item });
 	};
 
 	useLayoutEffect(() => {

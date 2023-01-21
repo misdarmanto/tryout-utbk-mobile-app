@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../../components/Layout";
 import { RootParamList } from "../../../navigations/index";
 import { tryOutContext } from "./contextApi";
@@ -8,7 +8,6 @@ import Start from "./start";
 import Play from "./play";
 import Review from "./review";
 import { TryOutDataTypes } from "../../../types/tryOutDataTypes";
-import { TRYOUT_DATA } from "./fakeData";
 
 type TryOutScreenPropsTypes = NativeStackScreenProps<RootParamList, "TryOut">;
 
@@ -30,9 +29,7 @@ export default function TryOutScreen({ route, navigation }: TryOutScreenPropsTyp
 	const [tryOutState, setTryOutState] = useState<TryoutStateTypes>("start");
 	const [tryOutDataFinish, setTryOutDataFinish] = useState<TryOutDataTypes>();
 
-	const { tryOutItem } = route.params;
-
-	const [tryOutData, setTryOutData] = useState(tryOutItem);
+	const { tryOutData } = route.params;
 
 	let renderScreen;
 	switch (tryOutState) {
@@ -60,7 +57,6 @@ export default function TryOutScreen({ route, navigation }: TryOutScreenPropsTyp
 					setTryOutState,
 					navigation,
 					tryOutData,
-					setTryOutData,
 					tryOutDataFinish,
 					setTryOutDataFinish,
 				}}
