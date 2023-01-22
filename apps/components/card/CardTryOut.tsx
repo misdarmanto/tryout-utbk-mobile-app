@@ -9,7 +9,7 @@ export interface CardTryOutTypes {
 	id: string;
 	title: string;
 	exampTotal: number;
-	enrollTotal: number;
+	time: number;
 	onPress?: any;
 	coinTotal?: number;
 	category?: string;
@@ -18,7 +18,7 @@ export interface CardTryOutTypes {
 }
 
 export const CardTryOut = (props: CardTryOutTypes) => {
-	const { title, exampTotal, enrollTotal, coinTotal, isFree, onPress, isFinish } = props;
+	const { title, exampTotal, time, coinTotal, isFree, onPress, isFinish } = props;
 
 	return (
 		<TouchableOpacity activeOpacity={0.7} onPress={onPress}>
@@ -74,16 +74,16 @@ export const CardTryOut = (props: CardTryOutTypes) => {
 
 					<HStack space={5} justifyContent="space-between" alignItems="flex-end">
 						<HStack space={5} alignItems="flex-end">
-							<HStack alignItems="flex-end">
-								<AntDesign name="user" size={20} color={BASE_COLOR.text.primary} />
+							<HStack alignItems="flex-end" space={1}>
+								<MaterialIcons name="timer" size={24} color={BASE_COLOR.text.primary} />
 								<Text fontSize="xs" color="gray.500">
-									{enrollTotal}
+									{time} menit
 								</Text>
 							</HStack>
 							<HStack space={1}>
 								<FontAwesome5 name="book" size={15} color={BASE_COLOR.text.primary} />
 								<Text fontSize="xs" color="gray.500">
-									{exampTotal}
+									{exampTotal} soal
 								</Text>
 							</HStack>
 						</HStack>

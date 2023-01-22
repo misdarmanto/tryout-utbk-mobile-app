@@ -5,7 +5,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import ModalPrimary from "../../../components/Modal/ModalPrimary";
-import { LocalStorage } from "../../../localStorage";
+
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import ChoiceField from "../../../components/form/choiceField";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";

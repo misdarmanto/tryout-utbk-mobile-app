@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HStack, ScrollView, Text } from "native-base";
+import { HStack, ScrollView, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -18,13 +18,79 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 	return (
 		<Layout>
 			<ScrollView showsVerticalScrollIndicator={false}>
-				<CardPyment title="Watch Ads" totalCoin={5} totalAmount={0} />
+				<VStack
+					backgroundColor="#FFF"
+					px={5}
+					py={2}
+					borderWidth={1}
+					borderColor="gray.200"
+					my={1}
+					space={1}
+					borderRadius="5"
+					rounded="md"
+				>
+					<HStack justifyContent="space-between">
+						<HStack space={1}>
+							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+								{5} coin
+							</Text>
+						</HStack>
+						<TouchableOpacity
+							style={{
+								backgroundColor: BASE_COLOR.primary,
+								padding: 5,
+								paddingHorizontal: 10,
+								borderRadius: 5,
+							}}
+						>
+							<Text style={{ color: "#FFF", fontSize: 15 }}>Detail</Text>
+						</TouchableOpacity>
+					</HStack>
+					<Text fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Lihat Iklan untuk mendapatkan 5 koin
+					</Text>
+				</VStack>
+
+				<VStack
+					backgroundColor="#FFF"
+					px={5}
+					py={2}
+					borderWidth={1}
+					borderColor="gray.200"
+					my={1}
+					space={1}
+					borderRadius="5"
+					rounded="md"
+				>
+					<HStack justifyContent="space-between">
+						<HStack space={1}>
+							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+								{50} coin
+							</Text>
+						</HStack>
+						<TouchableOpacity
+							style={{
+								backgroundColor: BASE_COLOR.primary,
+								padding: 5,
+								paddingHorizontal: 10,
+								borderRadius: 5,
+							}}
+						>
+							<Text style={{ color: "#FFF", fontSize: 15 }}>Detail</Text>
+						</TouchableOpacity>
+					</HStack>
+					<Text fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Undang teman mu untuk mendapatkan 50 koin
+					</Text>
+				</VStack>
 
 				{appInfo.payment.priceList.map((item, index: number) => {
 					return (
 						<CardPyment
 							key={index}
-							title="Top Up"
+							title="Detail"
 							onPress={() => navigation.navigate("DetailPayment", { item })}
 							totalCoin={item.totalCoin}
 							totalAmount={item.totalPrice}

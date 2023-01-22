@@ -18,6 +18,7 @@ import { ContextApiTypes, PriceTypes } from "../types";
 import RankTryOutScreen from "../screens/Stack/RankTryOut";
 import DetailPaymentScreen from "../screens/Stack/DetailPayment";
 import { TryOutDataTypes } from "../types/tryOutDataTypes";
+import { heightPercentage } from "../utilities/dimension";
 
 export type RootParamList = {
 	Main: undefined;
@@ -41,8 +42,8 @@ function TabNavigation() {
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
-				tabBarShowLabel: false,
-				headerTitleStyle: { fontFamily: "lato", color: BASE_COLOR.text.primary },
+				tabBarStyle: { minHeight: heightPercentage(7) },
+				sheaderTitleStyle: { fontFamily: "lato", color: BASE_COLOR.text.primary },
 				tabBarIcon: ({ color }) => {
 					switch (route.name) {
 						case "Home":
@@ -61,10 +62,26 @@ function TabNavigation() {
 				tabBarInactiveTintColor: BASE_COLOR.gray,
 			})}
 		>
-			<Tab.Screen name="Home" component={HomeScreen} />
-			<Tab.Screen name="Exercises" component={ExercisesScreen} />
-			<Tab.Screen name="Pyment" component={PymentScreen} />
-			{userInfo.isAuth && <Tab.Screen name="Profile" component={ProfileScreen} />}
+			<Tab.Screen name="Home" options={{ tabBarLabel: "Beranda" }} component={HomeScreen} />
+			<Tab.Screen
+				name="Exercises"
+				options={{ tabBarLabel: "Tryout", headerTitle: "TryOut" }}
+				component={ExercisesScreen}
+			/>
+			{userInfo.isAuth && (
+				<>
+					<Tab.Screen
+						name="Pyment"
+						options={{ tabBarLabel: "Pembelian", headerTitle: "Pembelian" }}
+						component={PymentScreen}
+					/>
+					<Tab.Screen
+						name="Profile"
+						options={{ tabBarLabel: "Profile" }}
+						component={ProfileScreen}
+					/>
+				</>
+			)}
 		</Tab.Navigator>
 	);
 }

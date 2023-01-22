@@ -221,7 +221,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 							exampTotal={item.total}
 							title={item.title}
 							id={item.id}
-							enrollTotal={item.enrollTotal}
+							time={item.time}
 							onPress={() => handleCardOnPress(item)}
 						/>
 					))}

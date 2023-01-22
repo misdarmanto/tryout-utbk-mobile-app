@@ -26,13 +26,12 @@ const Start = () => {
 		}
 	}, []);
 
-	const updateUserInfo = async ({ enrollId, newCoin }: { enrollId: string; newCoin: number }) => {
+	const updateUserInfo = async ({ newCoin }: { newCoin: number }) => {
 		const userDB = new FirestoreDB("User");
 
 		const newUserInfo: UserInfoTypes = {
 			...userInfo,
 			coin: newCoin,
-			enrollTryOutId: [...userInfo.enrollTryOutId, enrollId],
 		};
 
 		await userDB.update({
@@ -51,7 +50,6 @@ const Start = () => {
 
 		await updateUserInfo({
 			newCoin: newCoin,
-			enrollId: tryOutData.id,
 		});
 
 		setIsLoading(false);
