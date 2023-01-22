@@ -1,6 +1,11 @@
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc, query, where } from "firebase/firestore";
 import { DB } from "../configs/firebase";
-import { TryOutDataTypes } from "../screens/Stack/TryOut/fakeData";
+import { TryOutDataTypes } from "../types/tryOutDataTypes";
+
+interface QueryParamsTypes {
+	params_1: string;
+	params_2: any;
+}
 
 export class FirestoreDB {
 	private collectionName: string;
@@ -15,6 +20,14 @@ export class FirestoreDB {
 
 	private getCollectionPath() {
 		return collection(DB, this.collectionName);
+	}
+
+	private extractData(snapshoot: any) {
+		const data: TryOutDataTypes[] = [];
+		snapshoot.forEach((doc: any) => {
+			data.push({ ...doc.data(), id: doc.id });
+		});
+		return data;
 	}
 
 	public async set({ documentId, data }: { documentId: string; data: any }) {
@@ -40,17 +53,22 @@ export class FirestoreDB {
 
 	public async getCollection() {
 		try {
-			const extractData = (snapshoot: any) => {
-				const data: TryOutDataTypes[] = [];
-				snapshoot.forEach((doc: any) => {
-					data.push({ ...doc.data(), id: doc.id });
-				});
-				return data;
-			};
-
 			const collectionPath = this.getCollectionPath();
 			const querySnapshot = await getDocs(collectionPath);
-			const result = extractData(querySnapshot);
+			const result = this.extractData(querySnapshot);
+			return result;
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	}
+
+	public async queryCollection({ params_1, params_2 }: QueryParamsTypes) {
+		try {
+			const collectionPath = this.getCollectionPath();
+			const queryParams = query(collectionPath, where(params_1, "==", params_2));
+			const querySnapshot = await getDocs(queryParams);
+			const result = this.extractData(querySnapshot);
 			return result;
 		} catch (error: any) {
 			console.log(error);

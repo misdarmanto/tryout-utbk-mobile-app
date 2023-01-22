@@ -18,27 +18,28 @@ type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
 export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	const { userInfo, appInfo } = useContext<ContextApiTypes>(RootContext);
-
-	const { tryOutData, setTryOutData }: any = useContext(RootContext);
-
+	const [tryOutHighlight, setTryOutHighlight] = useState<TryOutDataTypes[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const cardData: TryOutDataTypes[] = tryOutData;
 
-	const firestoreDB = new FirestoreDB("TryOut");
+	const getTryOutHighlight = async () => {
+		setIsLoading(true);
+		const tryOutDB = new FirestoreDB("TryOut");
+		const data = await tryOutDB.queryCollection({
+			params_1: "isHighlight",
+			params_2: true,
+		});
+		setTryOutHighlight(data);
+		setIsLoading(false);
+	};
 
 	useEffect(() => {
 		(async () => {
-			const data = await firestoreDB.getCollection();
-			setTryOutData(data);
-			setIsLoading(false);
+			await getTryOutHighlight();
 		})();
 	}, []);
 
 	const onRefresh = useCallback(async () => {
-		setIsLoading(true);
-		const data = await firestoreDB.getCollection();
-		setTryOutData(data);
-		setIsLoading(false);
+		await getTryOutHighlight();
 	}, []);
 
 	const handleCardOnPress = (item: TryOutDataTypes) => {
@@ -46,13 +47,6 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			navigation.navigate("Login");
 			return;
 		}
-
-		// const isFinish = userInfo.enrollTryOutId?.includes(item.id);
-		// if (isFinish) {
-		// 	navigation.navigate("RankTryOut");
-		// } else {
-		// 	navigation.navigate("TryOut", { item });
-		// }
 		const newItem = item.questions.map((item: any) => ({ ...item, answer: "" }));
 		item.questions = newItem;
 		navigation.navigate("TryOut", { tryOutData: item });
@@ -212,12 +206,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 						Recomend
 					</Heading>
 
-					{cardData.map((item) => (
+					{tryOutHighlight.map((item) => (
 						<CardTryOut
 							key={item.id}
 							coinTotal={item.coin}
 							isFree={item.coin === 0}
-							isFinish={userInfo.enrollTryOutId?.includes(item.id)}
 							exampTotal={item.total}
 							title={item.title}
 							id={item.id}

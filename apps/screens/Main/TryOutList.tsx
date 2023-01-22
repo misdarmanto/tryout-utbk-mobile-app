@@ -9,43 +9,44 @@ import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
+import { FirestoreDB } from "../../firebase/firebaseDB";
+import { TryOutContextTypes } from "../Stack/TryOut";
+import { TryOutDataTypes } from "../../types/tryOutDataTypes";
 
-type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "Exercises">;
+type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "TryOutList">;
 
-export default function ExercisesScreen({ navigation }: ExercisesPropsTypes) {
-	const { userInfo } = useContext<ContextApiTypes>(RootContext);
+export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
+	const { userInfo, appInfo } = useContext<ContextApiTypes>(RootContext);
+	const context = useContext<TryOutContextTypes>(RootContext);
+	const tryOutList: any = context.tryOutData;
 
-	const [tryoutData, setTryoutData] = useState<CardTryOutTypes[]>(cardData);
+	console.log(tryOutList);
+
+	const [tryoutData, setTryOutData] = useState<TryOutDataTypes[]>(tryOutList);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("All");
 
 	useEffect(() => {
 		setTimeout(() => {
 			setIsLoading(false);
-		}, 2000);
-	}, []);
-
-	useLayoutEffect(() => {
-		navigation.setOptions({
-			title: "Latihan Soal",
-		});
+		}, 100);
 	}, []);
 
 	const onRefresh = useCallback(() => {
 		setIsLoading(true);
 		setTimeout(() => {
 			setIsLoading(false);
-		}, 2000);
+		}, 100);
 	}, []);
 
 	const handleSelectTab = (category: string) => {
 		setActiveTab(category);
 		if (category === "All") {
-			setTryoutData(cardData);
+			setTryOutData(tryOutList);
 			return;
 		}
-		const newTab = cardData.filter((item: CardTryOutTypes) => item.category === category);
-		setTryoutData(newTab);
+		const newTab = tryOutList.filter((item: CardTryOutTypes) => item.category === category);
+		setTryOutData(newTab);
 	};
 
 	const handleCardOnPress = () => {
@@ -57,7 +58,7 @@ export default function ExercisesScreen({ navigation }: ExercisesPropsTypes) {
 	};
 
 	const Tab = () => {
-		const TAB_HEADER_NAMES = ["All", "TPS", "Saintek", "Soshum"];
+		const TAB_HEADER_NAMES = appInfo.tryOutSettings.categories;
 		return (
 			<ScrollView showsHorizontalScrollIndicator={false} horizontal>
 				<HStack alignItems="center" justifyContent="space-between" px={1} py={5}>
@@ -84,7 +85,17 @@ export default function ExercisesScreen({ navigation }: ExercisesPropsTypes) {
 					ListHeaderComponent={() => <Tab />}
 					data={tryoutData}
 					keyExtractor={(item) => item.id + ""}
-					renderItem={({ item }) => <CardTryOut onPress={handleCardOnPress} {...item} />}
+					renderItem={({ item }) => (
+						<CardTryOut
+							onPress={handleCardOnPress}
+							coinTotal={item.coin}
+							isFree={item.coin === 0}
+							exampTotal={item.total}
+							title={item.title}
+							id={item.id}
+							time={item.time}
+						/>
+					)}
 				/>
 			)}
 		</Layout>
@@ -117,74 +128,3 @@ const RenderTabHeader = ({ title, onPress, isActive }: RenderTabHeaderTypes) => 
 		</Heading>
 	</Box>
 );
-
-const cardData: CardTryOutTypes[] = [
-	{
-		id: "Erer2",
-		title: "Tryout UTBK Saintek #1",
-		time: 1000,
-		exampTotal: 50,
-		isFree: true,
-		category: "Soshum",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK Saintek #2",
-		time: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		category: "Saintek",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK TPS #2",
-		time: 1000,
-		exampTotal: 50,
-		isFree: true,
-		category: "Soshum",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK Soshum #1",
-		time: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		category: "Saintek",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK TPS #2",
-		time: 1000,
-		exampTotal: 50,
-		isFree: true,
-		category: "TPS",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK Soshum #1",
-		time: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		category: "TPS",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK TPS #2",
-		time: 1000,
-		exampTotal: 50,
-		isFree: true,
-		category: "Saintek",
-	},
-	{
-		id: "Erer2",
-		title: "Tryout UTBK Soshum #1",
-		time: 1000,
-		exampTotal: 50,
-		coinTotal: 300,
-		isFree: false,
-		category: "Saintek",
-	},
-];

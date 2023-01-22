@@ -55,7 +55,6 @@ export default function App() {
 		return () => removeNetInfoSubscription();
 	}, []);
 
-	console.log("render again");
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			(async () => {
@@ -82,6 +81,10 @@ export default function App() {
 				const appInfoDB = new FirestoreDB("AppInfo");
 				const appData = await appInfoDB.get({ documentId: "general" });
 				setAppInfo(appData);
+
+				const tryOutDB = new FirestoreDB("TryOut");
+				const tryOut = await tryOutDB.getCollection();
+				setTryOutData(tryOut);
 
 				setIsLoading(false);
 			})();

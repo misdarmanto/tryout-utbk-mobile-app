@@ -4,7 +4,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/Main/Home";
-import ExercisesScreen from "../screens/Main/Exercises";
+import ExercisesScreen from "../screens/Main/TryOutList";
 import PymentScreen from "../screens/Main/Pyment";
 import ProfileScreen from "../screens/Main/Profile";
 import TryOutScreen from "../screens/Stack/TryOut";
@@ -19,11 +19,12 @@ import RankTryOutScreen from "../screens/Stack/RankTryOut";
 import DetailPaymentScreen from "../screens/Stack/DetailPayment";
 import { TryOutDataTypes } from "../types/tryOutDataTypes";
 import { heightPercentage } from "../utilities/dimension";
+import TryOutListScreen from "../screens/Main/TryOutList";
 
 export type RootParamList = {
 	Main: undefined;
 	Home: undefined;
-	Exercises: undefined;
+	TryOutList: undefined;
 	TryOut: { tryOutData: TryOutDataTypes };
 	Profile: undefined;
 	Pyment: undefined;
@@ -48,7 +49,7 @@ function TabNavigation() {
 					switch (route.name) {
 						case "Home":
 							return <Feather name="home" size={24} color={color} />;
-						case "Exercises":
+						case "TryOutList":
 							return <FontAwesome5 name="tasks" size={24} color={color} />;
 						case "Pyment":
 							return <MaterialCommunityIcons name="cart-outline" size={30} color={color} />;
@@ -64,9 +65,9 @@ function TabNavigation() {
 		>
 			<Tab.Screen name="Home" options={{ tabBarLabel: "Beranda" }} component={HomeScreen} />
 			<Tab.Screen
-				name="Exercises"
+				name="TryOutList"
 				options={{ tabBarLabel: "Tryout", headerTitle: "TryOut" }}
-				component={ExercisesScreen}
+				component={TryOutListScreen}
 			/>
 			{userInfo.isAuth && (
 				<>

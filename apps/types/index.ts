@@ -30,11 +30,16 @@ export interface BannerTypes {
 	countDown: string;
 }
 
+export interface tryOutSettings {
+	categories: string[];
+}
+
 export interface AppInfoTypes {
 	banner: BannerTypes;
 	payment: PaymentTypes;
 	maintenanceMode: boolean;
 	appVersion: number;
+	tryOutSettings: tryOutSettings;
 }
 
 export interface ContextApiTypes {
