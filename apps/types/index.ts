@@ -32,6 +32,7 @@ export interface BannerTypes {
 
 export interface tryOutSettings {
 	categories: string[];
+	cacheExpireTimeInMinute?: number;
 }
 
 export interface AppInfoTypes {

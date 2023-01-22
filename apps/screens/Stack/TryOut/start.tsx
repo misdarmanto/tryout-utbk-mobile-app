@@ -42,17 +42,13 @@ const Start = () => {
 		setUserInfo(newUserInfo);
 	};
 
-	const handleTryOutState = async () => {
+	const handleChangeTryOutState = async () => {
 		if (isError) return;
 		const newCoin = userInfo.coin - tryOutData.coin;
 		if (newCoin < 0) return;
 
 		setIsLoading(true);
-
-		await updateUserInfo({
-			newCoin: newCoin,
-		});
-
+		await updateUserInfo({ newCoin: newCoin });
 		setIsLoading(false);
 		setTryOutState("play");
 	};
@@ -124,7 +120,7 @@ const Start = () => {
 
 				<TouchableOpacity
 					style={{ marginVertical: heightPercentage(5) }}
-					onPress={handleTryOutState}
+					onPress={handleChangeTryOutState}
 					disabled={isError}
 				>
 					<HStack justifyContent="center" backgroundColor={BASE_COLOR.primary} rounded="md" p={2}>

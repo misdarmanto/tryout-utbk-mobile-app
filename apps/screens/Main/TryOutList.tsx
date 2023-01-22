@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, FlatList, Heading, HStack, ScrollView } from "native-base";
-import { useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
+import { Box, Button, FlatList, Heading, HStack, ScrollView } from "native-base";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
@@ -23,19 +23,19 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("All");
 
-	const saveDataToLocalStorage = async (item: any) => {
+	const saveDataToLocalStorage = async ({ key, item }: { key: string; item: any }) => {
 		try {
 			const data = JSON.stringify(item);
-			await AsyncStorage.setItem("tryOut_id", data);
+			await AsyncStorage.setItem(key, data);
 		} catch (error: any) {
 			console.log(error);
 			return error;
 		}
 	};
 
-	const getDataToLocalStorage = async () => {
+	const getDataFromLocalStorage = async ({ key }: { key: string }) => {
 		try {
-			const result = await AsyncStorage.getItem("tryOut_id");
+			const result = await AsyncStorage.getItem(key);
 			return result != null ? JSON.parse(result) : null;
 		} catch (error: any) {
 			console.log(error);
@@ -43,22 +43,48 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		}
 	};
 
+	const setExpireTimeToLocalStorage = async ({ time, key }: { time: number; key: string }) => {
+		const timeInMilliSecond = 60000;
+		const timeInMinute = timeInMilliSecond * time;
+		const expireUntile = timeInMinute;
+
+		const currentDateTimeInMilliSecond = Date.now() + expireUntile + "";
+		await AsyncStorage.setItem(key, currentDateTimeInMilliSecond);
+	};
+
+	const getExpireTimeFromLocalStorage = async ({ key }: { key: string }) => {
+		const result = await AsyncStorage.getItem(key);
+		return result != null ? JSON.parse(result) : 0;
+	};
+
 	useEffect(() => {
 		(async () => {
-			const checkLocalStorage = await getDataToLocalStorage();
+			const TRYOUT_DATA_KEY = "tryOutData_key";
+			const EXPIRE_KEY = "expire_time";
 
-			if (checkLocalStorage) {
+			const checkLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_DATA_KEY });
+			const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
+			const currentDateTime = Date.now();
+			const isExpire = expireTime >= currentDateTime;
+
+			if (checkLocalStorage && isExpire) {
 				setTryOutList(checkLocalStorage);
 				setTryOutData(checkLocalStorage);
-			}
+				console.log("get data from local storage");
+			} else {
+				const tryOutDB = new FirestoreDB("TryOut");
+				const tryOut = await tryOutDB.getCollection();
 
-			// if (!checkLocalStorage) {
-			// 	const tryOutDB = new FirestoreDB("TryOut");
-			// 	const tryOut = await tryOutDB.getCollection();
-			// 	setTryOutList(tryOut);
-			// 	setTryOutData(tryOut);
-			// 	await saveDataToLocalStorage(tryOut);
-			// }
+				setTryOutList(tryOut);
+				setTryOutData(tryOut);
+
+				await saveDataToLocalStorage({ key: TRYOUT_DATA_KEY, item: tryOut });
+				await setExpireTimeToLocalStorage({
+					key: EXPIRE_KEY,
+					time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 60,
+				});
+				console.log("get data from firebase");
+			}
 
 			setIsLoading(false);
 		})();
@@ -134,6 +160,13 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 					renderItem={({ item }) => <RenderListItem item={item} />}
 				/>
 			)}
+			<Button
+				onPress={async () => {
+					await AsyncStorage.multiRemove(["tryOutData_key", "expire_time"]);
+				}}
+			>
+				Clear
+			</Button>
 		</Layout>
 	);
 }

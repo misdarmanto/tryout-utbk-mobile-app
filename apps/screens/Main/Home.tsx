@@ -13,6 +13,7 @@ import { ContextApiTypes } from "../../types";
 import { TryOutDataTypes } from "../../types/tryOutDataTypes";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 import { widthPercentage } from "../../utilities/dimension";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
@@ -21,20 +22,72 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	const [tryOutHighlight, setTryOutHighlight] = useState<TryOutDataTypes[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
+	const saveDataToLocalStorage = async ({ key, item }: { key: string; item: any }) => {
+		try {
+			const data = JSON.stringify(item);
+			await AsyncStorage.setItem(key, data);
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	};
+
+	const getDataFromLocalStorage = async ({ key }: { key: string }) => {
+		try {
+			const result = await AsyncStorage.getItem(key);
+			return result != null ? JSON.parse(result) : null;
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	};
+
+	const setExpireTimeToLocalStorage = async ({ time, key }: { time: number; key: string }) => {
+		const timeInMilliSecond = 60000;
+		const timeInMinute = timeInMilliSecond * time;
+		const expireUntile = timeInMinute;
+
+		const currentDateTimeInMilliSecond = Date.now() + expireUntile + "";
+		await AsyncStorage.setItem(key, currentDateTimeInMilliSecond);
+	};
+
+	const getExpireTimeFromLocalStorage = async ({ key }: { key: string }) => {
+		const result = await AsyncStorage.getItem(key);
+		return result != null ? JSON.parse(result) : 0;
+	};
+
 	const getTryOutHighlight = async () => {
-		setIsLoading(true);
-		const tryOutDB = new FirestoreDB("TryOut");
-		const data = await tryOutDB.queryCollection({
-			params_1: "isHighlight",
-			params_2: true,
-		});
-		setTryOutHighlight(data);
-		setIsLoading(false);
+		const TRYOUT_KEY = "tryOutHighLight_key";
+		const EXPIRE_KEY = "tryOutHighLight_expire_time";
+
+		const checkLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_KEY });
+		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
+
+		const currentDateTime = Date.now();
+		const isExpire = expireTime >= currentDateTime;
+
+		if (checkLocalStorage && isExpire) {
+			setTryOutHighlight(checkLocalStorage);
+			console.log("get data highlight from local storage");
+		} else {
+			const tryOutDB = new FirestoreDB("TryOut");
+			const data = await tryOutDB.queryCollection({ params_1: "isHighlight", params_2: true });
+			setTryOutHighlight(data);
+
+			await saveDataToLocalStorage({ key: TRYOUT_KEY, item: data });
+			await setExpireTimeToLocalStorage({
+				key: EXPIRE_KEY,
+				time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
+			});
+			console.log("get data highlight from firebase");
+		}
 	};
 
 	useEffect(() => {
 		(async () => {
+			setIsLoading(true);
 			await getTryOutHighlight();
+			setIsLoading(false);
 		})();
 	}, []);
 
