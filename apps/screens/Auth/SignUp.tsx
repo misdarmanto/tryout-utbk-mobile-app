@@ -87,8 +87,8 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				notifications: [
 					{
 						id: Date.now() + "",
-						message: `Welcome ${name} to tryout utbk 2023`,
-						date: currentDateTime.toDateString(),
+						message: `Hi ${name}.. selamat datang di Edufire`,
+						createdAt: currentDateTime.toDateString(),
 					},
 				],
 				waitingListTransaction: [],
