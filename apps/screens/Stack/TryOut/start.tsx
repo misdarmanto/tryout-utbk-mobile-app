@@ -36,8 +36,9 @@ const Start = () => {
 
 		await userDB.update({
 			documentId: userInfo.email,
-			newData: newUserInfo,
+			newData: { coin: newCoin },
 		});
+
 		setUserInfo(newUserInfo);
 	};
 

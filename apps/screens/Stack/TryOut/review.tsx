@@ -4,7 +4,7 @@ import { tryOutContext } from "./contextApi";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
-import { QuestionTypes } from "./fakeData";
+import { QuestionTypes } from "../../../types/tryOutDataTypes";
 import ChoiceField from "../../../components/form/choiceField";
 
 const Review = () => {
@@ -14,7 +14,7 @@ const Review = () => {
 	const [index, setIndex] = useState(0);
 
 	const CURRENT_QUESTION: QuestionTypes = tryOutDataFinish.questions[index];
-	let progressValue = ((index + 1) / tryOutDataFinish.questions.length) * 100;
+	const progressValue = Math.round(((index + 1) / tryOutDataFinish.questions.length) * 100);
 
 	useEffect(() => {
 		const currentAnswer = CURRENT_QUESTION.answer;
@@ -39,7 +39,6 @@ const Review = () => {
 	useLayoutEffect(() => {
 		navigation.setOptions({
 			title: "Review",
-			headerRight: () => "",
 		});
 	}, []);
 
@@ -85,22 +84,26 @@ const Review = () => {
 				<VStack space={2} my="10">
 					<ChoiceField
 						alphaBet="A"
-						isActive={choiceSelected === "A"}
+						isActive={CURRENT_QUESTION.correctAnswer === "A"}
+						isWrong={choiceSelected === "A" && CURRENT_QUESTION.correctAnswer !== "A"}
 						text={CURRENT_QUESTION.choices.A}
 					/>
 					<ChoiceField
 						alphaBet="B"
-						isActive={choiceSelected === "B"}
+						isActive={CURRENT_QUESTION.correctAnswer === "B"}
+						isWrong={choiceSelected === "B" && CURRENT_QUESTION.correctAnswer !== "B"}
 						text={CURRENT_QUESTION.choices.B}
 					/>
 					<ChoiceField
 						alphaBet="C"
-						isActive={choiceSelected === "C"}
+						isActive={CURRENT_QUESTION.correctAnswer === "C"}
+						isWrong={choiceSelected === "C" && CURRENT_QUESTION.correctAnswer !== "C"}
 						text={CURRENT_QUESTION.choices.C}
 					/>
 					<ChoiceField
 						alphaBet="D"
-						isActive={choiceSelected === "D"}
+						isActive={CURRENT_QUESTION.correctAnswer === "D"}
+						isWrong={choiceSelected === "D" && CURRENT_QUESTION.correctAnswer !== "D"}
 						text={CURRENT_QUESTION.choices.D}
 					/>
 				</VStack>

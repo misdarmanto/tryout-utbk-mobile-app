@@ -14,12 +14,4 @@ const DetailTryOutScreen = ({ navigation }: DetailTryOutScreenPropsTypes) => {
 	);
 };
 
-function MathSymbol() {
-	return (
-		<MathJaxSvg fontSize={16} color="red" fontCache={true}>
-			{"$$4sen()cos^2(/2)$$"}
-		</MathJaxSvg>
-	);
-}
-
 export default DetailTryOutScreen;

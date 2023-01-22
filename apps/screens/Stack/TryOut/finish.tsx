@@ -5,24 +5,14 @@ import { heightPercentage, widthPercentage } from "../../../utilities/dimension"
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React, { memo, useContext, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
-import { RootContext } from "../../../utilities/rootContext";
-
-import { ContextApiTypes } from "../../../types";
 import { ScoreTypes } from ".";
 import { TryOutDataTypes } from "../../../types/tryOutDataTypes";
 
 const Finish = () => {
 	const { setTryOutState, navigation, tryOutDataFinish }: any = useContext(tryOutContext);
-	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	const [score, setScore] = useState<ScoreTypes>({ correct: 0, wrong: 0, empty: 0 });
 
-	const [isError, setIsError] = useState(false);
-
 	useLayoutEffect(() => {
-		if (100 >= userInfo.coin) {
-			setIsError(true);
-		}
-
 		const finished: TryOutDataTypes = tryOutDataFinish;
 
 		const correct = finished.questions.filter((question) => {
@@ -46,7 +36,7 @@ const Finish = () => {
 		setTryOutState("review");
 	};
 
-	const progressValue = (score?.correct! / tryOutDataFinish.questions.length) * 100;
+	const progressValue = Math.round((score?.correct! / tryOutDataFinish.questions.length) * 100);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({

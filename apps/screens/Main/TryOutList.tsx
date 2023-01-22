@@ -10,26 +10,58 @@ import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
-import { TryOutContextTypes } from "../Stack/TryOut";
 import { TryOutDataTypes } from "../../types/tryOutDataTypes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "TryOutList">;
 
 export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 	const { userInfo, appInfo } = useContext<ContextApiTypes>(RootContext);
-	const context = useContext<TryOutContextTypes>(RootContext);
-	const tryOutList: any = context.tryOutData;
-
-	console.log(tryOutList);
-
+	const [tryOutList, setTryOutList] = useState<TryOutDataTypes[]>([]);
 	const [tryoutData, setTryOutData] = useState<TryOutDataTypes[]>(tryOutList);
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("All");
 
+	const saveDataToLocalStorage = async (item: any) => {
+		try {
+			const data = JSON.stringify(item);
+			await AsyncStorage.setItem("tryOut_id", data);
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	};
+
+	const getDataToLocalStorage = async () => {
+		try {
+			const result = await AsyncStorage.getItem("tryOut_id");
+			return result != null ? JSON.parse(result) : null;
+		} catch (error: any) {
+			console.log(error);
+			return error;
+		}
+	};
+
 	useEffect(() => {
-		setTimeout(() => {
+		(async () => {
+			const checkLocalStorage = await getDataToLocalStorage();
+
+			if (checkLocalStorage) {
+				setTryOutList(checkLocalStorage);
+				setTryOutData(checkLocalStorage);
+			}
+
+			// if (!checkLocalStorage) {
+			// 	const tryOutDB = new FirestoreDB("TryOut");
+			// 	const tryOut = await tryOutDB.getCollection();
+			// 	setTryOutList(tryOut);
+			// 	setTryOutData(tryOut);
+			// 	await saveDataToLocalStorage(tryOut);
+			// }
+
 			setIsLoading(false);
-		}, 100);
+		})();
 	}, []);
 
 	const onRefresh = useCallback(() => {
@@ -45,7 +77,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 			setTryOutData(tryOutList);
 			return;
 		}
-		const newTab = tryOutList.filter((item: CardTryOutTypes) => item.category === category);
+		const newTab = tryOutList.filter((item: CardTryOutTypes | any) => item.category === category);
 		setTryOutData(newTab);
 	};
 
@@ -75,6 +107,20 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		);
 	};
 
+	const RenderListItem = ({ item }: any) => {
+		return (
+			<CardTryOut
+				onPress={handleCardOnPress}
+				coinTotal={item.coin}
+				isFree={item.coin === 0}
+				exampTotal={item.total}
+				title={item.title}
+				id={item.id}
+				time={item.time}
+			/>
+		);
+	};
+
 	return (
 		<Layout>
 			{isLoading && <TryOutScreenSkeleton />}
@@ -85,17 +131,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 					ListHeaderComponent={() => <Tab />}
 					data={tryoutData}
 					keyExtractor={(item) => item.id + ""}
-					renderItem={({ item }) => (
-						<CardTryOut
-							onPress={handleCardOnPress}
-							coinTotal={item.coin}
-							isFree={item.coin === 0}
-							exampTotal={item.total}
-							title={item.title}
-							id={item.id}
-							time={item.time}
-						/>
-					)}
+					renderItem={({ item }) => <RenderListItem item={item} />}
 				/>
 			)}
 		</Layout>

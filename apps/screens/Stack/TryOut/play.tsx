@@ -20,7 +20,7 @@ const Play = () => {
 	const [index, setIndex] = useState(0);
 
 	const CURRENT_QUESTION: QuestionTypes = tryOutData.questions[index];
-	const progressValue = ((index + 1) / tryOutData.questions.length) * 100;
+	const progressValue = Math.round(((index + 1) / tryOutData.questions.length) * 100);
 
 	useEffect(() => {
 		const currentAnswer = CURRENT_QUESTION.answer;

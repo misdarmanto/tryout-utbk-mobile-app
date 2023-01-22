@@ -42,7 +42,6 @@ declare module "native-base" {
 export default function App() {
 	const [userInfo, setUserInfo] = useState<UserInfoTypes>();
 	const [appInfo, setAppInfo] = useState<AppInfoTypes>();
-	const [tryOutData, setTryOutData] = useState<TryOutDataTypes[]>();
 
 	const [isOffline, setIsOffLine] = useState<any>(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -81,11 +80,6 @@ export default function App() {
 				const appInfoDB = new FirestoreDB("AppInfo");
 				const appData = await appInfoDB.get({ documentId: "general" });
 				setAppInfo(appData);
-
-				const tryOutDB = new FirestoreDB("TryOut");
-				const tryOut = await tryOutDB.getCollection();
-				setTryOutData(tryOut);
-
 				setIsLoading(false);
 			})();
 		});
@@ -118,7 +112,7 @@ export default function App() {
 
 	return (
 		<NativeBaseProvider>
-			<RootContext.Provider value={{ userInfo, setUserInfo, appInfo, tryOutData, setTryOutData }}>
+			<RootContext.Provider value={{ userInfo, setUserInfo, appInfo }}>
 				{/* {isOffline ? <NotInternetAnimation /> : <AppNavigations />} */}
 				<AppNavigations />
 			</RootContext.Provider>

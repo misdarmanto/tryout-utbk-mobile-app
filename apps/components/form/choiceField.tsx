@@ -6,11 +6,23 @@ interface ChoiceFieldTypes {
 	alphaBet: string;
 	text?: string;
 	isActive?: boolean;
+	isWrong?: boolean;
 	onPress?: any;
 	imageUrl?: string;
 }
 
-const ChoiceField = ({ alphaBet, text, isActive, imageUrl, onPress }: ChoiceFieldTypes) => {
+const ChoiceField = ({ alphaBet, text, isActive, isWrong, imageUrl, onPress }: ChoiceFieldTypes) => {
+	let backgroundColor = "#FFF";
+	let textColor = BASE_COLOR.text.primary;
+
+	if (isActive) {
+		backgroundColor = BASE_COLOR.primary;
+		textColor = "#FFF";
+	} else if (isWrong) {
+		backgroundColor = BASE_COLOR.red[200];
+		textColor = "#FFF";
+	}
+
 	return (
 		<Pressable
 			onPress={onPress}
@@ -18,16 +30,16 @@ const ChoiceField = ({ alphaBet, text, isActive, imageUrl, onPress }: ChoiceFiel
 			px="5"
 			borderWidth="1"
 			borderColor="gray.100"
-			bg={isActive ? BASE_COLOR.primary : "#FFF"}
+			bg={backgroundColor}
 			rounded="md"
-			_pressed={{ bg: BASE_COLOR.blue[100] }}
+			_pressed={{ bg: backgroundColor }}
 		>
 			<HStack alignItems="center" space={3}>
 				<Avatar
 					size="md"
-					backgroundColor={isActive ? "#FFF" : BASE_COLOR.primary}
+					backgroundColor={isActive || isWrong ? "#FFF" : BASE_COLOR.primary}
 					_text={{
-						color: isActive ? BASE_COLOR.primary : "#FFF",
+						color: isActive || isWrong ? BASE_COLOR.primary : "#FFF",
 						fontSize: "xl",
 						fontWeight: "bold",
 					}}
@@ -35,7 +47,7 @@ const ChoiceField = ({ alphaBet, text, isActive, imageUrl, onPress }: ChoiceFiel
 					{alphaBet}
 				</Avatar>
 				{text && (
-					<Text fontSize="md" color={isActive ? "#FFF" : BASE_COLOR.text.primary}>
+					<Text fontSize="md" color={textColor}>
 						{text}
 					</Text>
 				)}
