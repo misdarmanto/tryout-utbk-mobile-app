@@ -162,7 +162,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				navigation.navigate("Login");
 				return;
 			}
-			navigation.navigate("DetailTryOut");
+			navigation.navigate("DetailArticle");
 		};
 
 		return (

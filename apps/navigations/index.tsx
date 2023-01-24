@@ -20,6 +20,7 @@ import DetailPaymentScreen from "../screens/Stack/DetailPayment";
 import { TryOutDataTypes } from "../types/tryOutDataTypes";
 import { heightPercentage } from "../utilities/dimension";
 import TryOutListScreen from "../screens/Main/TryOutList";
+import DetailArticleScreen from "../screens/Stack/Articles/detailArticle";
 
 export type RootParamList = {
 	Main: undefined;
@@ -34,6 +35,7 @@ export type RootParamList = {
 	Notification: undefined;
 	RankTryOut: undefined;
 	DetailPayment: { item: PriceTypes };
+	DetailArticle: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -122,6 +124,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 						<Stack.Screen name="RankTryOut" component={RankTryOutScreen} />
 						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
+						<Stack.Screen name="DetailArticle" component={DetailArticleScreen} />
 					</>
 				)}
 				{!userInfo.isAuth && (
