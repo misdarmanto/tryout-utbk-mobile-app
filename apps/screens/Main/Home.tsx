@@ -1,8 +1,15 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Box, HStack, Text, Heading, ScrollView, Pressable } from "native-base";
-import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
+import { CardTryOut } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
-import { FontAwesome5, MaterialIcons, Fontisto, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import {
+	FontAwesome5,
+	MaterialIcons,
+	Fontisto,
+	MaterialCommunityIcons,
+	Ionicons,
+	AntDesign,
+} from "@expo/vector-icons";
 import { RootParamList } from "../../navigations";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
@@ -13,7 +20,12 @@ import { ContextApiTypes } from "../../types";
 import { TryOutDataTypes } from "../../types/tryOutDataTypes";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 import { widthPercentage } from "../../utilities/dimension";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+	saveDataToLocalStorage,
+	getDataFromLocalStorage,
+	getExpireTimeFromLocalStorage,
+	setExpireTimeToLocalStorage,
+} from "../../localStorage/localStorageDB";
 
 type HomeScreenPropsTypes = NativeStackScreenProps<RootParamList, "Home">;
 
@@ -22,77 +34,47 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	const [tryOutHighlight, setTryOutHighlight] = useState<TryOutDataTypes[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
-	const saveDataToLocalStorage = async ({ key, item }: { key: string; item: any }) => {
-		try {
-			const data = JSON.stringify(item);
-			await AsyncStorage.setItem(key, data);
-		} catch (error: any) {
-			console.log(error);
-			return error;
-		}
-	};
-
-	const getDataFromLocalStorage = async ({ key }: { key: string }) => {
-		try {
-			const result = await AsyncStorage.getItem(key);
-			return result != null ? JSON.parse(result) : null;
-		} catch (error: any) {
-			console.log(error);
-			return error;
-		}
-	};
-
-	const setExpireTimeToLocalStorage = async ({ time, key }: { time: number; key: string }) => {
-		const timeInMilliSecond = 60000;
-		const timeInMinute = timeInMilliSecond * time;
-		const expireUntile = timeInMinute;
-
-		const currentDateTimeInMilliSecond = Date.now() + expireUntile + "";
-		await AsyncStorage.setItem(key, currentDateTimeInMilliSecond);
-	};
-
-	const getExpireTimeFromLocalStorage = async ({ key }: { key: string }) => {
-		const result = await AsyncStorage.getItem(key);
-		return result != null ? JSON.parse(result) : 0;
-	};
-
 	const getTryOutHighlight = async () => {
 		const TRYOUT_KEY = "tryOutHighLight_key";
 		const EXPIRE_KEY = "tryOutHighLight_expire_time";
 
-		const checkLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_KEY });
+		const tryOutDataFromLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_KEY });
 		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
 
 		const currentDateTime = Date.now();
-		const isExpire = expireTime >= currentDateTime;
+		const hasExpired = expireTime >= currentDateTime;
 
-		if (checkLocalStorage && isExpire) {
-			setTryOutHighlight(checkLocalStorage);
-			console.log("get data highlight from local storage");
-		} else {
-			const tryOutDB = new FirestoreDB("TryOut");
-			const data = await tryOutDB.queryCollection({ params_1: "isHighlight", params_2: true });
-			setTryOutHighlight(data);
-
-			await saveDataToLocalStorage({ key: TRYOUT_KEY, item: data });
-			await setExpireTimeToLocalStorage({
-				key: EXPIRE_KEY,
-				time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
-			});
-			console.log("get data highlight from firebase");
+		if (tryOutDataFromLocalStorage && hasExpired) {
+			return tryOutDataFromLocalStorage;
 		}
+
+		const tryOutDB = new FirestoreDB("TryOut");
+		const tryOutDataFromDB = await tryOutDB.queryCollection({
+			params_1: "isHighlight",
+			params_2: true,
+		});
+
+		await saveDataToLocalStorage({ key: TRYOUT_KEY, item: tryOutDataFromDB });
+		await setExpireTimeToLocalStorage({
+			key: EXPIRE_KEY,
+			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
+		});
+
+		return tryOutDataFromDB;
 	};
 
 	useEffect(() => {
 		(async () => {
-			setIsLoading(true);
-			await getTryOutHighlight();
+			const result = await getTryOutHighlight();
+			setTryOutHighlight(result);
 			setIsLoading(false);
 		})();
 	}, []);
 
 	const onRefresh = useCallback(async () => {
+		setIsLoading(true);
 		await getTryOutHighlight();
+		setIsLoading(false);
 	}, []);
 
 	const handleCardOnPress = (item: TryOutDataTypes) => {
@@ -156,13 +138,13 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		});
 	}, [userInfo.isAuth]);
 
-	const IconRounded = ({ Icon, title }: { Icon: any; title: string }) => {
+	const IconRounded = ({ Icon, title, category }: { Icon: any; title: string; category: string }) => {
 		const handleIconOnPress = () => {
 			if (!userInfo.isAuth) {
 				navigation.navigate("Login");
 				return;
 			}
-			navigation.navigate("DetailArticle");
+			navigation.navigate("ListArticle", { categoryArticle: category });
 		};
 
 		return (
@@ -219,38 +201,46 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 							<IconRounded
 								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
 								title="penalaran umum"
+								category="penalaranUmum"
 							/>
 							<IconRounded
 								Icon={<FontAwesome5 name="square-root-alt" size={25} color="#FFF" />}
 								title="matematika"
+								category="matematika"
 							/>
 							<IconRounded
 								Icon={<MaterialCommunityIcons name="virus" size={25} color="#FFF" />}
 								title="Biologi"
+								category="biologi"
 							/>
 
 							<IconRounded
 								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
 								title="Fisika"
+								category="fisika"
 							/>
 						</HStack>
 
 						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
 							<IconRounded
-								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
-								title="Bahasa Inggris"
-							/>
-							<IconRounded
-								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
-								title="Geograpi"
-							/>
-							<IconRounded
-								Icon={<FontAwesome5 name="square-root-alt" size={25} color="#FFF" />}
+								Icon={<FontAwesome5 name="book" size={25} color="#FFF" />}
 								title="Bahasa Indonesia"
+								category="bahasaIndonesia"
 							/>
 							<IconRounded
-								Icon={<MaterialCommunityIcons name="virus" size={25} color="#FFF" />}
+								Icon={<Ionicons name="language" size={28} color="#FFF" />}
+								title="Bahasa Inggris"
+								category="bahasaInggris"
+							/>
+							<IconRounded
+								Icon={<AntDesign name="earth" size={25} color="#FFF" />}
+								title="Geograpi"
+								category="geoprapi"
+							/>
+							<IconRounded
+								Icon={<FontAwesome5 name="feather-alt" size={25} color="#FFF" />}
 								title="Sejarah"
+								category="sejarah"
 							/>
 						</HStack>
 					</Box>

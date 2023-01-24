@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { WebView } from "react-native-webview";
 import Layout from "../../../components/Layout";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootParamList } from "../../../navigations";
-import { FirestoreDB } from "../../../firebase/firebaseDB";
-import { ArticleTypes } from "../../../types/articleTypes";
 
 type DetailArticleScreenPropsTypes = NativeStackScreenProps<RootParamList, "DetailArticle">;
 
-const DetailArticleScreen = ({ navigation }: DetailArticleScreenPropsTypes) => {
-	const [article, setArticle] = useState<ArticleTypes>();
-
-	useEffect(() => {
-		(async () => {
-			const ArticleDB = new FirestoreDB("Article");
-			const result = await ArticleDB.getCollection();
-			setArticle(result[0]);
-		})();
-	}, []);
+const DetailArticleScreen = ({ route, navigation }: DetailArticleScreenPropsTypes) => {
+	const { article } = route.params;
 
 	const HTML = `
     <!doctype html>

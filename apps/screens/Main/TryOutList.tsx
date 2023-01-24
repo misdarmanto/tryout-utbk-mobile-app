@@ -12,6 +12,12 @@ import { ContextApiTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 import { TryOutDataTypes } from "../../types/tryOutDataTypes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+	saveDataToLocalStorage,
+	getDataFromLocalStorage,
+	getExpireTimeFromLocalStorage,
+	setExpireTimeToLocalStorage,
+} from "../../localStorage/localStorageDB";
 
 type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "TryOutList">;
 
@@ -23,69 +29,37 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState("All");
 
-	const saveDataToLocalStorage = async ({ key, item }: { key: string; item: any }) => {
-		try {
-			const data = JSON.stringify(item);
-			await AsyncStorage.setItem(key, data);
-		} catch (error: any) {
-			console.log(error);
-			return error;
+	const getTryOutCollections = async () => {
+		const TRYOUT_DATA_KEY = "tryOutData_key";
+		const EXPIRE_KEY = "expire_time";
+
+		const tryOutCollectionFromLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_DATA_KEY });
+		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
+
+		const currentDateTime = Date.now();
+		const hasExpired = expireTime >= currentDateTime;
+
+		if (tryOutCollectionFromLocalStorage && hasExpired) {
+			return tryOutCollectionFromLocalStorage;
 		}
-	};
 
-	const getDataFromLocalStorage = async ({ key }: { key: string }) => {
-		try {
-			const result = await AsyncStorage.getItem(key);
-			return result != null ? JSON.parse(result) : null;
-		} catch (error: any) {
-			console.log(error);
-			return error;
-		}
-	};
+		const tryOutDB = new FirestoreDB("TryOut");
+		const tryOutCollectionsFromDB = await tryOutDB.getCollection();
 
-	const setExpireTimeToLocalStorage = async ({ time, key }: { time: number; key: string }) => {
-		const timeInMilliSecond = 60000;
-		const timeInMinute = timeInMilliSecond * time;
-		const expireUntile = timeInMinute;
+		await saveDataToLocalStorage({ key: TRYOUT_DATA_KEY, item: tryOutCollectionsFromDB });
+		await setExpireTimeToLocalStorage({
+			key: EXPIRE_KEY,
+			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 60,
+		});
 
-		const currentDateTimeInMilliSecond = Date.now() + expireUntile + "";
-		await AsyncStorage.setItem(key, currentDateTimeInMilliSecond);
-	};
-
-	const getExpireTimeFromLocalStorage = async ({ key }: { key: string }) => {
-		const result = await AsyncStorage.getItem(key);
-		return result != null ? JSON.parse(result) : 0;
+		return tryOutCollectionsFromDB;
 	};
 
 	useEffect(() => {
 		(async () => {
-			const TRYOUT_DATA_KEY = "tryOutData_key";
-			const EXPIRE_KEY = "expire_time";
-
-			const checkLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_DATA_KEY });
-			const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
-			const currentDateTime = Date.now();
-			const isExpire = expireTime >= currentDateTime;
-
-			if (checkLocalStorage && isExpire) {
-				setTryOutList(checkLocalStorage);
-				setTryOutData(checkLocalStorage);
-				console.log("get data from local storage");
-			} else {
-				const tryOutDB = new FirestoreDB("TryOut");
-				const tryOut = await tryOutDB.getCollection();
-
-				setTryOutList(tryOut);
-				setTryOutData(tryOut);
-
-				await saveDataToLocalStorage({ key: TRYOUT_DATA_KEY, item: tryOut });
-				await setExpireTimeToLocalStorage({
-					key: EXPIRE_KEY,
-					time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 60,
-				});
-				console.log("get data from firebase");
-			}
-
+			const result = await getTryOutCollections();
+			setTryOutData(result);
+			setTryOutList(result);
 			setIsLoading(false);
 		})();
 	}, []);
