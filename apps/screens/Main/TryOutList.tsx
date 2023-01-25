@@ -134,13 +134,6 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 					renderItem={({ item }) => <RenderListItem item={item} />}
 				/>
 			)}
-			<Button
-				onPress={async () => {
-					await AsyncStorage.multiRemove(["tryOutData_key", "expire_time"]);
-				}}
-			>
-				Clear
-			</Button>
 		</Layout>
 	);
 }
