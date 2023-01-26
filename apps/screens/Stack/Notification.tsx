@@ -31,15 +31,16 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 	useEffect(() => {
 		(async () => {
 			const localNotification = (await storage.get()) || [];
-			console.log(localNotification);
 
 			if (userInfo.notifications.length === 0) {
+				localNotification.sort((a: any, b: any) => b.id - a.id);
 				setNotificationList(localNotification);
 				return;
 			}
 
 			if (userInfo.notifications.length !== 0) {
 				const notificationUpdated = [...localNotification, ...userInfo.notifications];
+				notificationList.sort((a: any, b: any) => b.id - a.id);
 				setNotificationList(notificationUpdated);
 				await storage.remove();
 				await storage.store(notificationUpdated);

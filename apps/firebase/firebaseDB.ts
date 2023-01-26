@@ -1,4 +1,16 @@
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc, query, where } from "firebase/firestore";
+import {
+	collection,
+	doc,
+	getDoc,
+	getDocs,
+	setDoc,
+	updateDoc,
+	query,
+	where,
+	increment,
+	arrayRemove,
+	arrayUnion,
+} from "firebase/firestore";
 import { DB } from "../configs/firebase";
 import { TryOutDataTypes } from "../types/tryOutDataTypes";
 
@@ -20,6 +32,18 @@ export class FirestoreDB {
 
 	private getCollectionPath() {
 		return collection(DB, this.collectionName);
+	}
+
+	public incrementValue(value: number) {
+		return increment(value);
+	}
+
+	public pushArray(value: any) {
+		return arrayUnion(value);
+	}
+
+	public removeArray(value: any) {
+		return arrayRemove(value);
 	}
 
 	private extractData(snapshoot: any) {

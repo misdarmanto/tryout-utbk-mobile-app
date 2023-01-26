@@ -8,9 +8,10 @@ export interface UserInfoTypes {
 	isAuth?: boolean;
 	name: string;
 	email: string;
+	deviceId?: string;
+	referralCode?: string;
 	coin: number;
 	notifications: NotificationsTypes[];
-	enrollTryOutId: string[];
 	waitingListTransaction: string[];
 }
 

@@ -11,12 +11,15 @@ import { ContextApiTypes } from "../../types";
 import { signOut } from "firebase/auth";
 import { auth } from "../../configs/firebase";
 import ModalPrimary from "../../components/Modal/ModalPrimary";
+import * as Application from "expo-application";
 
 type ProfilePropsTypes = NativeStackScreenProps<RootParamList, "Profile">;
 
 export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	const [openModal, setOpenModal] = useState(false);
+
+	const lastUpdate = Application.getLastUpdateTimeAsync().then(console.log);
 
 	const handleLogOut = async () => {
 		await signOut(auth);
@@ -56,12 +59,8 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 					<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
 						Beri Rating
 					</Text>
-				</CardProfileList>
-
-				<CardProfileList>
-					<MaterialCommunityIcons name="key-outline" size={30} color={BASE_COLOR.text.primary} />
-					<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Reset Password
+					<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						v{Application.nativeApplicationVersion}
 					</Text>
 				</CardProfileList>
 
@@ -94,7 +93,7 @@ const CardProfileList: React.FC<PropsWithChildren> = ({ children }) => {
 			backgroundColor="#FFF"
 			p={5}
 			space={5}
-			alignItems="center"
+			alignItems="flex-end"
 			borderWidth={1}
 			borderColor="gray.200"
 			my={1}

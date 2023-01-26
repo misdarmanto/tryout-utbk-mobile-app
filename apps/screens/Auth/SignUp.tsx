@@ -23,7 +23,10 @@ import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FirestoreDB } from "../../firebase/firebaseDB";
-import { UserInfoTypes } from "../../types/index";
+import { NotificationsTypes, UserInfoTypes } from "../../types/index";
+import * as Application from "expo-application";
+import { uniqueId } from "../../utilities/generateUniqueId";
+import { generateDateTime } from "../../utilities/generateDateTime";
 
 type SignUpScreenPropsTypes = NativeStackScreenProps<RootParamList, "SignUp">;
 
@@ -32,6 +35,8 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 	const [name, setName] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [referralCode, setReferralCode] = useState("");
+
 	const [errorInput, setErrorInput] = useState({ inputName: "", isError: false, message: "" });
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -48,6 +53,59 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 	const handleSetPassword = (input: string) => {
 		setPassword(input);
 		setErrorInput({ inputName: "", isError: false, message: "" });
+	};
+
+	const handleSetReferralCode = (input: string) => {
+		setReferralCode(input);
+		setErrorInput({ inputName: "", isError: false, message: "" });
+	};
+
+	interface ValidateReferralCodeTypes {
+		referralCode: string;
+		currentUserName: string;
+	}
+
+	const validateReferralCode = async ({ referralCode, currentUserName }: ValidateReferralCodeTypes) => {
+		const userDB = new FirestoreDB("User");
+
+		const checkReferralCode = await userDB.queryCollection({
+			params_1: "referralCode",
+			params_2: referralCode,
+		});
+
+		console.log(checkReferralCode);
+
+		if (checkReferralCode.length === 0) throw Error("kode referral tidak ditemukan!");
+
+		const checkDeviceId = await userDB.queryCollection({
+			params_1: "deviceId",
+			params_2: Application.androidId,
+		});
+
+		console.log(checkDeviceId);
+
+		if (checkDeviceId.length !== 0)
+			throw Error(
+				"kode referral telah digunakan, kamu tidak bisa memakai kode referral lebih dari satu dalam satu device yang sama"
+			);
+
+		const documentIdUserReferrer = referralCode.split("-")[1];
+
+		const notification: NotificationsTypes = {
+			id: Date.now() + "",
+			message: `${currentUserName} telah menggunakan kode referral mu, selamat koin mu telah bertambah 50`,
+			createdAt: generateDateTime(),
+		};
+
+		const newData = {
+			coin: userDB.incrementValue(50),
+			notifications: userDB.pushArray(notification),
+		};
+
+		await userDB.update({
+			documentId: documentIdUserReferrer,
+			newData: newData,
+		});
 	};
 
 	const handleSubmit = async () => {
@@ -74,6 +132,11 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				throw Error("gunakan password minimal 6 karakter!");
 			}
 
+			if (referralCode !== "") {
+				inputName = "referralCode";
+				await validateReferralCode({ referralCode: referralCode, currentUserName: name });
+			}
+
 			await createUserWithEmailAndPassword(auth, email, password);
 
 			const currentDateTime = new Date();
@@ -83,7 +146,8 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				name: name,
 				email: email.toLocaleLowerCase(),
 				coin: 50,
-				enrollTryOutId: [],
+				deviceId: Application.androidId + "",
+				referralCode: `${uniqueId()}-${email.toLocaleLowerCase()}`,
 				notifications: [
 					{
 						id: Date.now() + "",
@@ -109,7 +173,6 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 					break;
 				case "auth/weak-password":
 					error.message = "password tidak aman. gunakan password lain!";
-
 					break;
 			}
 			setErrorInput({ inputName: inputName, isError: true, message: error.message });
@@ -144,12 +207,13 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 						Sign up to continue!
 					</Heading>
 
-					<VStack space={3} mt="5">
+					<VStack space={1} mt="5">
 						<FormControl>
 							<FormControl.Label>Email</FormControl.Label>
 							<Input
 								isInvalid={errorInput.isError && errorInput.inputName === "email"}
 								onChangeText={handleSetEmail}
+								bgColor="#FFF"
 								InputLeftElement={
 									<Icon
 										as={<MaterialIcons name="email" />}
@@ -181,6 +245,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 								isInvalid={errorInput.isError && errorInput.inputName === "name"}
 								onChangeText={handleSetName}
 								placeholder="nama"
+								bgColor="#FFF"
 								_focus={{
 									bg: BASE_COLOR.blue[100],
 									borderColor: BASE_COLOR.primary,
@@ -203,6 +268,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 								onChangeText={handleSetPassword}
 								isInvalid={errorInput.isError && errorInput.inputName === "password"}
 								type={showPassword ? "text" : "password"}
+								bgColor="#FFF"
 								_focus={{
 									bg: BASE_COLOR.blue[100],
 									borderColor: BASE_COLOR.primary,
@@ -246,11 +312,37 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 							</FormControl.ErrorMessage>
 						</FormControl>
 
+						<FormControl>
+							<FormControl.Label>
+								masukan kode referral, kosongkan jika tidak ada
+							</FormControl.Label>
+							<Input
+								isInvalid={errorInput.isError && errorInput.inputName === "referralCode"}
+								onChangeText={handleSetReferralCode}
+								placeholder="referral code"
+								bgColor="#FFF"
+								_focus={{
+									bg: BASE_COLOR.blue[100],
+									borderColor: BASE_COLOR.primary,
+								}}
+							/>
+							<FormControl.ErrorMessage
+								isInvalid={errorInput.isError && errorInput.inputName === "referralCode"}
+								leftIcon={<WarningOutlineIcon size="xs" />}
+								_text={{
+									fontSize: "xs",
+								}}
+							>
+								{errorInput.message}
+							</FormControl.ErrorMessage>
+						</FormControl>
+
 						<Pressable
 							onPress={handleSubmit}
 							disabled={isLoading}
 							bg={BASE_COLOR.primary}
 							p="2"
+							mt="5"
 							rounded="xl"
 							_pressed={{ bg: BASE_COLOR.blue[200] }}
 						>

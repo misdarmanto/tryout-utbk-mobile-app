@@ -120,6 +120,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 						<Input
 							isInvalid={errorInput.isError && errorInput.inputName === "email"}
 							onChangeText={handleSetEmail}
+							bgColor="#FFF"
 							InputLeftElement={
 								<Icon as={<MaterialIcons name="email" />} size={5} ml="2" color="muted.400" />
 							}
@@ -142,6 +143,7 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 							onChangeText={handleSetPassword}
 							isInvalid={errorInput.isError && errorInput.inputName === "password"}
 							type={showPassword ? "text" : "password"}
+							bgColor="#FFF"
 							_focus={{ bg: BASE_COLOR.blue[100], borderColor: BASE_COLOR.primary }}
 							InputRightElement={
 								<Pressable onPress={() => setShowPassword(!showPassword)}>

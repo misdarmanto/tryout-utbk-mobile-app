@@ -117,7 +117,7 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 						kode referral tersebut pada saat melakukan pendaftaran
 					</Text>
 					<Text fontSize="md" color={BASE_COLOR.text.primary}>
-						kode referral mu : Xs-{userInfo.email}
+						kode referral mu : {userInfo.referralCode}
 					</Text>
 					<HStack justifyContent="space-between">
 						<HStack space={1}>
