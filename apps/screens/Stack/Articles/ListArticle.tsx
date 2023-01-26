@@ -11,7 +11,7 @@ import {
 	setExpireTimeToLocalStorage,
 } from "../../../localStorage/localStorageDB";
 import { FirestoreDB } from "../../../firebase/firebaseDB";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { RootContext } from "../../../utilities/rootContext";
 import { ContextApiTypes } from "../../../types";
 import { ArticleTypes } from "../../../types/articleTypes";
@@ -59,6 +59,12 @@ export default function ListArticleScreen({ route, navigation }: ListArticleScre
 			console.log(result);
 			setListArticle(result);
 		})();
+	}, []);
+
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			title: categoryArticle,
+		});
 	}, []);
 
 	const handleNavigateToDetailScreen = (article: any) => {

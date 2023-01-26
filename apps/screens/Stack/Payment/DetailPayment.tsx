@@ -1,18 +1,18 @@
 import { Button, Heading, HStack, ScrollView, Text, VStack } from "native-base";
 import { memo, useContext, useEffect, useLayoutEffect, useState } from "react";
-import Layout from "../../components/Layout";
+import Layout from "../../../components/Layout";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootParamList } from "../../navigations";
-import { BASE_COLOR } from "../../utilities/baseColor";
+import { RootParamList } from "../../../navigations";
+import { BASE_COLOR } from "../../../utilities/baseColor";
 import { FontAwesome5, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image, TouchableOpacity } from "react-native";
-import { toMoney } from "../../utilities/toMony";
-import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes, UserInfoTypes } from "../../types";
-import { FirebaseStorage } from "../../firebase/storage";
-import { FirestoreDB } from "../../firebase/firebaseDB";
-import { heightPercentage, widthPercentage } from "../../utilities/dimension";
-import { LocalStorage } from "../../localStorage";
+import { toMoney } from "../../../utilities/toMony";
+import { RootContext } from "../../../utilities/rootContext";
+import { ContextApiTypes, UserInfoTypes } from "../../../types";
+import { FirebaseStorage } from "../../../firebase/storage";
+import { FirestoreDB } from "../../../firebase/firebaseDB";
+import { heightPercentage, widthPercentage } from "../../../utilities/dimension";
+import { LocalStorage } from "../../../localStorage";
 
 type DetailPaymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "DetailPayment">;
 
@@ -28,6 +28,9 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 	const KEY = `${userInfo.email}_${item.id}`;
 	const transactionLocalStorage = new LocalStorage(KEY);
 	const documentName = `${userInfo.email}_${item.id}`;
+
+	const calculateDiscount = (item.totalPrice / 100) * item.discount;
+	const finalPrice = item.totalPrice - calculateDiscount;
 
 	const storage = new FirebaseStorage();
 
@@ -107,7 +110,7 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 				userName: userInfo.name,
 				email: userInfo.email,
 				coin: item.totalCoin,
-				price: item.totalPrice,
+				price: finalPrice,
 				image: imageUri,
 				status: "waiting",
 			});
@@ -163,9 +166,19 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 						<Text color={BASE_COLOR.text.primary} fontSize="md">
 							Total Pembayaran
 						</Text>
-						<Text color={BASE_COLOR.text.primary} fontSize="md">
-							Rp.{toMoney(item.totalPrice)}
-						</Text>
+						<VStack>
+							<Text color={BASE_COLOR.text.primary} fontSize="md">
+								Rp.{toMoney(finalPrice)}
+							</Text>
+							<Text
+								fontSize="xs"
+								fontWeight="bold"
+								strikeThrough
+								color={BASE_COLOR.text.primary}
+							>
+								Rp.{toMoney(item.totalPrice)}
+							</Text>
+						</VStack>
 					</HStack>
 				</VStack>
 				<VStack

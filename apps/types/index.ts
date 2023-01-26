@@ -18,6 +18,7 @@ export interface PriceTypes {
 	id: string;
 	totalCoin: number;
 	totalPrice: number;
+	discount: number;
 }
 
 export interface PaymentTypes {

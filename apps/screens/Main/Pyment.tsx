@@ -53,7 +53,8 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 								title="Detail"
 								onPress={() => navigation.navigate("DetailPayment", { item })}
 								totalCoin={item.totalCoin}
-								totalAmount={item.totalPrice}
+								price={item.totalPrice}
+								discount={item.discount}
 							/>
 						);
 					})}
@@ -66,10 +67,16 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 					borderWidth={1}
 					borderColor="gray.200"
 					my={1}
-					space={1}
+					space={5}
 					borderRadius="5"
 					rounded="md"
 				>
+					<Text fontSize="md" fontFamily="lato" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Lihat Iklan untuk mendapatkan 5 koin
+					</Text>
+					<Text fontSize="sm" color={BASE_COLOR.text.primary}>
+						Pastikan kamu melihat iklan hingga selesai untuk mendapatkan koin
+					</Text>
 					<HStack justifyContent="space-between">
 						<HStack space={1}>
 							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
@@ -84,13 +91,11 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 								paddingHorizontal: 10,
 								borderRadius: 5,
 							}}
+							onPress={() => navigation.navigate("DetailPaymentAds")}
 						>
-							<Text style={{ color: "#FFF", fontSize: 15 }}>Detail</Text>
+							<Text style={{ color: "#FFF", fontSize: 15 }}>Lihat</Text>
 						</TouchableOpacity>
 					</HStack>
-					<Text fontWeight="bold" fontFamily="lato" color={BASE_COLOR.text.primary}>
-						Lihat Iklan untuk mendapatkan 5 koin
-					</Text>
 				</VStack>
 
 				<VStack
@@ -100,10 +105,20 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 					borderWidth={1}
 					borderColor="gray.200"
 					my={1}
-					space={1}
+					space={5}
 					borderRadius="5"
 					rounded="md"
 				>
+					<Text fontSize="md" fontFamily="lato" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Undang teman mu untuk mendapatkan 50 koin
+					</Text>
+					<Text fontSize="sm" color={BASE_COLOR.text.primary}>
+						Salin kode referral mu dibawah ini dan share ke teman mu, pastikan teman mu memasukan
+						kode referral tersebut pada saat melakukan pendaftaran
+					</Text>
+					<Text fontSize="md" color={BASE_COLOR.text.primary}>
+						kode referral mu : Xs-{userInfo.email}
+					</Text>
 					<HStack justifyContent="space-between">
 						<HStack space={1}>
 							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
@@ -111,20 +126,7 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 								{50} coin
 							</Text>
 						</HStack>
-						<TouchableOpacity
-							style={{
-								backgroundColor: BASE_COLOR.primary,
-								padding: 5,
-								paddingHorizontal: 10,
-								borderRadius: 5,
-							}}
-						>
-							<Text style={{ color: "#FFF", fontSize: 15 }}>Detail</Text>
-						</TouchableOpacity>
 					</HStack>
-					<Text fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Undang teman mu untuk mendapatkan 50 koin
-					</Text>
 				</VStack>
 			</ScrollView>
 		</Layout>
@@ -134,11 +136,15 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 interface CardPymentTpes {
 	title?: string;
 	totalCoin: number;
-	totalAmount: number;
+	price: number;
+	discount: number;
 	onPress?: any;
 }
 
-const CardPyment = ({ title = "Top Up", totalCoin, totalAmount, onPress }: CardPymentTpes) => {
+const CardPyment = ({ title = "Top Up", totalCoin, price, discount, onPress }: CardPymentTpes) => {
+	const calculateDiscount = (price / 100) * discount;
+	const percentage = price - calculateDiscount;
+
 	return (
 		<TouchableOpacity onPress={onPress}>
 			<VStack
@@ -163,18 +169,18 @@ const CardPyment = ({ title = "Top Up", totalCoin, totalAmount, onPress }: CardP
 				</HStack>
 
 				<Text fontSize="xl" fontFamily="lato" fontWeight="bold" color={BASE_COLOR.text.primary}>
-					{totalCoin} coin - Disc 50%
+					{totalCoin} coin - Disc {discount}%
 				</Text>
 
 				<HStack space={1}>
 					<FontAwesome5 name="money-bill-wave" size={17} color={BASE_COLOR.text.primary} />
 					<Text fontSize="sm" fontFamily="lato" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Rp.{toMoney(totalAmount)}
+						Rp.{toMoney(percentage)}
 					</Text>
 				</HStack>
 
 				<Text fontSize="xs" fontWeight="bold" strikeThrough color={BASE_COLOR.text.primary}>
-					Rp.{toMoney(totalAmount + 1000)}
+					Rp.{toMoney(price)}
 				</Text>
 			</VStack>
 		</TouchableOpacity>

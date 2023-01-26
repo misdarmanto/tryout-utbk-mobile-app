@@ -4,7 +4,6 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/Main/Home";
-import ExercisesScreen from "../screens/Main/TryOutList";
 import PymentScreen from "../screens/Main/Pyment";
 import ProfileScreen from "../screens/Main/Profile";
 import TryOutScreen from "../screens/Stack/TryOut";
@@ -15,14 +14,15 @@ import NotificationScreen from "../screens/Stack/Notification";
 import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
 import { RootContext } from "../utilities/rootContext";
 import { ContextApiTypes, PriceTypes } from "../types";
-import RankTryOutScreen from "../screens/Stack/RankTryOut";
-import DetailPaymentScreen from "../screens/Stack/DetailPayment";
+import DetailPaymentScreen from "../screens/Stack/Payment/DetailPayment";
 import { TryOutDataTypes } from "../types/tryOutDataTypes";
 import { heightPercentage } from "../utilities/dimension";
 import TryOutListScreen from "../screens/Main/TryOutList";
 import DetailArticleScreen from "../screens/Stack/Articles/DetailArticle";
 import ListArticleScreen from "../screens/Stack/Articles/ListArticle";
 import { ArticleTypes } from "../types/articleTypes";
+import DetailPaymentAdsScreen from "../screens/Stack/Payment/DetailAds";
+import DetailPaymentReferralScreen from "../screens/Stack/Payment/DetailReferral";
 
 export type RootParamList = {
 	Main: undefined;
@@ -35,8 +35,9 @@ export type RootParamList = {
 	Login: undefined;
 	SignUp: undefined;
 	Notification: undefined;
-	RankTryOut: undefined;
 	DetailPayment: { item: PriceTypes };
+	DetailPaymentAds: undefined;
+	DetailPaymentReferral: undefined;
 	DetailArticle: { article: ArticleTypes };
 	ListArticle: { categoryArticle?: string };
 };
@@ -125,10 +126,11 @@ export default function AppNavigations() {
 						<Stack.Screen name="TryOut" component={TryOutScreen} />
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
-						<Stack.Screen name="RankTryOut" component={RankTryOutScreen} />
 						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
 						<Stack.Screen name="ListArticle" component={ListArticleScreen} />
 						<Stack.Screen name="DetailArticle" component={DetailArticleScreen} />
+						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />
+						<Stack.Screen name="DetailPaymentReferral" component={DetailPaymentReferralScreen} />
 					</>
 				)}
 				{!userInfo.isAuth && (
