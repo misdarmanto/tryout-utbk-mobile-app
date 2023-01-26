@@ -1,4 +1,4 @@
-import { Box, HStack, Image, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
+import { Box, HStack, Image, Pressable, Progress, QuestionIcon, ScrollView, Text, VStack } from "native-base";
 import React, { memo, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { AntDesign } from "@expo/vector-icons";
@@ -9,8 +9,8 @@ import ModalPrimary from "../../../components/Modal/ModalPrimary";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import ChoiceField from "../../../components/form/choiceField";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
 import { TryOutDataTypes, QuestionTypes } from "../../../types/tryOutDataTypes";
+import RenderWebView from "../../../components/webView/RenderWebView";
 
 const Play = () => {
 	const { navigation, tryOutData, setTryOutDataFinish, setTryOutState }: any = useContext(tryOutContext);
@@ -134,7 +134,7 @@ const Play = () => {
 						alt="Alternate Text"
 						size="xl"
 					/> */}
-					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.question}</Text>
+					<RenderWebView htmlBody={CURRENT_QUESTION.question} />
 					{/* <Image
 						source={{
 							uri: "https://wallpaperaccess.com/full/317501.jpg",
