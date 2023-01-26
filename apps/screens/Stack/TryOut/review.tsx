@@ -6,6 +6,7 @@ import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
 import { QuestionTypes } from "../../../types/tryOutDataTypes";
 import ChoiceField from "../../../components/form/choiceField";
+import RenderWebView from "../../../components/webView/RenderWebView";
 
 const Review = () => {
 	const { navigation, tryOutDataFinish }: any = useContext(tryOutContext);
@@ -71,14 +72,15 @@ const Review = () => {
 				</HStack>
 
 				<Box my="8">
-					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.question}</Text>
+					<RenderWebView htmlBody={CURRENT_QUESTION.question} />
 				</Box>
 
 				<Box>
 					<Text fontFamily="lato" color={BASE_COLOR.text.primary}>
 						Pembahasan:
 					</Text>
-					<Text color={BASE_COLOR.text.primary}>{CURRENT_QUESTION.review}</Text>
+
+					<RenderWebView htmlBody={CURRENT_QUESTION.review} />
 				</Box>
 
 				<VStack space={2} my="10">

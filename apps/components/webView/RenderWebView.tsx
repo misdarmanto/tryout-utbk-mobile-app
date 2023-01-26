@@ -14,6 +14,7 @@ const RenderWebView = ({ htmlBody }: { htmlBody: string }) => {
     </html>`;
 
 	const [webViewHeight, setwebViewHeight] = useState(0);
+
 	const onWebViewMessage = (event: any) => {
 		setwebViewHeight(Number(event.nativeEvent.data));
 	};

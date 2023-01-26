@@ -156,7 +156,6 @@ const Play = () => {
 						isActive={choiceSelected === "B"}
 						onPress={() => handleSelectAnswer("B")}
 						text={CURRENT_QUESTION.choices.B}
-						// imageUrl="https://wallpaperaccess.com/full/317501.jpg"
 					/>
 					<ChoiceField
 						alphaBet="C"
