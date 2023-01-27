@@ -144,7 +144,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				navigation.navigate("Login");
 				return;
 			}
-			navigation.navigate("ListArticle", { categoryArticle: category });
+			navigation.navigate("ListLearningModule", { category: category });
 		};
 
 		return (
@@ -246,7 +246,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					</Box>
 
 					<Heading mt="5" color={BASE_COLOR.text.primary} fontFamily="lato" fontStyle="italic">
-						Recomend
+						Terbaru
 					</Heading>
 
 					{tryOutHighlight.map((item) => (
@@ -284,9 +284,9 @@ const Banner = ({ onTopUpPress, countDown, coin }: BannerTypes) => {
 						</Text>
 					)}
 
-					<HStack space={2}>
+					<HStack space={3}>
 						<HStack space={1}>
-							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+							<FontAwesome5 name="bitcoin" size={20} color="#FFD700" />
 							<Text fontSize="sm" fontWeight="bold" color="white">
 								{coin}
 							</Text>
@@ -296,6 +296,15 @@ const Banner = ({ onTopUpPress, countDown, coin }: BannerTypes) => {
 								<MaterialIcons name="add-box" size={24} color="#fff" />
 								<Text fontSize="sm" fontWeight="bold" color="white">
 									Top Up
+								</Text>
+							</HStack>
+						</TouchableOpacity>
+
+						<TouchableOpacity onPress={onTopUpPress}>
+							<HStack space={1} alignItems="center">
+								<MaterialCommunityIcons name="history" size={24} color="#fff" />
+								<Text fontSize="sm" fontWeight="bold" color="white">
+									History
 								</Text>
 							</HStack>
 						</TouchableOpacity>

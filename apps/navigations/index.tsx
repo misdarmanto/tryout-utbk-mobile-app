@@ -18,9 +18,9 @@ import DetailPaymentScreen from "../screens/Stack/Payment/DetailPayment";
 import { TryOutDataTypes } from "../types/tryOutDataTypes";
 import { heightPercentage } from "../utilities/dimension";
 import TryOutListScreen from "../screens/Main/TryOutList";
-import DetailArticleScreen from "../screens/Stack/Articles/DetailArticle";
-import ListArticleScreen from "../screens/Stack/Articles/ListArticle";
-import { ArticleTypes } from "../types/articleTypes";
+import DetailLearningModuleScreen from "../screens/Stack/learningModule/detailModule";
+import ListLearningModuleScreen from "../screens/Stack/learningModule/ListModule";
+import { LearningModuleTypes } from "../types/learningModuleTypes";
 import DetailPaymentAdsScreen from "../screens/Stack/Payment/DetailAds";
 import DetailPaymentReferralScreen from "../screens/Stack/Payment/DetailReferral";
 
@@ -38,8 +38,8 @@ export type RootParamList = {
 	DetailPayment: { item: PriceTypes };
 	DetailPaymentAds: undefined;
 	DetailPaymentReferral: undefined;
-	DetailArticle: { article: ArticleTypes };
-	ListArticle: { categoryArticle?: string };
+	DetailLearningModule: { moduleItem: LearningModuleTypes };
+	ListLearningModule: { category?: string };
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -50,7 +50,7 @@ function TabNavigation() {
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
 				tabBarStyle: { minHeight: heightPercentage(7) },
-				sheaderTitleStyle: { fontFamily: "lato", color: BASE_COLOR.text.primary },
+				headerTitleStyle: { fontFamily: "lato", color: BASE_COLOR.text.primary },
 				tabBarIcon: ({ color }) => {
 					switch (route.name) {
 						case "Home":
@@ -127,8 +127,8 @@ export default function AppNavigations() {
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
-						<Stack.Screen name="ListArticle" component={ListArticleScreen} />
-						<Stack.Screen name="DetailArticle" component={DetailArticleScreen} />
+						<Stack.Screen name="ListLearningModule" component={ListLearningModuleScreen} />
+						<Stack.Screen name="DetailLearningModule" component={DetailLearningModuleScreen} />
 						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />
 						<Stack.Screen name="DetailPaymentReferral" component={DetailPaymentReferralScreen} />
 					</>

@@ -1,4 +1,4 @@
-export interface ArticleTypes {
+export interface LearningModuleTypes {
 	id?: string;
 	title: string;
 	category: string;

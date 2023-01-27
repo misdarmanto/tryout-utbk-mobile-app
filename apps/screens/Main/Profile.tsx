@@ -1,9 +1,9 @@
-import React, { PropsWithChildren, useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Avatar, Heading, HStack, Text, VStack } from "native-base";
+import { Avatar, Box, Heading, HStack, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
-import { FontAwesome5, Ionicons, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, AntDesign, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { TouchableOpacity } from "react-native";
 import { RootContext } from "../../utilities/rootContext";
@@ -12,6 +12,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../configs/firebase";
 import ModalPrimary from "../../components/Modal/ModalPrimary";
 import * as Application from "expo-application";
+import { Share, Linking } from "react-native";
 
 type ProfilePropsTypes = NativeStackScreenProps<RootParamList, "Profile">;
 
@@ -25,13 +26,27 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 		await signOut(auth);
 	};
 
+	const ratingPlayStore = () => {
+		Linking.openURL(`market://details?id=com.misdar.utbk&showAllReviews=true`);
+	};
+
+	const onShare = async () => {
+		try {
+			await Share.share({
+				message: "https://play.google.com/store/apps/details?id=com.misdar.utbk",
+			});
+		} catch (error: any) {
+			alert(error.message);
+		}
+	};
+
 	return (
 		<Layout>
-			<HStack
+			<VStack
 				backgroundColor="#FFF"
-				p={5}
-				alignItems="center"
-				justifyContent="space-between"
+				p={3}
+				px={3}
+				space={2}
 				borderWidth={1}
 				borderColor="gray.200"
 				my={1}
@@ -40,23 +55,47 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 			>
 				<HStack alignItems="center" space={2}>
 					<Avatar>{userInfo.name[0]}</Avatar>
-					<VStack>
-						<Heading color={BASE_COLOR.text.primary}>{userInfo.name}</Heading>
-						<Text color={BASE_COLOR.text.primary}>{userInfo.email}</Text>
-					</VStack>
-				</HStack>
-				<HStack space={1} alignItems="center">
-					<FontAwesome5 name="bitcoin" size={32} color="#FFD700" />
-					<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						{userInfo.coin}
+					<Text fontFamily="lato" fontSize="xl" color={BASE_COLOR.text.primary}>
+						{userInfo.name}
 					</Text>
+					<Text color={BASE_COLOR.text.primary}>{userInfo.email}</Text>
 				</HStack>
-			</HStack>
+
+				<HStack backgroundColor="#FFF" py={3} space={5} borderRadius="5" rounded="md">
+					<HStack space={1} alignItems="center">
+						<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+						<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+							{userInfo.coin}
+						</Text>
+					</HStack>
+					<TouchableOpacity>
+						<HStack space={1}>
+							<MaterialIcons name="add-box" size={24} color={BASE_COLOR.text.primary} />
+							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+								Top Up
+							</Text>
+						</HStack>
+					</TouchableOpacity>
+
+					<TouchableOpacity>
+						<HStack space={1} alignItems="center">
+							<MaterialCommunityIcons
+								name="history"
+								size={24}
+								color={BASE_COLOR.text.primary}
+							/>
+							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+								History
+							</Text>
+						</HStack>
+					</TouchableOpacity>
+				</HStack>
+			</VStack>
 
 			<VStack mt={10}>
-				<CardProfileList>
-					<AntDesign name="star" size={30} color={BASE_COLOR.text.primary} />
-					<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
+				<CardProfileList onPress={ratingPlayStore}>
+					<AntDesign name="star" size={24} color={BASE_COLOR.text.primary} />
+					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>
 						Beri Rating
 					</Text>
 					<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
@@ -64,14 +103,19 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 					</Text>
 				</CardProfileList>
 
-				<TouchableOpacity activeOpacity={0.5} onPress={() => setOpenModal(true)}>
-					<CardProfileList>
-						<Ionicons name="exit-outline" size={30} color={BASE_COLOR.text.primary} />
-						<Text fontSize="xl" fontWeight="bold" color={BASE_COLOR.text.primary}>
-							Keluar
-						</Text>
-					</CardProfileList>
-				</TouchableOpacity>
+				<CardProfileList onPress={onShare}>
+					<Ionicons name="ios-people" size={24} color={BASE_COLOR.text.primary} />
+					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Bagikan ke teman mu
+					</Text>
+				</CardProfileList>
+
+				<CardProfileList onPress={() => setOpenModal(true)}>
+					<Ionicons name="exit-outline" size={24} color={BASE_COLOR.text.primary} />
+					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Keluar
+					</Text>
+				</CardProfileList>
 			</VStack>
 
 			<ModalPrimary
@@ -87,20 +131,27 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 	);
 }
 
-const CardProfileList: React.FC<PropsWithChildren> = ({ children }) => {
+type CardProfileListTypes = {
+	onPress: any;
+	children: ReactNode;
+};
+
+const CardProfileList = ({ children, onPress }: CardProfileListTypes) => {
 	return (
-		<HStack
-			backgroundColor="#FFF"
-			p={5}
-			space={5}
-			alignItems="flex-end"
-			borderWidth={1}
-			borderColor="gray.200"
-			my={1}
-			borderRadius="5"
-			rounded="md"
-		>
-			{children}
-		</HStack>
+		<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+			<HStack
+				backgroundColor="#FFF"
+				p={5}
+				space={5}
+				alignItems="flex-end"
+				borderWidth={1}
+				borderColor="gray.200"
+				my={1}
+				borderRadius="5"
+				rounded="md"
+			>
+				{children}
+			</HStack>
+		</TouchableOpacity>
 	);
 };

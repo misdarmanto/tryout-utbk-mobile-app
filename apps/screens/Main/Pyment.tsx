@@ -2,19 +2,59 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Avatar, Heading, HStack, ScrollView, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
 import { useContext } from "react";
 import { toMoney } from "../../utilities/toMony";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Share } from "react-native";
 import { heightPercentage, widthPercentage } from "../../utilities/dimension";
+
+import React, { memo, useEffect, useState } from "react";
+import { RewardedAd, RewardedAdEventType, TestIds } from "react-native-google-mobile-ads";
+
+const adUnitId = __DEV__ ? TestIds.REWARDED : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
+
+const rewarded = RewardedAd.createForAdRequest(adUnitId, {
+	requestNonPersonalizedAdsOnly: true,
+	keywords: ["fashion", "clothing"],
+});
 
 type PymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "Pyment">;
 
 export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 	const { appInfo, userInfo } = useContext<ContextApiTypes>(RootContext);
+
+	// const [loaded, setLoaded] = useState(false);
+
+	// useEffect(() => {
+	// 	const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
+	// 		setLoaded(true);
+	// 	});
+	// 	const unsubscribeEarned = rewarded.addAdEventListener(RewardedAdEventType.EARNED_REWARD, (reward) => {
+	// 		console.log("User earned reward of ", reward);
+	// 	});
+
+	// 	// Start loading the rewarded ad straight away
+	// 	rewarded.load();
+
+	// 	// Unsubscribe from events on unmount
+	// 	return () => {
+	// 		unsubscribeLoaded();
+	// 		unsubscribeEarned();
+	// 	};
+	// }, []);
+
+	const onShare = async () => {
+		try {
+			await Share.share({
+				message: "https://play.google.com/store/apps/details?id=com.misdar.utbk",
+			});
+		} catch (error: any) {
+			alert(error.message);
+		}
+	};
 
 	return (
 		<Layout>
@@ -33,13 +73,17 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 					<HStack alignItems="center" space={2}>
 						<Avatar>{userInfo.name[0]}</Avatar>
 						<VStack>
-							<Heading color={BASE_COLOR.text.primary}>{userInfo.name}</Heading>
-							<Text color={BASE_COLOR.text.primary}>{userInfo.email}</Text>
+							<Text fontSize="md" fontFamily="lato" color={BASE_COLOR.text.primary}>
+								{userInfo.name}
+							</Text>
+							<Text fontSize="xs" color={BASE_COLOR.text.primary}>
+								{userInfo.email}
+							</Text>
 						</VStack>
 					</HStack>
 					<HStack space={1} alignItems="center">
-						<FontAwesome5 name="bitcoin" size={32} color="#FFD700" />
-						<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+						<Text fontSize="sm" fontFamily="lato" color={BASE_COLOR.text.primary}>
 							{userInfo.coin}
 						</Text>
 					</HStack>
@@ -71,9 +115,17 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 					borderRadius="5"
 					rounded="md"
 				>
-					<Text fontSize="md" fontFamily="lato" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Lihat Iklan untuk mendapatkan 5 koin
-					</Text>
+					<HStack space={2} alignItems="flex-end">
+						<MaterialIcons name="ondemand-video" size={24} color={BASE_COLOR.text.primary} />
+						<Text
+							fontSize="md"
+							fontFamily="lato"
+							fontWeight="bold"
+							color={BASE_COLOR.text.primary}
+						>
+							Lihat Iklan untuk mendapatkan 5 koin
+						</Text>
+					</HStack>
 					<Text fontSize="sm" color={BASE_COLOR.text.primary}>
 						Pastikan kamu melihat iklan hingga selesai untuk mendapatkan koin
 					</Text>
@@ -91,43 +143,55 @@ export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
 								paddingHorizontal: 10,
 								borderRadius: 5,
 							}}
-							onPress={() => navigation.navigate("DetailPaymentAds")}
+							onPress={() => {
+								rewarded.show();
+							}}
 						>
 							<Text style={{ color: "#FFF", fontSize: 15 }}>Lihat</Text>
 						</TouchableOpacity>
 					</HStack>
 				</VStack>
 
-				<VStack
-					backgroundColor="#FFF"
-					px={5}
-					py={2}
-					borderWidth={1}
-					borderColor="gray.200"
-					my={1}
-					space={5}
-					borderRadius="5"
-					rounded="md"
-				>
-					<Text fontSize="md" fontFamily="lato" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Undang teman mu untuk mendapatkan 50 koin
-					</Text>
-					<Text fontSize="sm" color={BASE_COLOR.text.primary}>
-						Salin kode referral mu dibawah ini dan share ke teman mu, pastikan teman mu memasukan
-						kode referral tersebut pada saat melakukan pendaftaran
-					</Text>
-					<Text fontSize="md" color={BASE_COLOR.text.primary}>
-						kode referral mu : {userInfo.referralCode}
-					</Text>
-					<HStack justifyContent="space-between">
-						<HStack space={1}>
-							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
-							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
-								{50} coin
+				<TouchableOpacity onPress={onShare} activeOpacity={0.7}>
+					<VStack
+						backgroundColor="#FFF"
+						px={5}
+						py={2}
+						borderWidth={1}
+						borderColor="gray.200"
+						my={1}
+						space={5}
+						borderRadius="5"
+						rounded="md"
+					>
+						<HStack space={2}>
+							<Ionicons name="ios-people" size={24} color={BASE_COLOR.text.primary} />
+							<Text
+								fontSize="md"
+								fontFamily="lato"
+								fontWeight="bold"
+								color={BASE_COLOR.text.primary}
+							>
+								Undang teman dapatkan 50 coin
 							</Text>
 						</HStack>
-					</HStack>
-				</VStack>
+						<Text fontSize="sm" color={BASE_COLOR.text.primary}>
+							Salin kode referral mu dibawah ini dan share ke teman mu, pastikan teman mu
+							memasukan kode referral tersebut pada saat melakukan pendaftaran
+						</Text>
+						<Text fontSize="md" color={BASE_COLOR.text.primary}>
+							kode referral mu : {userInfo.referralCode}
+						</Text>
+						<HStack justifyContent="space-between">
+							<HStack space={1}>
+								<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
+								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+									{50} coin
+								</Text>
+							</HStack>
+						</HStack>
+					</VStack>
+				</TouchableOpacity>
 			</ScrollView>
 		</Layout>
 	);
