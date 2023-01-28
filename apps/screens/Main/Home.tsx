@@ -253,7 +253,6 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 								title="Biologi"
 								category="biologi"
 							/>
-
 							<IconRounded
 								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
 								title="Fisika"

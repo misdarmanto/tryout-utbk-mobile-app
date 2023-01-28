@@ -8,7 +8,6 @@ import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes, NotificationsTypes, UserInfoTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
-import RewardButton from "../../components/adds/RewardButton";
 
 type NotificationScreenPropsTypes = NativeStackScreenProps<RootParamList, "Notification">;
 
@@ -84,7 +83,7 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 					</VStack>
 				)}
 			/>
-			<RewardButton />
+
 			<Button onPress={handleRemove}>Remove</Button>
 		</Layout>
 	);

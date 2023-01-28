@@ -17,6 +17,7 @@ import { ContextApiTypes } from "../../../types";
 import { LearningModuleTypes } from "../../../types/learningModuleTypes";
 import { TouchableOpacity } from "react-native";
 import { widthPercentage } from "../../../utilities/dimension";
+import LearningModuleSkeleton from "../../../components/skeleton/LearningModuleSkeleton";
 
 type ListLearningModuleScreenPropsTypes = NativeStackScreenProps<RootParamList, "ListLearningModule">;
 
@@ -25,6 +26,7 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 	const { category } = route.params;
 
 	const [ListLearningModule, setListLearningModule] = useState<LearningModuleTypes[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const getListLearningModule = async () => {
 		const LEARNING_MODULE_KEY = `learning_module_key_${category}`;
@@ -37,10 +39,11 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 		const hasExpired = expireTime >= currentDateTime;
 
 		if (learningModluleFromLocalStorage && hasExpired) {
+			console.log("from local storage");
 			return learningModluleFromLocalStorage;
 		}
 
-		const LearningModuleDB = new FirestoreDB("Article");
+		const LearningModuleDB = new FirestoreDB("LearningModule");
 		const learningModuleFromDB = await LearningModuleDB.queryCollection({
 			params_1: "category",
 			params_2: category,
@@ -51,13 +54,16 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 			key: EXPIRE_KEY,
 			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
 		});
+		console.log("from firestore");
 		return learningModuleFromDB;
 	};
 
 	useEffect(() => {
 		(async () => {
-			const result = await getListLearningModule();
+			const result: LearningModuleTypes[] = await getListLearningModule();
+			result.sort((a, b) => a.order - b.order);
 			setListLearningModule(result);
+			setIsLoading(false);
 		})();
 	}, []);
 
@@ -73,19 +79,25 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 
 	return (
 		<Layout>
-			<FlatList
-				ListHeaderComponent={
-					<ListHeaderComponent totalModule={ListLearningModule.length} category={category + ""} />
-				}
-				data={ListLearningModule}
-				keyExtractor={(item) => item.id + ""}
-				renderItem={({ item }) => (
-					<ListLearningModuleItem
-						title={item.title}
-						onPress={() => handleNavigateToDetailScreen(item)}
-					/>
-				)}
-			/>
+			{isLoading && <LearningModuleSkeleton />}
+			{!isLoading && (
+				<FlatList
+					ListHeaderComponent={
+						<ListHeaderComponent
+							totalModule={ListLearningModule.length}
+							category={category + ""}
+						/>
+					}
+					data={ListLearningModule}
+					keyExtractor={(item) => item.id + ""}
+					renderItem={({ item }) => (
+						<ListLearningModuleItem
+							title={item.title}
+							onPress={() => handleNavigateToDetailScreen(item)}
+						/>
+					)}
+				/>
+			)}
 		</Layout>
 	);
 }
@@ -104,7 +116,7 @@ const ListHeaderComponent = ({ totalModule, category }: { totalModule: number; c
 			borderWidth={1}
 			borderColor="gray.200"
 		>
-			<HStack justifyContent="space-between" alignItems="center">
+			{/* <HStack justifyContent="space-between" alignItems="center">
 				<Progress
 					size="md"
 					value={45}
@@ -117,7 +129,7 @@ const ListHeaderComponent = ({ totalModule, category }: { totalModule: number; c
 				<Text color={BASE_COLOR.text.primary} fontFamily="lato">
 					50%
 				</Text>
-			</HStack>
+			</HStack> */}
 			<HStack space={5}>
 				<HStack space={1} alignItems="center">
 					<FontAwesome name="list-alt" size={20} color={BASE_COLOR.text.secondary} />
