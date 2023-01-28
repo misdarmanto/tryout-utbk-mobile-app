@@ -172,7 +172,15 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			navigation.navigate("Login");
 			return;
 		}
-		navigation.navigate("Pyment");
+		navigation.navigate("Payment");
+	};
+
+	const handleOnHistoryPress = () => {
+		if (!userInfo.isAuth) {
+			navigation.navigate("Login");
+			return;
+		}
+		navigation.navigate("HistoryTransaction");
 	};
 
 	return (
@@ -183,11 +191,43 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					showsVerticalScrollIndicator={false}
 					refreshControl={<RefreshControl refreshing={isLoading} onRefresh={onRefresh} />}
 				>
-					<Banner
-						countDown={appInfo.banner.countDown}
-						coin={userInfo.coin}
-						onTopUpPress={handleOnTopUpPress}
-					/>
+					<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
+						<HStack justifyContent="space-between">
+							<Box justifyContent="space-between">
+								{appInfo.banner.countDown && (
+									<Text fontSize="sm" color="white" pb="3">
+										{appInfo.banner.countDown}
+									</Text>
+								)}
+
+								<HStack space={3}>
+									<HStack space={1}>
+										<FontAwesome5 name="bitcoin" size={20} color="#FFD700" />
+										<Text fontSize="sm" fontWeight="bold" color="white">
+											{userInfo.coin}
+										</Text>
+									</HStack>
+									<TouchableOpacity onPress={handleOnTopUpPress}>
+										<HStack space={1}>
+											<MaterialIcons name="add-box" size={24} color="#fff" />
+											<Text fontSize="sm" fontWeight="bold" color="white">
+												Top Up
+											</Text>
+										</HStack>
+									</TouchableOpacity>
+
+									<TouchableOpacity onPress={handleOnHistoryPress}>
+										<HStack space={1} alignItems="center">
+											<MaterialCommunityIcons name="history" size={24} color="#fff" />
+											<Text fontSize="sm" fontWeight="bold" color="white">
+												History
+											</Text>
+										</HStack>
+									</TouchableOpacity>
+								</HStack>
+							</Box>
+						</HStack>
+					</Box>
 					<Box
 						borderWidth={1}
 						my="5"
@@ -266,51 +306,3 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		</Layout>
 	);
 }
-
-interface BannerTypes {
-	onTopUpPress?: any;
-	countDown?: string;
-	coin: number;
-}
-
-const Banner = ({ onTopUpPress, countDown, coin }: BannerTypes) => {
-	return (
-		<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
-			<HStack justifyContent="space-between">
-				<Box justifyContent="space-between">
-					{countDown && (
-						<Text fontSize="sm" color="white" pb="3">
-							{countDown}
-						</Text>
-					)}
-
-					<HStack space={3}>
-						<HStack space={1}>
-							<FontAwesome5 name="bitcoin" size={20} color="#FFD700" />
-							<Text fontSize="sm" fontWeight="bold" color="white">
-								{coin}
-							</Text>
-						</HStack>
-						<TouchableOpacity onPress={onTopUpPress}>
-							<HStack space={1}>
-								<MaterialIcons name="add-box" size={24} color="#fff" />
-								<Text fontSize="sm" fontWeight="bold" color="white">
-									Top Up
-								</Text>
-							</HStack>
-						</TouchableOpacity>
-
-						<TouchableOpacity onPress={onTopUpPress}>
-							<HStack space={1} alignItems="center">
-								<MaterialCommunityIcons name="history" size={24} color="#fff" />
-								<Text fontSize="sm" fontWeight="bold" color="white">
-									History
-								</Text>
-							</HStack>
-						</TouchableOpacity>
-					</HStack>
-				</Box>
-			</HStack>
-		</Box>
-	);
-};

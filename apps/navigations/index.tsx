@@ -4,7 +4,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/Main/Home";
-import PymentScreen from "../screens/Main/Pyment";
+import PaymentScreen from "../screens/Main/Payment";
 import ProfileScreen from "../screens/Main/Profile";
 import TryOutScreen from "../screens/Stack/TryOut";
 import SignUpScreen from "../screens/Auth/SignUp";
@@ -23,6 +23,7 @@ import ListLearningModuleScreen from "../screens/Stack/learningModule/ListModule
 import { LearningModuleTypes } from "../types/learningModuleTypes";
 import DetailPaymentAdsScreen from "../screens/Stack/Payment/DetailAds";
 import DetailPaymentReferralScreen from "../screens/Stack/Payment/DetailReferral";
+import HistoryTransactionScreen from "../screens/Stack/Payment/HistoryTransaction";
 
 export type RootParamList = {
 	Main: undefined;
@@ -30,7 +31,8 @@ export type RootParamList = {
 	TryOutList: undefined;
 	TryOut: { tryOutData: TryOutDataTypes };
 	Profile: undefined;
-	Pyment: undefined;
+	Payment: undefined;
+	HistoryTransaction: undefined;
 	DetailTryOut: undefined;
 	Login: undefined;
 	SignUp: undefined;
@@ -57,7 +59,7 @@ function TabNavigation() {
 							return <Feather name="home" size={24} color={color} />;
 						case "TryOutList":
 							return <FontAwesome5 name="tasks" size={24} color={color} />;
-						case "Pyment":
+						case "Payment":
 							return <MaterialCommunityIcons name="cart-outline" size={30} color={color} />;
 						case "Profile":
 							return <AntDesign name="user" size={30} color={color} />;
@@ -78,9 +80,9 @@ function TabNavigation() {
 			{userInfo.isAuth && (
 				<>
 					<Tab.Screen
-						name="Pyment"
+						name="Payment"
 						options={{ tabBarLabel: "Pembelian", headerTitle: "Pembelian" }}
-						component={PymentScreen}
+						component={PaymentScreen}
 					/>
 					<Tab.Screen
 						name="Profile"
@@ -131,6 +133,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="DetailLearningModule" component={DetailLearningModuleScreen} />
 						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />
 						<Stack.Screen name="DetailPaymentReferral" component={DetailPaymentReferralScreen} />
+						<Stack.Screen name="HistoryTransaction" component={HistoryTransactionScreen} />
 					</>
 				)}
 				{!userInfo.isAuth && (

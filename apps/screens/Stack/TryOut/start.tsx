@@ -47,9 +47,12 @@ const Start = () => {
 		const newCoin = userInfo.coin - tryOutData.coin;
 		if (newCoin < 0) return;
 
-		setIsLoading(true);
-		await updateUserInfo({ newCoin: newCoin });
-		setIsLoading(false);
+		if (tryOutData.coin !== 0) {
+			setIsLoading(true);
+			await updateUserInfo({ newCoin: newCoin });
+			setIsLoading(false);
+		}
+
 		setTryOutState("play");
 	};
 
@@ -132,7 +135,7 @@ const Start = () => {
 				{isError && (
 					<HStack alignItems="center" space="1">
 						<Text color="red.500">Coin mu tidak cukup, yuk top up </Text>
-						<TouchableOpacity onPress={() => navigation.navigate("Pyment")}>
+						<TouchableOpacity onPress={() => navigation.navigate("Payment")}>
 							<Text color={BASE_COLOR.primary}>di sini!</Text>
 						</TouchableOpacity>
 					</HStack>

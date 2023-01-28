@@ -68,7 +68,7 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 							{userInfo.coin}
 						</Text>
 					</HStack>
-					<TouchableOpacity>
+					<TouchableOpacity onPress={() => navigation.navigate("Payment")}>
 						<HStack space={1}>
 							<MaterialIcons name="add-box" size={24} color={BASE_COLOR.text.primary} />
 							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
@@ -77,7 +77,7 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 						</HStack>
 					</TouchableOpacity>
 
-					<TouchableOpacity>
+					<TouchableOpacity onPress={() => navigation.navigate("HistoryTransaction")}>
 						<HStack space={1} alignItems="center">
 							<MaterialCommunityIcons
 								name="history"

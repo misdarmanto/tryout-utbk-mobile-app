@@ -21,9 +21,9 @@ const rewarded = RewardedAd.createForAdRequest(adUnitId, {
 	keywords: ["fashion", "clothing"],
 });
 
-type PymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "Pyment">;
+type PaymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "Payment">;
 
-export default function PymentScreen({ navigation }: PymentScreenPropsTypes) {
+export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 	const { appInfo, userInfo } = useContext<ContextApiTypes>(RootContext);
 
 	// const [loaded, setLoaded] = useState(false);

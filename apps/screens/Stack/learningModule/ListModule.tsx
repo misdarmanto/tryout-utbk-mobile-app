@@ -152,9 +152,9 @@ const ListLearningModuleItem = ({ title, onPress }: { title: string; onPress: an
 			>
 				<HStack space={3} alignItems="center">
 					<Box backgroundColor={BASE_COLOR.blue[100]} rounded="full" p={5}>
-						<FontAwesome5 name="book" size={24} color={BASE_COLOR.primary} />
+						<FontAwesome5 name="book" size={24} color={BASE_COLOR.text.secondary} />
 					</Box>
-					<Text fontFamily="lato" fontSize="md" color={BASE_COLOR.text.primary}>
+					<Text fontFamily="lato" fontSize="md" color={BASE_COLOR.text.secondary}>
 						{title}
 					</Text>
 				</HStack>

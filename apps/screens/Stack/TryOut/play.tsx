@@ -11,6 +11,7 @@ import ChoiceField from "../../../components/form/choiceField";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { TryOutDataTypes, QuestionTypes } from "../../../types/tryOutDataTypes";
 import RenderWebView from "../../../components/webView/RenderWebView";
+import ModalSecondary from "../../../components/Modal/ModalSecondary";
 
 const Play = () => {
 	const { navigation, tryOutData, setTryOutDataFinish, setTryOutState }: any = useContext(tryOutContext);
@@ -127,21 +128,7 @@ const Play = () => {
 				</HStack>
 
 				<VStack my="10" space={5}>
-					{/* <Image
-						source={{
-							uri: "https://wallpaperaccess.com/full/317501.jpg",
-						}}
-						alt="Alternate Text"
-						size="xl"
-					/> */}
 					<RenderWebView htmlBody={CURRENT_QUESTION.question} />
-					{/* <Image
-						source={{
-							uri: "https://wallpaperaccess.com/full/317501.jpg",
-						}}
-						alt="Alternate Text"
-						size="xl"
-					/> */}
 				</VStack>
 
 				<VStack space={2} my="10">
@@ -201,14 +188,15 @@ const Play = () => {
 					<AntDesign name="arrowright" size={24} color="#FFF" />
 				</Pressable>
 			</HStack>
-			<ModalPrimary
-				openModel={openModal}
-				onCloseModal={setOpenModal}
-				modalHeaderTitle="Kumpulkan"
-				modalText="Apakah yakin jawaban mu sudah selesai?"
-				btnNoTitle="Koreksi"
-				btnYesTitle="Selesai"
-				onBtnYesClick={handleChangeTryOutState}
+
+			<ModalSecondary
+				onPress={() => {
+					setOpenModal(!openModal);
+					handleChangeTryOutState();
+				}}
+				onCancel={() => setOpenModal(!openModal)}
+				visible={openModal}
+				onRequestClose={() => setOpenModal(!openModal)}
 			/>
 		</VStack>
 	);
