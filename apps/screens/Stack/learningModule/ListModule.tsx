@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, FlatList, HStack, Progress, Text, VStack } from "native-base";
+import { Box, FlatList, HStack, Text, VStack } from "native-base";
 import Layout from "../../../components/Layout";
 import { RootParamList } from "../../../navigations";
 import { FontAwesome5, MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
@@ -16,13 +16,12 @@ import { RootContext } from "../../../utilities/rootContext";
 import { ContextApiTypes } from "../../../types";
 import { LearningModuleTypes } from "../../../types/learningModuleTypes";
 import { TouchableOpacity } from "react-native";
-import { widthPercentage } from "../../../utilities/dimension";
 import LearningModuleSkeleton from "../../../components/skeleton/LearningModuleSkeleton";
 
 type ListLearningModuleScreenPropsTypes = NativeStackScreenProps<RootParamList, "ListLearningModule">;
 
 export default function ListLearningModuleScreen({ route, navigation }: ListLearningModuleScreenPropsTypes) {
-	const { userInfo, appInfo } = useContext<ContextApiTypes>(RootContext);
+	const { appInfo } = useContext<ContextApiTypes>(RootContext);
 	const { category } = route.params;
 
 	const [ListLearningModule, setListLearningModule] = useState<LearningModuleTypes[]>([]);
@@ -52,7 +51,7 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 		await saveDataToLocalStorage({ key: LEARNING_MODULE_KEY, item: learningModuleFromDB });
 		await setExpireTimeToLocalStorage({
 			key: EXPIRE_KEY,
-			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
+			time: appInfo.learningModuleSettings.cacheExpireTimeInMinute || 5,
 		});
 		console.log("from firestore");
 		return learningModuleFromDB;
@@ -82,6 +81,7 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 			{isLoading && <LearningModuleSkeleton />}
 			{!isLoading && (
 				<FlatList
+					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={
 						<ListHeaderComponent
 							totalModule={ListLearningModule.length}
@@ -116,20 +116,6 @@ const ListHeaderComponent = ({ totalModule, category }: { totalModule: number; c
 			borderWidth={1}
 			borderColor="gray.200"
 		>
-			{/* <HStack justifyContent="space-between" alignItems="center">
-				<Progress
-					size="md"
-					value={45}
-					width={widthPercentage(75)}
-					bg="coolGray.100"
-					_filledTrack={{
-						bg: BASE_COLOR.primary,
-					}}
-				/>
-				<Text color={BASE_COLOR.text.primary} fontFamily="lato">
-					50%
-				</Text>
-			</HStack> */}
 			<HStack space={5}>
 				<HStack space={1} alignItems="center">
 					<FontAwesome name="list-alt" size={20} color={BASE_COLOR.text.secondary} />
@@ -148,6 +134,7 @@ const ListHeaderComponent = ({ totalModule, category }: { totalModule: number; c
 		</VStack>
 	);
 };
+
 const ListLearningModuleItem = ({ title, onPress }: { title: string; onPress: any }) => {
 	return (
 		<TouchableOpacity onPress={onPress}>

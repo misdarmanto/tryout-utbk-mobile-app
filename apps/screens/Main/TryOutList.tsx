@@ -81,14 +81,6 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		setTryOutData(newTab);
 	};
 
-	const handleCardOnPress = () => {
-		if (!userInfo.isAuth) {
-			navigation.navigate("Login");
-			return;
-		}
-		navigation.navigate("DetailTryOut");
-	};
-
 	const Tab = () => {
 		const TAB_HEADER_NAMES = appInfo.tryOutSettings.categories;
 		return (
@@ -107,16 +99,27 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		);
 	};
 
+	const handleCardOnPress = (item: TryOutDataTypes) => {
+		if (!userInfo.isAuth) {
+			navigation.navigate("Login");
+			return;
+		}
+		const newItem = item.questions.map((item: any) => ({ ...item, answer: "" }));
+		item.questions = newItem;
+		navigation.navigate("TryOut", { tryOutData: item });
+	};
+
 	const RenderListItem = ({ item }: any) => {
 		return (
 			<CardTryOut
-				onPress={handleCardOnPress}
+				key={item.id}
 				coinTotal={item.coin}
 				isFree={item.coin === 0}
 				exampTotal={item.total}
 				title={item.title}
 				id={item.id}
 				time={item.time}
+				onPress={() => handleCardOnPress(item)}
 			/>
 		);
 	};

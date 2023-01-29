@@ -239,11 +239,6 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 					>
 						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
 							<IconRounded
-								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
-								title="penalaran umum"
-								category="penalaranUmum"
-							/>
-							<IconRounded
 								Icon={<FontAwesome5 name="square-root-alt" size={25} color="#FFF" />}
 								title="matematika"
 								category="matematika"
@@ -258,23 +253,28 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 								title="Fisika"
 								category="fisika"
 							/>
+							<IconRounded
+								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
+								title="Logika"
+								category="logika"
+							/>
 						</HStack>
 
 						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
 							<IconRounded
 								Icon={<FontAwesome5 name="book" size={25} color="#FFF" />}
-								title="Bahasa Indonesia"
-								category="bahasaIndonesia"
+								title="PBM"
+								category="PBM"
 							/>
 							<IconRounded
 								Icon={<Ionicons name="language" size={28} color="#FFF" />}
-								title="Bahasa Inggris"
+								title="B.Inggris"
 								category="bahasaInggris"
 							/>
 							<IconRounded
 								Icon={<AntDesign name="earth" size={25} color="#FFF" />}
-								title="Geograpi"
-								category="geoprapi"
+								title="Geografi"
+								category="geografi"
 							/>
 							<IconRounded
 								Icon={<FontAwesome5 name="feather-alt" size={25} color="#FFF" />}

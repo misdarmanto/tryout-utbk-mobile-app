@@ -37,12 +37,17 @@ export interface tryOutSettings {
 	cacheExpireTimeInMinute?: number;
 }
 
+export interface learningModuleSettings {
+	cacheExpireTimeInMinute?: number;
+}
+
 export interface AppInfoTypes {
 	banner: BannerTypes;
 	payment: PaymentTypes;
 	maintenanceMode: boolean;
 	appVersion: number;
 	tryOutSettings: tryOutSettings;
+	learningModuleSettings: learningModuleSettings;
 }
 
 export interface ContextApiTypes {
