@@ -39,7 +39,7 @@ const Review = () => {
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
-			title: "Review",
+			title: tryOutDataFinish.title,
 		});
 	}, []);
 
@@ -71,7 +71,7 @@ const Review = () => {
 					</HStack>
 				</HStack>
 
-				<Box my="8">
+				<Box my="5">
 					<RenderWebView htmlBody={CURRENT_QUESTION.question} />
 				</Box>
 
@@ -83,7 +83,7 @@ const Review = () => {
 					<RenderWebView htmlBody={CURRENT_QUESTION.review} />
 				</Box>
 
-				<VStack space={2} my="10">
+				<VStack space={2} my="5">
 					<ChoiceField
 						alphaBet="A"
 						isActive={CURRENT_QUESTION.correctAnswer === "A"}

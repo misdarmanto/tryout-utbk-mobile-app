@@ -1,7 +1,7 @@
 {
 	"expo": {
-		"name": "tryout-utbk",
-		"slug": "tryout-utbk",
+		"name": "edu-fire",
+		"slug": "edu-fire",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",

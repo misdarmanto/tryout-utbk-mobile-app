@@ -1,14 +1,13 @@
-import { Box, HStack, Image, Pressable, Progress, QuestionIcon, ScrollView, Text, VStack } from "native-base";
+import { HStack, Pressable, Progress, ScrollView, Text, VStack } from "native-base";
 import React, { memo, useCallback, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { tryOutContext } from "./contextApi";
 import { AntDesign } from "@expo/vector-icons";
 import { BASE_COLOR } from "../../../utilities/baseColor";
 import { widthPercentage } from "../../../utilities/dimension";
-import ModalPrimary from "../../../components/Modal/ModalPrimary";
 
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import ChoiceField from "../../../components/form/choiceField";
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { TryOutDataTypes, QuestionTypes } from "../../../types/tryOutDataTypes";
 import RenderWebView from "../../../components/webView/RenderWebView";
 import ModalSecondary from "../../../components/Modal/ModalSecondary";
@@ -94,7 +93,7 @@ const Play = () => {
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
-			title: "TryOut",
+			title: tryOutData.title,
 			headerRight: () => <HeaderRightComponent />,
 		});
 	}, []);
@@ -127,11 +126,11 @@ const Play = () => {
 					</HStack>
 				</HStack>
 
-				<VStack my="10" space={5}>
+				<VStack my="5" space={5}>
 					<RenderWebView htmlBody={CURRENT_QUESTION.question} />
 				</VStack>
 
-				<VStack space={2} my="10">
+				<VStack space={2} my="5">
 					<ChoiceField
 						alphaBet="A"
 						isActive={choiceSelected === "A"}
