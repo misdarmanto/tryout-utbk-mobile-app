@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Avatar, Heading, HStack, ScrollView, Text, VStack } from "native-base";
+import { Avatar, HStack, ScrollView, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -9,42 +9,12 @@ import { ContextApiTypes } from "../../types";
 import { useContext } from "react";
 import { toMoney } from "../../utilities/toMony";
 import { TouchableOpacity, Share } from "react-native";
-import { heightPercentage, widthPercentage } from "../../utilities/dimension";
-
-import React, { memo, useEffect, useState } from "react";
-import { RewardedAd, RewardedAdEventType, TestIds } from "react-native-google-mobile-ads";
-
-const adUnitId = __DEV__ ? TestIds.REWARDED : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
-
-const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-	requestNonPersonalizedAdsOnly: true,
-	keywords: ["fashion", "clothing"],
-});
+import { widthPercentage } from "../../utilities/dimension";
 
 type PaymentScreenPropsTypes = NativeStackScreenProps<RootParamList, "Payment">;
 
 export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 	const { appInfo, userInfo } = useContext<ContextApiTypes>(RootContext);
-
-	// const [loaded, setLoaded] = useState(false);
-
-	// useEffect(() => {
-	// 	const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
-	// 		setLoaded(true);
-	// 	});
-	// 	const unsubscribeEarned = rewarded.addAdEventListener(RewardedAdEventType.EARNED_REWARD, (reward) => {
-	// 		console.log("User earned reward of ", reward);
-	// 	});
-
-	// 	// Start loading the rewarded ad straight away
-	// 	rewarded.load();
-
-	// 	// Unsubscribe from events on unmount
-	// 	return () => {
-	// 		unsubscribeLoaded();
-	// 		unsubscribeEarned();
-	// 	};
-	// }, []);
 
 	const onShare = async () => {
 		try {
@@ -144,7 +114,7 @@ export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 								borderRadius: 5,
 							}}
 							onPress={() => {
-								rewarded.show();
+								navigation.navigate("RewardAd");
 							}}
 						>
 							<Text style={{ color: "#FFF", fontSize: 15 }}>Lihat</Text>

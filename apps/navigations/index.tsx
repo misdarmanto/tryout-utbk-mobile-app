@@ -24,6 +24,7 @@ import { LearningModuleTypes } from "../types/learningModuleTypes";
 import DetailPaymentAdsScreen from "../screens/Stack/Payment/DetailAds";
 import DetailPaymentReferralScreen from "../screens/Stack/Payment/DetailReferral";
 import HistoryTransactionScreen from "../screens/Stack/Payment/HistoryTransaction";
+import RewardAdScreen from "../screens/Stack/RewardAd";
 
 export type RootParamList = {
 	Main: undefined;
@@ -42,6 +43,7 @@ export type RootParamList = {
 	DetailPaymentReferral: undefined;
 	DetailLearningModule: { moduleItem: LearningModuleTypes };
 	ListLearningModule: { category?: string };
+	RewardAd: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -134,6 +136,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />
 						<Stack.Screen name="DetailPaymentReferral" component={DetailPaymentReferralScreen} />
 						<Stack.Screen name="HistoryTransaction" component={HistoryTransactionScreen} />
+						<Stack.Screen name="RewardAd" component={RewardAdScreen} />
 					</>
 				)}
 				{!userInfo.isAuth && (
