@@ -110,6 +110,13 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 					</Text>
 				</CardProfileList>
 
+				<CardProfileList onPress={() => navigation.navigate("DetailTryOut")}>
+					<Ionicons name="ios-people" size={24} color={BASE_COLOR.text.primary} />
+					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>
+						Test
+					</Text>
+				</CardProfileList>
+
 				<CardProfileList onPress={() => setOpenModal(true)}>
 					<Ionicons name="exit-outline" size={24} color={BASE_COLOR.text.primary} />
 					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>

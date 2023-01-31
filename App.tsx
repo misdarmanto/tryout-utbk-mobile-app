@@ -18,6 +18,8 @@ import MaintenanceAnimation from "./apps/components/animations/Maintenance";
 import { BASE_COLOR } from "./apps/utilities/baseColor";
 import { TryOutDataTypes } from "./apps/types/tryOutDataTypes";
 
+import "expo-dev-client";
+
 LogBox.ignoreLogs(["Warning:..."]); // ignore specific logs
 LogBox.ignoreAllLogs(); // ignore all logs
 const _console = _.clone(console);
@@ -72,7 +74,6 @@ export default function App() {
 						name: "",
 						coin: 0,
 						notifications: [],
-						enrollTryOutId: [],
 						waitingListTransaction: [],
 					};
 					setUserInfo(userData);
