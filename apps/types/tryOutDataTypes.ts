@@ -21,4 +21,5 @@ export interface TryOutDataTypes {
 	questions: QuestionTypes[];
 	coin: number;
 	finish: boolean;
+	order: number;
 }

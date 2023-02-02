@@ -4,6 +4,14 @@ export interface NotificationsTypes {
 	createdAt: string;
 }
 
+export interface TransactionHistoryTypes {
+	id: string;
+	price: number;
+	coin: number;
+	createdAt: string;
+	status: "succsess" | "fail";
+}
+
 export interface UserInfoTypes {
 	isAuth?: boolean;
 	name: string;
@@ -13,6 +21,7 @@ export interface UserInfoTypes {
 	coin: number;
 	notifications: NotificationsTypes[];
 	waitingListTransaction: string[];
+	transactionHistory: TransactionHistoryTypes;
 }
 
 export interface PriceTypes {

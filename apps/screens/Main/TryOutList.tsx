@@ -78,6 +78,8 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 			return;
 		}
 		const newTab = tryOutList.filter((item: CardTryOutTypes | any) => item.category === category);
+
+		newTab.sort((a, b) => a.order - b.order);
 		setTryOutData(newTab);
 	};
 

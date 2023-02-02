@@ -51,7 +51,7 @@ const Review = () => {
 						<Progress
 							value={progressValue}
 							w={widthPercentage(62)}
-							mx="4"
+							mx="2"
 							my="5"
 							size="xl"
 							bg="coolGray.100"
@@ -59,9 +59,6 @@ const Review = () => {
 								bg: BASE_COLOR.primary,
 							}}
 						/>
-						<Text color={BASE_COLOR.text.primary} fontSize="md" fontWeight="bold">
-							{progressValue}%
-						</Text>
 					</HStack>
 					<HStack alignItems="center" space={1}>
 						<Text fontFamily="lato" color={BASE_COLOR.text.primary}>{`${index + 1}/${

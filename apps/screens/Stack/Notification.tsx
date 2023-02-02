@@ -33,14 +33,14 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 			const localNotification = (await storage.get()) || [];
 
 			if (userInfo.notifications.length === 0) {
-				localNotification.sort((a: any, b: any) => b.id - a.id);
+				localNotification.sort((a: any, b: any) => +b.id - +a.id);
 				setNotificationList(localNotification);
 				return;
 			}
 
 			if (userInfo.notifications.length !== 0) {
 				const notificationUpdated = [...localNotification, ...userInfo.notifications];
-				notificationList.sort((a: any, b: any) => b.id - a.id);
+				localNotification.sort((a: any, b: any) => +b.id - +a.id);
 				setNotificationList(notificationUpdated);
 				await storage.remove();
 				await storage.store(notificationUpdated);
@@ -84,7 +84,7 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 				)}
 			/>
 
-			<Button onPress={handleRemove}>Remove</Button>
+			{/* <Button onPress={handleRemove}>Remove</Button> */}
 		</Layout>
 	);
 };

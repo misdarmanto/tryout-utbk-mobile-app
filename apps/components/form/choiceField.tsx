@@ -1,6 +1,7 @@
 import { Avatar, HStack, Image, Pressable, Text } from "native-base";
 import React, { memo } from "react";
 import { BASE_COLOR } from "../../utilities/baseColor";
+import { widthPercentage } from "../../utilities/dimension";
 
 interface ChoiceFieldTypes {
 	alphaBet: string;
@@ -27,14 +28,14 @@ const ChoiceField = ({ alphaBet, text, isActive, isWrong, imageUrl, onPress }: C
 		<Pressable
 			onPress={onPress}
 			py="3"
-			px="5"
+			px="3"
 			borderWidth="1"
 			borderColor="gray.100"
 			bg={backgroundColor}
 			rounded="md"
 			_pressed={{ bg: backgroundColor }}
 		>
-			<HStack alignItems="center" space={3}>
+			<HStack alignItems="center" space={1}>
 				<Avatar
 					size="md"
 					backgroundColor={isActive || isWrong ? "#FFF" : BASE_COLOR.primary}
@@ -47,7 +48,14 @@ const ChoiceField = ({ alphaBet, text, isActive, isWrong, imageUrl, onPress }: C
 					{alphaBet}
 				</Avatar>
 				{text && (
-					<Text fontSize="md" color={textColor}>
+					<Text
+						fontSize="md"
+						color={textColor}
+						textAlign="justify"
+						flexWrap="wrap"
+						px="2"
+						flexShrink={1}
+					>
 						{text}
 					</Text>
 				)}

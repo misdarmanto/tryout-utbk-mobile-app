@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Avatar, Box, Heading, HStack, Text, VStack } from "native-base";
+import { Avatar, HStack, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { FontAwesome5, Ionicons, AntDesign, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -77,7 +77,7 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 						</HStack>
 					</TouchableOpacity>
 
-					<TouchableOpacity onPress={() => navigation.navigate("HistoryTransaction")}>
+					<TouchableOpacity onPress={() => navigation.navigate("TransactionHistory")}>
 						<HStack space={1} alignItems="center">
 							<MaterialCommunityIcons
 								name="history"
@@ -107,13 +107,6 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 					<Ionicons name="ios-people" size={24} color={BASE_COLOR.text.primary} />
 					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>
 						Bagikan ke teman mu
-					</Text>
-				</CardProfileList>
-
-				<CardProfileList onPress={() => navigation.navigate("DetailTryOut")}>
-					<Ionicons name="ios-people" size={24} color={BASE_COLOR.text.primary} />
-					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>
-						Test
 					</Text>
 				</CardProfileList>
 

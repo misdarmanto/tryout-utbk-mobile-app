@@ -9,6 +9,7 @@ import { RewardedAd, RewardedAdEventType, TestIds } from "react-native-google-mo
 import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
+import { BASE_COLOR } from "../../utilities/baseColor";
 
 const adUnitId = __DEV__ ? TestIds.REWARDED : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
 
@@ -45,6 +46,7 @@ const RewardAdScreen = ({ navigation }: RewardAdScreenPropsTypes) => {
 		const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
 			setLoaded(true);
 		});
+
 		const unsubscribeEarned = rewarded.addAdEventListener(
 			RewardedAdEventType.EARNED_REWARD,
 			async (reward) => {
@@ -52,14 +54,21 @@ const RewardAdScreen = ({ navigation }: RewardAdScreenPropsTypes) => {
 				await updateUserCoin();
 			}
 		);
+
 		rewarded.load();
+
 		return () => {
 			unsubscribeLoaded();
 			unsubscribeEarned();
 		};
 	}, []);
 
-	if (!loaded) return null;
+	if (!loaded)
+		return (
+			<Text textAlign="center" fontFamily="lato" fontSize="xl" mt="64" color={BASE_COLOR.text.primary}>
+				loading...
+			</Text>
+		);
 
 	return (
 		<Layout>
