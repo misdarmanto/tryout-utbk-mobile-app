@@ -21,7 +21,7 @@ import LearningModuleSkeleton from "../../../components/skeleton/LearningModuleS
 type ListLearningModuleScreenPropsTypes = NativeStackScreenProps<RootParamList, "ListLearningModule">;
 
 export default function ListLearningModuleScreen({ route, navigation }: ListLearningModuleScreenPropsTypes) {
-	const { appInfo } = useContext<ContextApiTypes>(RootContext);
+	const { appInfo, userInfo } = useContext<ContextApiTypes>(RootContext);
 	const { category } = route.params;
 
 	const [ListLearningModule, setListLearningModule] = useState<LearningModuleTypes[]>([]);
@@ -73,6 +73,10 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 	}, []);
 
 	const handleNavigateToDetailScreen = (item: any) => {
+		if (!userInfo.isAuth) {
+			navigation.navigate("Login");
+			return;
+		}
 		navigation.navigate("DetailLearningModule", { moduleItem: item });
 	};
 

@@ -140,10 +140,6 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 
 	const IconRounded = ({ Icon, title, category }: { Icon: any; title: string; category: string }) => {
 		const handleIconOnPress = () => {
-			if (!userInfo.isAuth) {
-				navigation.navigate("Login");
-				return;
-			}
 			navigation.navigate("ListLearningModule", { category: category });
 		};
 
@@ -193,7 +189,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				>
 					<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
 						<HStack justifyContent="space-between">
-							<Box justifyContent="space-between">
+							<Box justifyContent="space-between" minH="16">
 								{appInfo.banner.countDown && (
 									<Text fontSize="sm" color="white" pb="3">
 										{appInfo.banner.countDown}

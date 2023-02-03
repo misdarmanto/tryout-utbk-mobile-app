@@ -1,12 +1,12 @@
-import { Button, FlatList, HStack, Input, Stack, Text, VStack } from "native-base";
+import { FlatList, HStack, Text, VStack } from "native-base";
 import Layout from "../../components/Layout";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootParamList } from "../../navigations";
 import { LocalStorage } from "../../localStorage";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { RootContext } from "../../utilities/rootContext";
-import { ContextApiTypes, NotificationsTypes, UserInfoTypes } from "../../types";
+import { ContextApiTypes, NotificationsTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 
 type NotificationScreenPropsTypes = NativeStackScreenProps<RootParamList, "Notification">;

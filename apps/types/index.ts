@@ -21,7 +21,7 @@ export interface UserInfoTypes {
 	coin: number;
 	notifications: NotificationsTypes[];
 	waitingListTransaction: string[];
-	transactionHistory: TransactionHistoryTypes;
+	transactionHistory: TransactionHistoryTypes[];
 }
 
 export interface PriceTypes {

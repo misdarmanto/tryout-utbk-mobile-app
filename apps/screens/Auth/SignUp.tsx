@@ -156,6 +156,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 					},
 				],
 				waitingListTransaction: [],
+				transactionHistory: [],
 			};
 
 			await userDb.set({

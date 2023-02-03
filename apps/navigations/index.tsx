@@ -130,7 +130,6 @@ export default function AppNavigations() {
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
-						<Stack.Screen name="ListLearningModule" component={ListLearningModuleScreen} />
 						<Stack.Screen name="DetailLearningModule" component={DetailLearningModuleScreen} />
 						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />
 						<Stack.Screen name="TransactionHistory" component={TransactionHistoryScreen} />
@@ -143,6 +142,7 @@ export default function AppNavigations() {
 						<Stack.Screen name="SignUp" component={SignUpScreen} />
 					</>
 				)}
+				<Stack.Screen name="ListLearningModule" component={ListLearningModuleScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
