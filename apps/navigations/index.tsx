@@ -41,7 +41,7 @@ export type RootParamList = {
 	DetailPaymentAds: undefined;
 	DetailPaymentReferral: undefined;
 	DetailLearningModule: { moduleItem: LearningModuleTypes };
-	ListLearningModule: { category?: string };
+	ListLearningModule: { item?: { detailTitle: string; category: string } };
 	RewardAd: undefined;
 };
 

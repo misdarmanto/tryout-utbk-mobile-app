@@ -22,14 +22,14 @@ type ListLearningModuleScreenPropsTypes = NativeStackScreenProps<RootParamList, 
 
 export default function ListLearningModuleScreen({ route, navigation }: ListLearningModuleScreenPropsTypes) {
 	const { appInfo, userInfo } = useContext<ContextApiTypes>(RootContext);
-	const { category } = route.params;
+	const { item } = route.params;
 
 	const [ListLearningModule, setListLearningModule] = useState<LearningModuleTypes[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const getListLearningModule = async () => {
-		const LEARNING_MODULE_KEY = `learning_module_key_${category}`;
-		const EXPIRE_KEY = `learning_module_expire_time_key_${category}`;
+		const LEARNING_MODULE_KEY = `learning_module_key_${item?.category}`;
+		const EXPIRE_KEY = `learning_module_expire_time_key_${item?.category}`;
 
 		const learningModluleFromLocalStorage = await getDataFromLocalStorage({ key: LEARNING_MODULE_KEY });
 		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
@@ -45,7 +45,7 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 		const LearningModuleDB = new FirestoreDB("LearningModule");
 		const learningModuleFromDB = await LearningModuleDB.queryCollection({
 			params_1: "category",
-			params_2: category,
+			params_2: item?.category,
 		});
 
 		await saveDataToLocalStorage({ key: LEARNING_MODULE_KEY, item: learningModuleFromDB });
@@ -68,7 +68,7 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
-			title: category,
+			title: item?.detailTitle,
 		});
 	}, []);
 
@@ -89,7 +89,8 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 					ListHeaderComponent={
 						<ListHeaderComponent
 							totalModule={ListLearningModule.length}
-							category={category + ""}
+							category={item?.category + ""}
+							title={item?.detailTitle + ""}
 						/>
 					}
 					data={ListLearningModule}
@@ -106,7 +107,13 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 	);
 }
 
-const ListHeaderComponent = ({ totalModule, category }: { totalModule: number; category: string }) => {
+type ListHeaderTypes = {
+	totalModule: number;
+	category: string;
+	title: string;
+};
+
+const ListHeaderComponent = ({ totalModule, category, title }: ListHeaderTypes) => {
 	return (
 		<VStack
 			backgroundColor="#FFF"

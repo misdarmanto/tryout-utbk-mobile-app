@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AppNavigations from "./apps/navigations";
 import { NativeBaseProvider, extendTheme, Spinner } from "native-base";
-import { Text, View } from "react-native";
+import { StatusBar, Text, View } from "react-native";
 import { RootContext } from "./apps/utilities/rootContext";
 import { AppInfoTypes, UserInfoTypes } from "./apps/types";
 import { useFonts } from "expo-font";
@@ -16,7 +16,6 @@ import LoadingAnimation from "./apps/components/animations/Loading";
 import { FirestoreDB } from "./apps/firebase/firebaseDB";
 import MaintenanceAnimation from "./apps/components/animations/Maintenance";
 import { BASE_COLOR } from "./apps/utilities/baseColor";
-import { TryOutDataTypes } from "./apps/types/tryOutDataTypes";
 
 import "expo-dev-client";
 
@@ -75,6 +74,7 @@ export default function App() {
 						coin: 0,
 						notifications: [],
 						waitingListTransaction: [],
+						transactionHistory: [],
 					};
 					setUserInfo(userData);
 				}
@@ -107,6 +107,7 @@ export default function App() {
 				}}
 			>
 				<Text style={{ color: BASE_COLOR.text.primary }}>Loading...</Text>
+				<StatusBar barStyle="default" backgroundColor="#FFF" />
 			</View>
 		);
 
@@ -115,8 +116,9 @@ export default function App() {
 	return (
 		<NativeBaseProvider>
 			<RootContext.Provider value={{ userInfo, setUserInfo, appInfo }}>
-				{/* {isOffline ? <NotInternetAnimation /> : <AppNavigations />} */}
-				<AppNavigations />
+				{isOffline ? <NotInternetAnimation /> : <AppNavigations />}
+				{/* <AppNavigations /> */}
+				<StatusBar barStyle="default" backgroundColor="#FFF" />
 			</RootContext.Provider>
 		</NativeBaseProvider>
 	);

@@ -138,9 +138,11 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		});
 	}, [userInfo.isAuth]);
 
-	const IconRounded = ({ Icon, title, category }: { Icon: any; title: string; category: string }) => {
+	type IconRoundedTypes = { Icon: any; title: string; category: string; detailTitle: string };
+
+	const IconRounded = ({ Icon, title, category, detailTitle }: IconRoundedTypes) => {
 		const handleIconOnPress = () => {
-			navigation.navigate("ListLearningModule", { category: category });
+			navigation.navigate("ListLearningModule", { item: { category, detailTitle } });
 		};
 
 		return (
@@ -236,22 +238,26 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 						<HStack my="3" flexWrap="wrap" justifyContent="space-between">
 							<IconRounded
 								Icon={<FontAwesome5 name="square-root-alt" size={25} color="#FFF" />}
-								title="matematika"
+								title="Matematika"
+								detailTitle="matematika"
 								category="matematika"
 							/>
 							<IconRounded
 								Icon={<MaterialCommunityIcons name="virus" size={25} color="#FFF" />}
 								title="Biologi"
 								category="biologi"
+								detailTitle="Biologi"
 							/>
 							<IconRounded
 								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
 								title="Fisika"
 								category="fisika"
+								detailTitle="Fisika"
 							/>
 							<IconRounded
 								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
 								title="Logika"
+								detailTitle="Logika"
 								category="logika"
 							/>
 						</HStack>
@@ -260,22 +266,26 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 							<IconRounded
 								Icon={<FontAwesome5 name="book" size={25} color="#FFF" />}
 								title="PBM"
+								detailTitle="Pemahaman Bacaan dan Menulis"
 								category="PBM"
 							/>
 							<IconRounded
 								Icon={<Ionicons name="language" size={28} color="#FFF" />}
 								title="B.Inggris"
+								detailTitle="Bahasa Inggris"
 								category="bahasaInggris"
 							/>
 							<IconRounded
 								Icon={<AntDesign name="earth" size={25} color="#FFF" />}
-								title="Geografi"
-								category="geografi"
+								title="PPU"
+								detailTitle="Pengetahuan dan Pemahaman Umum"
+								category="PPU"
 							/>
 							<IconRounded
 								Icon={<FontAwesome5 name="feather-alt" size={25} color="#FFF" />}
-								title="Sejarah"
-								category="sejarah"
+								title="Kuantitatif"
+								detailTitle="Pemahaman Kuantitatif"
+								category="PK"
 							/>
 						</HStack>
 					</Box>
