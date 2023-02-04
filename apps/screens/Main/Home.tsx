@@ -243,22 +243,22 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 								category="matematika"
 							/>
 							<IconRounded
+								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
+								title="Penalaran Umum"
+								detailTitle="Penalaran Umum"
+								category="PU"
+							/>
+							<IconRounded
 								Icon={<MaterialCommunityIcons name="virus" size={25} color="#FFF" />}
 								title="Biologi"
 								category="biologi"
 								detailTitle="Biologi"
 							/>
 							<IconRounded
-								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
-								title="Fisika"
-								category="fisika"
-								detailTitle="Fisika"
-							/>
-							<IconRounded
-								Icon={<FontAwesome5 name="brain" size={25} color="#FFF" />}
-								title="Logika"
-								detailTitle="Logika"
-								category="logika"
+								Icon={<FontAwesome5 name="feather-alt" size={25} color="#FFF" />}
+								title="Kuantitatif"
+								detailTitle="Pemahaman Kuantitatif"
+								category="PK"
 							/>
 						</HStack>
 
@@ -282,10 +282,10 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 								category="PPU"
 							/>
 							<IconRounded
-								Icon={<FontAwesome5 name="feather-alt" size={25} color="#FFF" />}
-								title="Kuantitatif"
-								detailTitle="Pemahaman Kuantitatif"
-								category="PK"
+								Icon={<Fontisto name="atom" size={25} color="#FFF" />}
+								title="Fisika"
+								category="fisika"
+								detailTitle="Fisika"
 							/>
 						</HStack>
 					</Box>

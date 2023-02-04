@@ -27,7 +27,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 	const [tryoutData, setTryOutData] = useState<TryOutDataTypes[]>(tryOutList);
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [activeTab, setActiveTab] = useState("All");
+	const [activeTab, setActiveTab] = useState("Semua");
 
 	const getTryOutCollections = async () => {
 		const TRYOUT_DATA_KEY = "tryOutData_key";
@@ -73,7 +73,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 
 	const handleSelectTab = (category: string) => {
 		setActiveTab(category);
-		if (category === "All") {
+		if (category === "Semua") {
 			setTryOutData(tryOutList);
 			return;
 		}

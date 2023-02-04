@@ -17,6 +17,7 @@ import { ContextApiTypes } from "../../../types";
 import { LearningModuleTypes } from "../../../types/learningModuleTypes";
 import { TouchableOpacity } from "react-native";
 import LearningModuleSkeleton from "../../../components/skeleton/LearningModuleSkeleton";
+import EmptyAnimation from "../../../components/animations/Empty";
 
 type ListLearningModuleScreenPropsTypes = NativeStackScreenProps<RootParamList, "ListLearningModule">;
 
@@ -83,7 +84,8 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 	return (
 		<Layout>
 			{isLoading && <LearningModuleSkeleton />}
-			{!isLoading && (
+			{!isLoading && ListLearningModule.length === 0 && <EmptyAnimation />}
+			{!isLoading && ListLearningModule.length !== 0 && (
 				<FlatList
 					showsVerticalScrollIndicator={false}
 					ListHeaderComponent={
