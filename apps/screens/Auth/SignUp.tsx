@@ -122,6 +122,11 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				throw Error("nama tidak boleh kosong!");
 			}
 
+			if (name.length < 5 || name.length > 15) {
+				inputName = "name";
+				throw Error("panjang nama min 5 - 15 karakter !");
+			}
+
 			if (password === "") {
 				inputName = "password";
 				throw Error("password tidak boleh kosong!");
@@ -167,12 +172,15 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 			console.log(error);
 			switch (error.code) {
 				case "auth/invalid-email":
+					inputName = "email";
 					error.message = "Opss... email tidak valid";
 					break;
 				case "auth/email-already-in-use":
+					inputName = "email";
 					error.message = "email sudah digunakan";
 					break;
 				case "auth/weak-password":
+					inputName = "password";
 					error.message = "password tidak aman. gunakan password lain!";
 					break;
 			}

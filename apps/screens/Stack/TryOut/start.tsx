@@ -116,7 +116,7 @@ const Start = () => {
 
 				<Text color={BASE_COLOR.text.secondaryGray} fontSize="sm" textAlign="justify">
 					kamu akan mengerjakan {tryOutData.title} dengan waktu pengerjaan {tryOutData.time} menit,
-					total koin yang dibutuhkan untuk mengerjakan soal ini adalah {tryOutData.coin} coin.
+					total coin yang dibutuhkan untuk mengerjakan soal ini adalah {tryOutData.coin} coin.
 					pastikan koneksi internet mu lancar agar bisa mendapatkan hasil yang maksimal, selamat
 					mengerjakan!
 				</Text>

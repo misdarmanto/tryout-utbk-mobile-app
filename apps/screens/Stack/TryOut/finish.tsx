@@ -30,8 +30,6 @@ const Finish = () => {
 		setScore({ correct: correct.length, wrong: wrong.length, empty: empty.length });
 	}, []);
 
-	console.log(score);
-
 	const handleTryOutState = () => {
 		setTryOutState("review");
 	};

@@ -48,7 +48,7 @@ export const CardTryOut = (props: CardTryOutTypes) => {
 						{isFree && (
 							<HStack space={1}>
 								<MaterialIcons name="verified" size={24} color={BASE_COLOR.primary} />
-								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
+								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.primary}>
 									free
 								</Text>
 							</HStack>

@@ -41,7 +41,7 @@ export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 					rounded="md"
 				>
 					<HStack alignItems="center" space={2}>
-						<Avatar>{userInfo.name[0]}</Avatar>
+						<Avatar backgroundColor={BASE_COLOR.green}>{userInfo.name[0]}</Avatar>
 						<VStack>
 							<Text fontSize="md" fontFamily="lato" color={BASE_COLOR.text.primary}>
 								{userInfo.name}

@@ -11,7 +11,7 @@ import { ContextApiTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 import { BASE_COLOR } from "../../utilities/baseColor";
 
-const adUnitId = __DEV__ ? TestIds.REWARDED : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
+const adUnitId = __DEV__ ? TestIds.REWARDED : "ca-app-pub-8095237298596091/9584709385";
 
 const rewarded = RewardedAd.createForAdRequest(adUnitId, {
 	requestNonPersonalizedAdsOnly: true,

@@ -10,7 +10,7 @@ const RenderWebView = ({ htmlBody }: { htmlBody: string }) => {
             <meta charset="utf-8">
             <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         </head>
-        <body style="color:${BASE_COLOR.text.primary}; min-height: 100px; padding: 5px; font-family:lora; line-height: 25px; text-align: justify;">${htmlBody}</body>
+        <body style="color:${BASE_COLOR.text.primary}; padding: 5px; font-family:lora; line-height: 25px; text-align: justify;">${htmlBody}</body>
     </html>`;
 
 	const [webViewHeight, setwebViewHeight] = useState(0);

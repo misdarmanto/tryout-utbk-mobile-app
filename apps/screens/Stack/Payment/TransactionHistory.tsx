@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import Layout from "../../../components/Layout";
 import { RootParamList } from "../../../navigations";
 import { RootContext } from "../../../utilities/rootContext";
@@ -7,16 +7,67 @@ import { ContextApiTypes, TransactionHistoryTypes } from "../../../types";
 
 import { FlatList, HStack, Text, VStack } from "native-base";
 import { BASE_COLOR } from "../../../utilities/baseColor";
-import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { toMoney } from "../../../utilities/toMony";
 import EmptyAnimation from "../../../components/animations/Empty";
+import { FirestoreDB } from "../../../firebase/firebaseDB";
+import {
+	getDataFromLocalStorage,
+	removeDataFromLocalStorage,
+	saveDataToLocalStorage,
+} from "../../../localStorage/localStorageDB";
+import ListSkeleton from "../../../components/skeleton/ListSkeleton";
 
 type TransactionHistoryScreenPropsTypes = NativeStackScreenProps<RootParamList, "TransactionHistory">;
 
 export default function TransactionHistoryScreen({ navigation }: TransactionHistoryScreenPropsTypes) {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
-	const transactionHistory: any[] = userInfo.transactionHistory;
-	transactionHistory.sort((a: any, b: any) => +b.id - +a.id);
+	const { setUserInfo }: any = useContext(RootContext);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const [listTransactionHistory, setListTransactionHistory] = useState<TransactionHistoryTypes[]>([]);
+
+	const LOCALSTORAGE_TRANSACTION_HISTORY__KEY = `transaction_history_${userInfo.email}`;
+
+	const removeTransactionHistoryFromFirestore = async () => {
+		const UserDB = new FirestoreDB("User");
+		await UserDB.update({ documentId: userInfo.email, newData: { transactionHistory: [] } });
+	};
+
+	const updateNotificationFromLocalStorage = async (newTransaction: any) => {
+		await removeDataFromLocalStorage({ key: LOCALSTORAGE_TRANSACTION_HISTORY__KEY });
+		await saveDataToLocalStorage({
+			key: LOCALSTORAGE_TRANSACTION_HISTORY__KEY,
+			item: newTransaction,
+		});
+		await removeTransactionHistoryFromFirestore();
+	};
+
+	const updateUserInfo = () => {
+		setUserInfo({ ...userInfo, transactionHistory: [] });
+	};
+
+	useEffect(() => {
+		(async () => {
+			const localTransactionHistory =
+				(await getDataFromLocalStorage({ key: LOCALSTORAGE_TRANSACTION_HISTORY__KEY })) || [];
+
+			if (userInfo.transactionHistory.length === 0) {
+				localTransactionHistory.sort((a: any, b: any) => parseInt(b.id) - parseInt(a.id));
+				setListTransactionHistory(localTransactionHistory);
+			}
+
+			if (userInfo.transactionHistory.length !== 0) {
+				const newData = [...localTransactionHistory, ...userInfo.transactionHistory];
+				newData.sort((a: any, b: any) => parseInt(b.id) - parseInt(a.id));
+				setListTransactionHistory(newData);
+				await updateNotificationFromLocalStorage(newData);
+				updateUserInfo();
+			}
+
+			setIsLoading(false);
+		})();
+	}, []);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -24,12 +75,14 @@ export default function TransactionHistoryScreen({ navigation }: TransactionHist
 		});
 	}, []);
 
+	if (isLoading) return <ListSkeleton />;
+
 	return (
 		<Layout>
-			{transactionHistory.length === 0 && <EmptyAnimation title="Belum melakukan pembelian" />}
-			{transactionHistory.length !== 0 && (
+			{listTransactionHistory.length === 0 && <EmptyAnimation title="Belum melakukan pembelian" />}
+			{listTransactionHistory.length !== 0 && (
 				<FlatList
-					data={transactionHistory}
+					data={listTransactionHistory}
 					keyExtractor={(item: TransactionHistoryTypes) => item.id}
 					renderItem={({ item }) => (
 						<VStack

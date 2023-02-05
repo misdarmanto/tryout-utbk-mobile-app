@@ -20,6 +20,15 @@ export const getDataFromLocalStorage = async ({ key }: { key: string }) => {
 	}
 };
 
+export const removeDataFromLocalStorage = async ({ key }: { key: string }) => {
+	try {
+		await AsyncStorage.removeItem(key);
+	} catch (error: any) {
+		console.log(error);
+		return error;
+	}
+};
+
 export const setExpireTimeToLocalStorage = async ({ time, key }: { time: number; key: string }) => {
 	const timeInMilliSecond = 60000;
 	const timeInMinute = timeInMilliSecond * time;

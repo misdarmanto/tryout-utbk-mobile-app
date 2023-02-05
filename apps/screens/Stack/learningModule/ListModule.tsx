@@ -29,8 +29,8 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 	const [isLoading, setIsLoading] = useState(true);
 
 	const getListLearningModule = async () => {
-		const LEARNING_MODULE_KEY = `learning_module_key_${item?.category}`;
-		const EXPIRE_KEY = `learning_module_expire_time_key_${item?.category}`;
+		const LEARNING_MODULE_KEY = `learning_module_key_${item?.category}_${userInfo.email}`;
+		const EXPIRE_KEY = `learning_module_expire_time_key_${item?.category}_${userInfo.email}`;
 
 		const learningModluleFromLocalStorage = await getDataFromLocalStorage({ key: LEARNING_MODULE_KEY });
 		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });

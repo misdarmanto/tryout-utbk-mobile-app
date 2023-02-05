@@ -30,8 +30,8 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 	const [activeTab, setActiveTab] = useState("Semua");
 
 	const getTryOutCollections = async () => {
-		const TRYOUT_DATA_KEY = "tryOutData_key";
-		const EXPIRE_KEY = "expire_time";
+		const TRYOUT_DATA_KEY = `tryOutData_key_${userInfo.email}`;
+		const EXPIRE_KEY = `expire_time_${userInfo.email}`;
 
 		const tryOutCollectionFromLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_DATA_KEY });
 		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
@@ -40,16 +40,18 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		const hasExpired = expireTime >= currentDateTime;
 
 		if (tryOutCollectionFromLocalStorage && hasExpired) {
+			console.log("local");
 			return tryOutCollectionFromLocalStorage;
 		}
 
 		const tryOutDB = new FirestoreDB("TryOut");
 		const tryOutCollectionsFromDB = await tryOutDB.getCollection();
 
+		console.log("internet");
 		await saveDataToLocalStorage({ key: TRYOUT_DATA_KEY, item: tryOutCollectionsFromDB });
 		await setExpireTimeToLocalStorage({
 			key: EXPIRE_KEY,
-			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 60,
+			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
 		});
 
 		return tryOutCollectionsFromDB;

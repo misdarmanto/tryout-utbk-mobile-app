@@ -9,6 +9,13 @@ import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes, NotificationsTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 import EmptyAnimation from "../../components/animations/Empty";
+import {
+	getDataFromLocalStorage,
+	removeDataFromLocalStorage,
+	saveDataToLocalStorage,
+} from "../../localStorage/localStorageDB";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ListSkeleton from "../../components/skeleton/ListSkeleton";
 
 type NotificationScreenPropsTypes = NativeStackScreenProps<RootParamList, "Notification">;
 
@@ -16,12 +23,22 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 	const { userInfo } = useContext<ContextApiTypes>(RootContext);
 	const { setUserInfo }: any = useContext(RootContext);
 	const [notificationList, setNotificationList] = useState<NotificationsTypes[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
-	const storage = new LocalStorage("notification");
+	const LOCALSTORAGE_NOTIFICATION_KEY = `notification_${userInfo.email}`;
 
-	const remoreNotificationFromFirestore = async () => {
+	const removeNotificationFromFirestore = async () => {
 		const updateCoin = new FirestoreDB("User");
 		await updateCoin.update({ documentId: userInfo.email, newData: { notifications: [] } });
+	};
+
+	const updateNotificationFromLocalStorage = async (newNotification: any) => {
+		await removeDataFromLocalStorage({ key: LOCALSTORAGE_NOTIFICATION_KEY });
+		await saveDataToLocalStorage({
+			key: LOCALSTORAGE_NOTIFICATION_KEY,
+			item: newNotification,
+		});
+		await removeNotificationFromFirestore();
 	};
 
 	const updateUserInfo = () => {
@@ -30,30 +47,27 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 
 	useEffect(() => {
 		(async () => {
-			const localNotification = (await storage.get()) || [];
+			const localNotification =
+				(await getDataFromLocalStorage({ key: LOCALSTORAGE_NOTIFICATION_KEY })) || [];
 
 			if (userInfo.notifications.length === 0) {
-				localNotification.sort((a: any, b: any) => +b.id - +a.id);
+				localNotification.sort((a: any, b: any) => parseInt(b.id) - parseInt(a.id));
 				setNotificationList(localNotification);
-				return;
 			}
 
 			if (userInfo.notifications.length !== 0) {
 				const notificationUpdated = [...localNotification, ...userInfo.notifications];
-				localNotification.sort((a: any, b: any) => +b.id - +a.id);
+				notificationUpdated.sort((a: any, b: any) => parseInt(b.id) - parseInt(a.id));
 				setNotificationList(notificationUpdated);
-				await storage.remove();
-				await storage.store(notificationUpdated);
-				await remoreNotificationFromFirestore();
+				await updateNotificationFromLocalStorage(notificationUpdated);
 				updateUserInfo();
-				return;
 			}
+
+			setIsLoading(false);
 		})();
 	}, []);
 
-	const handleRemove = async () => {
-		storage.remove();
-	};
+	if (isLoading) return <ListSkeleton />;
 
 	return (
 		<Layout>
@@ -86,8 +100,6 @@ const NotificationScreen = ({ navigation }: NotificationScreenPropsTypes) => {
 					)}
 				/>
 			)}
-
-			{/* <Button onPress={handleRemove}>Remove</Button> */}
 		</Layout>
 	);
 };

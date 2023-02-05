@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, HStack, Text, Heading, ScrollView, Pressable } from "native-base";
+import { Box, HStack, Text, Heading, ScrollView, Pressable, VStack } from "native-base";
 import { CardTryOut } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
 import {
@@ -35,8 +35,8 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const getTryOutHighlight = async () => {
-		const TRYOUT_KEY = "tryOutHighLight_key";
-		const EXPIRE_KEY = "tryOutHighLight_expire_time";
+		const TRYOUT_KEY = `tryOutHighLight_key_${userInfo.email}`;
+		const EXPIRE_KEY = `tryOutHighLight_expire_time_${userInfo.email}`;
 
 		const tryOutDataFromLocalStorage = await getDataFromLocalStorage({ key: TRYOUT_KEY });
 		const expireTime = await getExpireTimeFromLocalStorage({ key: EXPIRE_KEY });
@@ -45,6 +45,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		const hasExpired = expireTime >= currentDateTime;
 
 		if (tryOutDataFromLocalStorage && hasExpired) {
+			console.log("get from local");
 			return tryOutDataFromLocalStorage;
 		}
 
@@ -53,6 +54,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 			params_1: "isHighlight",
 			params_2: true,
 		});
+		console.log("get from internet");
 
 		await saveDataToLocalStorage({ key: TRYOUT_KEY, item: tryOutDataFromDB });
 		await setExpireTimeToLocalStorage({
@@ -191,7 +193,10 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 				>
 					<Box bg={BASE_COLOR.primary} p="2" borderRadius="5" rounded="md">
 						<HStack justifyContent="space-between">
-							<Box justifyContent="space-between" minH="16">
+							<VStack
+								justifyContent={appInfo.banner.countDown ? "space-between" : "center"}
+								minH="10"
+							>
 								{appInfo.banner.countDown && (
 									<Text fontSize="sm" color="white" pb="3">
 										{appInfo.banner.countDown}
@@ -223,7 +228,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 										</HStack>
 									</TouchableOpacity>
 								</HStack>
-							</Box>
+							</VStack>
 						</HStack>
 					</Box>
 					<Box
