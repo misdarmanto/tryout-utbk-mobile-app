@@ -84,7 +84,7 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 	return (
 		<Layout>
 			{isLoading && <LearningModuleSkeleton />}
-			{!isLoading && ListLearningModule.length === 0 && <EmptyAnimation />}
+			{!isLoading && ListLearningModule.length === 0 && <EmptyAnimation title="Belum Tersedia" />}
 			{!isLoading && ListLearningModule.length !== 0 && (
 				<FlatList
 					showsVerticalScrollIndicator={false}

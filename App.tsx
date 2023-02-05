@@ -117,7 +117,6 @@ export default function App() {
 		<NativeBaseProvider>
 			<RootContext.Provider value={{ userInfo, setUserInfo, appInfo }}>
 				{isOffline ? <NotInternetAnimation /> : <AppNavigations />}
-				{/* <AppNavigations /> */}
 				<StatusBar barStyle="default" backgroundColor="#FFF" />
 			</RootContext.Provider>
 		</NativeBaseProvider>

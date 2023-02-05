@@ -1,6 +1,6 @@
 import React from "react";
 import LottieView from "lottie-react-native";
-import { View, Text } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
 import { widthPercentage } from "../../utilities/dimension";
 
@@ -29,6 +29,7 @@ function MaintenanceAnimation() {
 			>
 				Sedang dalam perbaikan!
 			</Text>
+			<StatusBar barStyle="default" backgroundColor="#FFF" />
 		</View>
 	);
 }

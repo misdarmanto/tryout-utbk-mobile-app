@@ -8,7 +8,6 @@ export class FirebaseStorage {
 		const result: any = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			allowsEditing: true,
-			aspect: [1, 1],
 			base64: true,
 			quality: 1,
 		});

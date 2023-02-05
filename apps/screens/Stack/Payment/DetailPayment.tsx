@@ -236,7 +236,7 @@ const DetailPaymentScreen = ({ route, navigation }: DetailPaymentScreenPropsType
 							)}
 							{image && (
 								<Image
-									style={{ width: widthPercentage(50), height: heightPercentage(30) }}
+									style={{ width: widthPercentage(50), height: heightPercentage(50) }}
 									source={{ uri: image }}
 								/>
 							)}

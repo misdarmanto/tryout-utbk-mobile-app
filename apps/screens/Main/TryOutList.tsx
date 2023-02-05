@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Box, Button, FlatList, Heading, HStack, ScrollView } from "native-base";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { RefreshControl } from "react-native";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
 import Layout from "../../components/Layout";
 import TryOutScreenSkeleton from "../../components/skeleton/TryOutScreenSkeleton";
@@ -11,13 +11,13 @@ import { RootContext } from "../../utilities/rootContext";
 import { ContextApiTypes } from "../../types";
 import { FirestoreDB } from "../../firebase/firebaseDB";
 import { TryOutDataTypes } from "../../types/tryOutDataTypes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	saveDataToLocalStorage,
 	getDataFromLocalStorage,
 	getExpireTimeFromLocalStorage,
 	setExpireTimeToLocalStorage,
 } from "../../localStorage/localStorageDB";
+import { heightPercentage } from "../../utilities/dimension";
 
 type ExercisesPropsTypes = NativeStackScreenProps<RootParamList, "TryOutList">;
 
@@ -58,6 +58,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 	useEffect(() => {
 		(async () => {
 			const result = await getTryOutCollections();
+			result.sort((a: any, b: any) => a.order - b.order);
 			setTryOutData(result);
 			setTryOutList(result);
 			setIsLoading(false);
@@ -68,36 +69,43 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		setIsLoading(true);
 		setTimeout(() => {
 			setIsLoading(false);
-		}, 100);
+		}, 50);
 	}, []);
 
 	const handleSelectTab = (category: string) => {
+		setIsLoading(true);
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 5);
+
 		setActiveTab(category);
 		if (category === "Semua") {
 			setTryOutData(tryOutList);
 			return;
 		}
-		const newTab = tryOutList.filter((item: CardTryOutTypes | any) => item.category === category);
 
-		newTab.sort((a, b) => a.order - b.order);
+		const newTab = tryOutList.filter((item: CardTryOutTypes | any) => item.category === category);
 		setTryOutData(newTab);
 	};
 
 	const Tab = () => {
 		const TAB_HEADER_NAMES = appInfo.tryOutSettings.categories;
 		return (
-			<ScrollView showsHorizontalScrollIndicator={false} horizontal>
-				<HStack alignItems="center" justifyContent="space-between" px={1} py={5}>
-					{TAB_HEADER_NAMES.map((name, index) => (
-						<RenderTabHeader
-							key={index}
-							isActive={activeTab === name}
-							onPress={() => handleSelectTab(name)}
-							title={name}
-						/>
-					))}
-				</HStack>
-			</ScrollView>
+			<FlatList
+				horizontal
+				style={{ paddingVertical: heightPercentage(2) }}
+				showsHorizontalScrollIndicator={false}
+				initialScrollIndex={TAB_HEADER_NAMES.indexOf(activeTab)}
+				data={TAB_HEADER_NAMES}
+				keyExtractor={(item: any) => item}
+				renderItem={({ item }) => (
+					<RenderTabHeader
+						isActive={activeTab === item}
+						onPress={() => handleSelectTab(item)}
+						title={item}
+					/>
+				)}
+			/>
 		);
 	};
 
@@ -150,22 +158,23 @@ interface RenderTabHeaderTypes {
 }
 
 const RenderTabHeader = ({ title, onPress, isActive }: RenderTabHeaderTypes) => (
-	<Box
-		backgroundColor="#FFF"
-		px="5"
-		p="2"
-		mx="1"
-		borderWidth="1"
-		borderColor={isActive ? BASE_COLOR.primary : "gray.300"}
-		borderRadius="full"
-	>
-		<Heading
-			fontFamily="lato"
-			fontSize="md"
-			color={isActive ? BASE_COLOR.primary : BASE_COLOR.text.primary}
-			onPress={onPress}
+	<TouchableOpacity onPress={onPress}>
+		<Box
+			backgroundColor="#FFF"
+			px="5"
+			p="2"
+			mx="1"
+			borderWidth="1"
+			borderColor={isActive ? BASE_COLOR.primary : "gray.300"}
+			borderRadius="full"
 		>
-			{title}
-		</Heading>
-	</Box>
+			<Heading
+				fontFamily="lato"
+				fontSize="md"
+				color={isActive ? BASE_COLOR.primary : BASE_COLOR.text.primary}
+			>
+				{title}
+			</Heading>
+		</Box>
+	</TouchableOpacity>
 );
