@@ -1,7 +1,7 @@
 {
 	"expo": {
 		"name": "edufire",
-		"slug": "edufire",
+		"slug": "UTBK",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
@@ -18,18 +18,19 @@
 			"supportsTablet": true
 		},
 		"android": {
+			"versionCode": 15,
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#1E90FF"
 			},
-			"package": "com.misdar.edufire"
+			"package": "com.misdar.utbk"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
 		},
 		"extra": {
 			"eas": {
-				"projectId": "122e054a-ace9-4865-af33-876149ecfb19"
+				"projectId": "a518bc4f-12f8-44c5-aac6-2b387b681850"
 			}
 		}
 	},

@@ -50,7 +50,6 @@ const RewardAdScreen = ({ navigation }: RewardAdScreenPropsTypes) => {
 		const unsubscribeEarned = rewarded.addAdEventListener(
 			RewardedAdEventType.EARNED_REWARD,
 			async (reward) => {
-				console.log("User earned reward of ", reward);
 				await updateUserCoin();
 			}
 		);
@@ -73,7 +72,7 @@ const RewardAdScreen = ({ navigation }: RewardAdScreenPropsTypes) => {
 	return (
 		<Layout>
 			<VStack flex="1" justifyContent="center" alignItems="center">
-				{alreadyWatchAd && <Text>Selamat kamu koin mu bertambah 5</Text>}
+				{alreadyWatchAd && <Text>Selamat koin mu bertambah 5</Text>}
 				{!alreadyWatchAd && (
 					<Button
 						title="klik untuk melihat iklan"

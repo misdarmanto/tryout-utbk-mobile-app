@@ -11,7 +11,6 @@ import SignUpScreen from "../screens/Auth/SignUp";
 import LoginScreen from "../screens/Auth/Login";
 import { BASE_COLOR } from "../utilities/baseColor";
 import NotificationScreen from "../screens/Stack/Notification";
-import DetailTryOutScreen from "../screens/Stack/DetailTryOut";
 import { RootContext } from "../utilities/rootContext";
 import { ContextApiTypes, PriceTypes } from "../types";
 import DetailPaymentScreen from "../screens/Stack/Payment/DetailPayment";
@@ -33,7 +32,6 @@ export type RootParamList = {
 	Profile: undefined;
 	Payment: undefined;
 	TransactionHistory: undefined;
-	DetailTryOut: undefined;
 	Login: undefined;
 	SignUp: undefined;
 	Notification: undefined;
@@ -128,7 +126,6 @@ export default function AppNavigations() {
 					<>
 						<Stack.Screen name="TryOut" component={TryOutScreen} />
 						<Stack.Screen name="Notification" component={NotificationScreen} />
-						<Stack.Screen name="DetailTryOut" component={DetailTryOutScreen} />
 						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
 						<Stack.Screen name="DetailLearningModule" component={DetailLearningModuleScreen} />
 						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />

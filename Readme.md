@@ -7,3 +7,5 @@ The official NativeBase TypeScript template for [Expo](https://docs.expo.io/)
 ```sh
 expo init my-app --template @native-base/expo-template-typescript
 ```
+
+//"com.misdar.edufire"

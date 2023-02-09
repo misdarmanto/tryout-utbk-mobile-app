@@ -64,21 +64,24 @@ export default function LoginScreen({ navigation }: LoginScreenPropsTypes) {
 			console.log(error);
 			switch (error.code) {
 				case "auth/invalid-email":
-					error.message = "Opss... email tidak valid";
+					error.message = "email tidak valid";
+					inputName = "email";
 					break;
 				case "auth/email-already-in-use":
-					error.message = "Opss... email sudah digunakan";
+					error.message = "email sudah digunakan";
+					inputName = "email";
 					break;
 				case "auth/user-not-found":
-					error.message = "Opss... user tidak ditemukan, silahkan buat akun";
+					error.message = "email tidak ditemukan, silahkan buat akun terlebih dahulu";
+					inputName = "email";
 					break;
 				case "auth/wrong-password":
-					error.message = "Opss... Password salah";
+					error.message = "Password salah";
+					inputName = "password";
 					break;
 				case "auth/too-many-requests":
 					error.message =
 						"Access to this account has been temporarily disabled due to many failed login attempts. try again later!";
-
 					break;
 				default:
 					break;
