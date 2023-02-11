@@ -93,7 +93,7 @@ export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 							fontWeight="bold"
 							color={BASE_COLOR.text.primary}
 						>
-							Lihat Iklan untuk mendapatkan 5 koin
+							Lihat Iklan untuk mendapatkan {appInfo.payment.totalCoinAds} koin
 						</Text>
 					</HStack>
 					<Text fontSize="sm" color={BASE_COLOR.text.primary}>
@@ -103,7 +103,7 @@ export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 						<HStack space={1}>
 							<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
 							<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
-								{5} coin
+								{appInfo.payment.totalCoinAds} coin
 							</Text>
 						</HStack>
 						<TouchableOpacity
@@ -142,7 +142,7 @@ export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 								fontWeight="bold"
 								color={BASE_COLOR.text.primary}
 							>
-								Undang teman dapatkan 50 coin
+								Undang teman dapat {appInfo.payment.totalCoinReferral} coin
 							</Text>
 						</HStack>
 						<Text fontSize="sm" color={BASE_COLOR.text.primary}>
@@ -156,7 +156,7 @@ export default function PaymentScreen({ navigation }: PaymentScreenPropsTypes) {
 							<HStack space={1}>
 								<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
 								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>
-									{50} coin
+									{appInfo.payment.totalCoinReferral} coin
 								</Text>
 							</HStack>
 						</HStack>

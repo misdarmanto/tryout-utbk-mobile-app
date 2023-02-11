@@ -14,7 +14,6 @@ import {
 	removeDataFromLocalStorage,
 	saveDataToLocalStorage,
 } from "../../localStorage/localStorageDB";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ListSkeleton from "../../components/skeleton/ListSkeleton";
 
 type NotificationScreenPropsTypes = NativeStackScreenProps<RootParamList, "Notification">;

@@ -295,9 +295,19 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 						</HStack>
 					</Box>
 
+					{/* <Box
+						minH="32"
+						backgroundColor="#FFF"
+						borderWidth={1}
+						borderColor="gray.100"
+						p="5"
+						rounded="md"
+					>
+						<Text>Download versi premium! hanya Rp.20.000</Text>
+					</Box>
 					<Heading mt="5" color={BASE_COLOR.text.primary} fontFamily="lato" fontStyle="italic">
 						Terbaru
-					</Heading>
+					</Heading> */}
 
 					{tryOutHighlight.map((item) => (
 						<CardTryOut

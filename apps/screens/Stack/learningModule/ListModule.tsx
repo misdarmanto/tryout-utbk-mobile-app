@@ -91,7 +91,6 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 					ListHeaderComponent={
 						<ListHeaderComponent
 							totalModule={ListLearningModule.length}
-							category={item?.category + ""}
 							title={item?.detailTitle + ""}
 						/>
 					}
@@ -111,11 +110,10 @@ export default function ListLearningModuleScreen({ route, navigation }: ListLear
 
 type ListHeaderTypes = {
 	totalModule: number;
-	category: string;
 	title: string;
 };
 
-const ListHeaderComponent = ({ totalModule, category, title }: ListHeaderTypes) => {
+const ListHeaderComponent = ({ totalModule, title }: ListHeaderTypes) => {
 	return (
 		<VStack
 			backgroundColor="#FFF"
@@ -129,11 +127,11 @@ const ListHeaderComponent = ({ totalModule, category, title }: ListHeaderTypes) 
 			borderWidth={1}
 			borderColor="gray.200"
 		>
-			<HStack space={5}>
+			<HStack space={5} flexWrap="wrap">
 				<HStack space={1} alignItems="center">
 					<FontAwesome name="list-alt" size={20} color={BASE_COLOR.text.secondary} />
 					<Text fontFamily="lato" fontSize="sm" color={BASE_COLOR.text.secondary}>
-						{category}
+						{title}
 					</Text>
 				</HStack>
 

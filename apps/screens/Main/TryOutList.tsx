@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Box, Button, FlatList, Heading, HStack, ScrollView } from "native-base";
+import { Box, FlatList, Heading } from "native-base";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { CardTryOut, CardTryOutTypes } from "../../components/card/CardTryOut";
@@ -51,7 +51,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 		await saveDataToLocalStorage({ key: TRYOUT_DATA_KEY, item: tryOutCollectionsFromDB });
 		await setExpireTimeToLocalStorage({
 			key: EXPIRE_KEY,
-			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 5,
+			time: appInfo.tryOutSettings.cacheExpireTimeInMinute || 50,
 		});
 
 		return tryOutCollectionsFromDB;

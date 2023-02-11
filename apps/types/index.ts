@@ -16,6 +16,7 @@ export interface UserInfoTypes {
 	isAuth?: boolean;
 	name: string;
 	email: string;
+	password: string;
 	deviceId?: string;
 	referralCode?: string;
 	coin: number;
@@ -35,6 +36,8 @@ export interface PaymentTypes {
 	paymentMethods: string[];
 	priceList: PriceTypes[];
 	message: string;
+	totalCoinReferral: number;
+	totalCoinAds: number;
 }
 
 export interface BannerTypes {

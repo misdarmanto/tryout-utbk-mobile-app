@@ -150,6 +150,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 			const userData: UserInfoTypes = {
 				name: name,
 				email: email.toLocaleLowerCase(),
+				password: password,
 				coin: 50,
 				deviceId: Application.androidId + "",
 				referralCode: `${uniqueId()}-${email.toLocaleLowerCase()}`,

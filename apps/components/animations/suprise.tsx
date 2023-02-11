@@ -3,7 +3,7 @@ import LottieView from "lottie-react-native";
 import { View, Text } from "react-native";
 import { BASE_COLOR } from "../../utilities/baseColor";
 
-function EmptyAnimation({ title = "Tidak ditemukan" }: { title?: string }) {
+function SupriseAnimation({ title = "Selamat" }: { title?: string }) {
 	return (
 		<View
 			style={{
@@ -15,7 +15,7 @@ function EmptyAnimation({ title = "Tidak ditemukan" }: { title?: string }) {
 		>
 			<LottieView
 				style={{ width: 200, height: 200 }}
-				source={require("../../../assets/animations/empty.json")}
+				source={require("../../../assets/animations/surprise.json")}
 				autoPlay
 				loop={true}
 				duration={2000}
@@ -33,4 +33,4 @@ function EmptyAnimation({ title = "Tidak ditemukan" }: { title?: string }) {
 	);
 }
 
-export default EmptyAnimation;
+export default SupriseAnimation;

@@ -20,7 +20,6 @@ import TryOutListScreen from "../screens/Main/TryOutList";
 import DetailLearningModuleScreen from "../screens/Stack/learningModule/detailModule";
 import ListLearningModuleScreen from "../screens/Stack/learningModule/ListModule";
 import { LearningModuleTypes } from "../types/learningModuleTypes";
-import DetailPaymentAdsScreen from "../screens/Stack/Payment/DetailAds";
 import TransactionHistoryScreen from "../screens/Stack/Payment/TransactionHistory";
 import RewardAdScreen from "../screens/Stack/RewardAd";
 
@@ -36,7 +35,6 @@ export type RootParamList = {
 	SignUp: undefined;
 	Notification: undefined;
 	DetailPayment: { item: PriceTypes };
-	DetailPaymentAds: undefined;
 	DetailPaymentReferral: undefined;
 	DetailLearningModule: { moduleItem: LearningModuleTypes };
 	ListLearningModule: { item?: { detailTitle: string; category: string } };
@@ -128,7 +126,6 @@ export default function AppNavigations() {
 						<Stack.Screen name="Notification" component={NotificationScreen} />
 						<Stack.Screen name="DetailPayment" component={DetailPaymentScreen} />
 						<Stack.Screen name="DetailLearningModule" component={DetailLearningModuleScreen} />
-						<Stack.Screen name="DetailPaymentAds" component={DetailPaymentAdsScreen} />
 						<Stack.Screen name="TransactionHistory" component={TransactionHistoryScreen} />
 						<Stack.Screen name="RewardAd" component={RewardAdScreen} />
 					</>
