@@ -1,11 +1,10 @@
-# NativeBase TypeScript Expo Template
-
-The official NativeBase TypeScript template for [Expo](https://docs.expo.io/)
+# Tryout UTBK
+application for college entrance examination preparation. using firebase as backend and react native as frontend
 
 ## Usage
 
 ```sh
-expo init my-app --template @native-base/expo-template-typescript
+npm install .
 ```
 
 //"com.misdar.edufire"
