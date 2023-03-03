@@ -17,7 +17,7 @@ import {
 	WarningOutlineIcon,
 } from "native-base";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Layout from "../../components/Layout";
 import { RootParamList } from "../../navigations";
 import { BASE_COLOR } from "../../utilities/baseColor";
@@ -27,10 +27,14 @@ import { NotificationsTypes, UserInfoTypes } from "../../types/index";
 import * as Application from "expo-application";
 import { uniqueId } from "../../utilities/generateUniqueId";
 import { generateDateTime } from "../../utilities/generateDateTime";
+import { RootContext } from "../../utilities/rootContext";
+import { ContextApiTypes } from "../../types/index";
 
 type SignUpScreenPropsTypes = NativeStackScreenProps<RootParamList, "SignUp">;
 
 export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
+	const { appInfo } = useContext<ContextApiTypes>(RootContext);
+
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
 	const [password, setPassword] = useState("");
@@ -93,12 +97,12 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 
 		const notification: NotificationsTypes = {
 			id: Date.now() + "",
-			message: `${currentUserName} telah menggunakan kode referral mu, selamat koin mu telah bertambah 50`,
+			message: `${currentUserName} telah menggunakan kode referral mu, selamat koin mu telah bertambah ${appInfo.payment.totalCoinReferral}`,
 			createdAt: generateDateTime(),
 		};
 
 		const newData = {
-			coin: userDB.incrementValue(50),
+			coin: userDB.incrementValue(appInfo.payment.totalCoinReferral),
 			notifications: userDB.pushArray(notification),
 		};
 
@@ -151,7 +155,7 @@ export default function SignUpScreen({ navigation }: SignUpScreenPropsTypes) {
 				name: name,
 				email: email.toLocaleLowerCase(),
 				password: password,
-				coin: 50,
+				coin: appInfo.payment.totalFreeCoin || 0,
 				deviceId: Application.androidId + "",
 				referralCode: `${uniqueId()}-${email.toLocaleLowerCase()}`,
 				notifications: [

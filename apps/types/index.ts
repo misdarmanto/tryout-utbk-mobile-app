@@ -38,6 +38,7 @@ export interface PaymentTypes {
 	message: string;
 	totalCoinReferral: number;
 	totalCoinAds: number;
+	totalFreeCoin: number;
 }
 
 export interface BannerTypes {

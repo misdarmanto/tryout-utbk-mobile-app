@@ -14,10 +14,11 @@ export interface CardTryOutTypes {
 	coinTotal?: number;
 	category?: string;
 	isFree: boolean;
+	showTotalCoin?: boolean;
 }
 
 export const CardTryOut = (props: CardTryOutTypes) => {
-	const { title, exampTotal, time, coinTotal, isFree, onPress } = props;
+	const { title, exampTotal, time, coinTotal, isFree, onPress, showTotalCoin } = props;
 
 	return (
 		<TouchableOpacity activeOpacity={0.7} onPress={onPress}>
@@ -45,7 +46,7 @@ export const CardTryOut = (props: CardTryOutTypes) => {
 						>
 							{title}
 						</Text>
-						{isFree && (
+						{isFree && showTotalCoin && (
 							<HStack space={1}>
 								<MaterialIcons name="verified" size={24} color={BASE_COLOR.primary} />
 								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.primary}>
@@ -53,7 +54,7 @@ export const CardTryOut = (props: CardTryOutTypes) => {
 								</Text>
 							</HStack>
 						)}
-						{!isFree && (
+						{!isFree && showTotalCoin && (
 							<HStack space={1}>
 								<FontAwesome5 name="bitcoin" size={24} color="#FFD700" />
 								<Text fontSize="sm" fontWeight="bold" color={BASE_COLOR.text.primary}>

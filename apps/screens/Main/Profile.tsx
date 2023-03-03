@@ -92,7 +92,7 @@ export default function ProfileScreen({ navigation }: ProfilePropsTypes) {
 				</HStack>
 			</VStack>
 
-			<VStack mt={10}>
+			<VStack mt={8}>
 				<CardProfileList onPress={ratingPlayStore}>
 					<AntDesign name="star" size={24} color={BASE_COLOR.text.primary} />
 					<Text fontSize="md" fontWeight="bold" color={BASE_COLOR.text.primary}>

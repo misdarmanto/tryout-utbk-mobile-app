@@ -130,6 +130,7 @@ export default function TryOutListScreen({ navigation }: ExercisesPropsTypes) {
 				exampTotal={item.total}
 				title={item.title}
 				id={item.id}
+				showTotalCoin={userInfo.isAuth}
 				time={item.time}
 				onPress={() => handleCardOnPress(item)}
 			/>

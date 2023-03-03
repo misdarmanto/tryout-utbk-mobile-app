@@ -34,6 +34,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 	const [tryOutHighlight, setTryOutHighlight] = useState<TryOutDataTypes[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
+	//ceache data to local storage with specified duration to reduce billing costs from firebase
 	const getTryOutHighlight = async () => {
 		const TRYOUT_KEY = `tryOutHighLight_key_${userInfo.email}`;
 		const EXPIRE_KEY = `tryOutHighLight_expire_time_${userInfo.email}`;
@@ -167,7 +168,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		);
 	};
 
-	const handleOnTopUpPress = () => {
+	const handleButtonTopUpOnPress = () => {
 		if (!userInfo.isAuth) {
 			navigation.navigate("Login");
 			return;
@@ -175,7 +176,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 		navigation.navigate("Payment");
 	};
 
-	const handleOnHistoryPress = () => {
+	const handleButtonTransactionHistoryOnPress = () => {
 		if (!userInfo.isAuth) {
 			navigation.navigate("Login");
 			return;
@@ -210,7 +211,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 											{userInfo.coin}
 										</Text>
 									</HStack>
-									<TouchableOpacity onPress={handleOnTopUpPress}>
+									<TouchableOpacity onPress={handleButtonTopUpOnPress}>
 										<HStack space={1}>
 											<MaterialIcons name="add-box" size={24} color="#fff" />
 											<Text fontSize="sm" fontWeight="bold" color="white">
@@ -219,7 +220,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 										</HStack>
 									</TouchableOpacity>
 
-									<TouchableOpacity onPress={handleOnHistoryPress}>
+									<TouchableOpacity onPress={handleButtonTransactionHistoryOnPress}>
 										<HStack space={1} alignItems="center">
 											<MaterialCommunityIcons name="history" size={24} color="#fff" />
 											<Text fontSize="sm" fontWeight="bold" color="white">
@@ -295,20 +296,6 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 						</HStack>
 					</Box>
 
-					{/* <Box
-						minH="32"
-						backgroundColor="#FFF"
-						borderWidth={1}
-						borderColor="gray.100"
-						p="5"
-						rounded="md"
-					>
-						<Text>Download versi premium! hanya Rp.20.000</Text>
-					</Box>
-					<Heading mt="5" color={BASE_COLOR.text.primary} fontFamily="lato" fontStyle="italic">
-						Terbaru
-					</Heading> */}
-
 					{tryOutHighlight.map((item) => (
 						<CardTryOut
 							key={item.id}
@@ -317,6 +304,7 @@ export default function HomeScreen({ navigation }: HomeScreenPropsTypes) {
 							exampTotal={item.total}
 							title={item.title}
 							id={item.id}
+							showTotalCoin={userInfo.isAuth}
 							time={item.time}
 							onPress={() => handleCardOnPress(item)}
 						/>

@@ -18,7 +18,7 @@
 			"supportsTablet": true
 		},
 		"android": {
-			"versionCode": 15,
+			"versionCode": 16,
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#1E90FF"
@@ -30,11 +30,11 @@
 		},
 		"extra": {
 			"eas": {
-				"projectId": "a518bc4f-12f8-44c5-aac6-2b387b681850"
+				"projectId": ""
 			}
 		}
 	},
 	"react-native-google-mobile-ads": {
-		"android_app_id": "ca-app-pub-8095237298596091~3314525522"
+		"android_app_id": ""
 	}
 }
